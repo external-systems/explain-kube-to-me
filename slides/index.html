@@ -11,11 +11,11 @@
 		<link rel="stylesheet" href="reveal/reset.css" />
 		<link rel="stylesheet" href="reveal/reveal.css" />
 
-		<!-- Theme: a light theme reads best on a TV or projector.
-		     Others: black, league, moon, ... (reveal/theme/ in the build) -->
-		<link rel="stylesheet" href="reveal/theme/white.css" />
+		<!-- Base theme (dark); custom.css recolours it with Claude's palette.
+		     Others: white, league, moon, ... (reveal/theme/ in the build) -->
+		<link rel="stylesheet" href="reveal/theme/black.css" />
 
-		<!-- Our boxes, arrows and layers for picture-style slides -->
+		<!-- Claude colours + boxes, arrows, layers and route pills -->
 		<link rel="stylesheet" href="custom.css" />
 	</head>
 	<body>
@@ -42,8 +42,11 @@
 			// All options: https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true, // keep the slide number in the URL, so refresh stays put
-				slideNumber: "c/t", // "current / total" in the corner
+				slideNumber: "h.v", // slide number (and step below it) in the corner
 				progress: true,
+				transition: "slide", // between slides; one slide can override with data-transition
+				backgroundTransition: "fade",
+				autoAnimateDuration: 0.8, // data-auto-animate slides morph into each other
 				width: 1280,
 				height: 720,
 				plugins: [RevealMarkdown, RevealNotes],

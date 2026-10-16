@@ -43,6 +43,43 @@ Nobody had to change Kubernetes itself. Nobody had to wait for a vendor's
 next release. The new endpoint is managed with the **same tools, same
 permissions, same history in git and same dashboards** as everything else.
 
+## What it looks like: new routes on our API
+
+You already know HTTP routes like `/api/blog-posts/42` from Payload. Every
+Kubernetes record lives at a route too, and it always reads the same way:
+
+| Part of the route | Example | Means |
+| --- | --- | --- |
+| who added it | `kubevirt.io` | the project that taught Kubernetes this route |
+| version | `v1` | which version of that route |
+| folder | `namespaces/acme` | whose it is: usually one folder per team or customer |
+| kind of thing | `virtualmachines` | like a table name, or a Payload collection |
+| one record | `sql-01` | like a row id |
+
+So `GET /apis/kubevirt.io/v1/namespaces/acme/virtualmachines/sql-01` simply
+means *"show me Acme's Windows SQL server"*.
+
+Every Kubernetes starts with built-in routes. Each thing we install adds
+more, and they work exactly like the built-in ones:
+
+| Route (`{namespace}` = whose folder) | What lives there | Added by |
+| --- | --- | --- |
+| `/api/v1/namespaces/{namespace}/pods` | running copies of an app | built in |
+| `/apis/apps/v1/namespaces/{namespace}/deployments` | "keep N copies running" | built in |
+| `/api/v1/namespaces/{namespace}/secrets` | passwords, certificates | built in |
+| `/apis/postgresql.cnpg.io/v1/namespaces/{namespace}/clusters` | Postgres databases | CloudNativePG |
+| `/apis/kubevirt.io/v1/namespaces/{namespace}/virtualmachines` | Windows Server VMs | KubeVirt |
+| `/apis/argoproj.io/v1alpha1/namespaces/{namespace}/workflows` | multi-step jobs and pipelines | Argo Workflows |
+| `/apis/gateway.networking.k8s.io/v1/namespaces/{namespace}/httproutes` | website front doors | Gateway API |
+| `/apis/traefik.io/v1alpha1/namespaces/{namespace}/ingressroutes` | Traefik routing with mTLS | Traefik |
+| `/apis/infra.contrib.fluxcd.io/v1alpha2/namespaces/{namespace}/terraforms` | cloud infrastructure via OpenTofu | Flux OpenTofu controller |
+| `/apis/compute.gcp.upbound.io/v1beta1/instances` | Google Cloud servers | Crossplane |
+| `/apis/kro.run/v1alpha1/namespaces/{namespace}/tenants` | a whole new customer (ours) | KRO, no code |
+
+Nobody rebuilt or restarted Kubernetes to get those routes. Logins,
+permissions, history and dashboards all work on them from the moment
+they appear.
+
 ## Real examples, all of which we can use
 
 Every row below is a new kind of record that someone added to the

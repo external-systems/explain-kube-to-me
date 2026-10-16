@@ -5,6 +5,7 @@
 Click the slides and use the arrow keys, or
 <a href="../slides/index.html" target="_blank">open them full screen in a new tab</a>
 (press ++f++ there for full screen, ++esc++ for an overview of every slide).
+++right++ moves to the next topic; ++down++ goes deeper into the current one.
 
 <!-- Plain HTML links on purpose: the deck only exists inside the site
      after `nix build .#documentation`, and strict mode would fail the live

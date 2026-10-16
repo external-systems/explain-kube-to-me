@@ -1,822 +1,833 @@
-<!-- .slide: data-background-color="#1d2a44" -->
+<!-- .slide: data-background-gradient="radial-gradient(circle at 70% 30%, #3a2a22, #141413 70%)" data-transition="zoom" class="title-slide" -->
+
+<p class="kicker">For Dad</p>
 
 # Kubernetes
 
-## The Extensible API
+<h2>The Extensible API</h2>
 
-<p class="subtitle">a Platform that Develops itself</p>
+<p class="big" style="color: var(--clay)">a Platform that Develops itself</p>
 
-<small>Press → to go forward · F for full screen</small>
+<p class="hint">→ next · ↓ deeper · F full screen · Esc overview</p>
 
 Note:
-Welcome. Set expectations right away: no code tonight, only pictures and
-comparisons to things he already knows (Windows Server, IIS, DotNetNuke,
-Payload CMS, SQL, APIs). Tell him he can stop you at any slide.
-Everything here is also written up, slower, on the website, so nothing has
-to be memorised tonight.
+Set expectations: pictures and comparisons to things he already knows
+(Windows Server, IIS, DotNetNuke, Payload CMS, SQL, APIs). The only
+"code" tonight is web addresses (HTTP routes), which he already reads
+every day. Explain the controls once: right arrow = next topic, down arrow
+= a deeper look at the same topic. He can stop you on any slide.
 
 ---
 
-## Tonight's promise
+## Tonight: five ideas
 
 <div class="row">
-<div class="box teal"><span class="emoji">🚫</span><b>Zero code</b>Pictures and comparisons only</div>
-<div class="box"><span class="emoji">🪟</span><b>Your world first</b>Windows Server, IIS, DNN, Payload, SQL</div>
-<div class="box amber"><span class="emoji">✋</span><b>Stop me anytime</b>No question is too basic</div>
+<div class="box fragment fade-up"><span class="emoji">🌐</span><b>1. An HTTP API</b>routes you already understand</div>
+<div class="box blue fragment fade-up"><span class="emoji">🧩</span><b>2. Extensible</b>we add our own routes</div>
+<div class="box green fragment fade-up"><span class="emoji">🗄️</span><b>3. A database</b>behind every route</div>
+<div class="box sand fragment fade-up"><span class="emoji">🔧</span><b>4. Plumbing included</b>DNS, network, storage</div>
+<div class="box rose fragment fade-up"><span class="emoji">🌍</span><b>5. Owned by everyone</b>community + foundation</div>
 </div>
 
-<p class="fragment">Everything tonight is also on the website, to read later at your own pace.</p>
+<p class="fragment fade-in muted">Everything is also on the website, to read later.</p>
 
 Note:
-The website is the docs site this deck lives in. Show him the URL at the
-end. This takes the pressure off: he does not need to take notes.
-
----
-
-## Five ideas, that's all
-
-<div class="row">
-<div class="box fragment"><span class="emoji">🚪</span><b>1. It's an API</b>Describe what you want</div>
-<div class="box teal fragment"><span class="emoji">🧩</span><b>2. It's extensible</b>Add our own endpoints</div>
-<div class="box purple fragment"><span class="emoji">🗄️</span><b>3. It's a database</b>Built right in</div>
-<div class="box amber fragment"><span class="emoji">🔧</span><b>4. Plumbing included</b>DNS, network, storage</div>
-<div class="box red fragment"><span class="emoji">🌍</span><b>5. Owned by everyone</b>Community + foundation</div>
-</div>
-
-Note:
-This is the map for the evening. Come back to it at the end. If he only
-remembers one thing: Kubernetes is an API, and we can teach it new things.
-
----
-
-<!-- .slide: data-background-color="#2f6fde" -->
-
-<p class="section-number">Part 1</p>
-
-# The big idea
-
-Containers, and the thermostat
+This is the map for the evening. If he only remembers one thing: Kubernetes
+is an HTTP API, and we can add our own routes to it.
 
 ---
 
 ## Today: setting up DotNetNuke by hand
 
 <div class="row">
-<div class="box gray"><span class="emoji">🖥️</span><b>Windows Server</b></div>
-<div class="arrow">→</div>
-<div class="box gray"><span class="emoji">🌐</span><b>+ IIS</b></div>
-<div class="arrow">→</div>
-<div class="box gray"><span class="emoji">⚙️</span><b>+ .NET</b></div>
-<div class="arrow">→</div>
-<div class="box gray"><span class="emoji">📝</span><b>+ settings</b></div>
-<div class="arrow">→</div>
-<div class="box gray"><span class="emoji">🧾</span><b>+ the site</b></div>
+<div class="box gray fragment fade-right"><span class="emoji">🖥️</span><b>Windows Server</b></div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box gray fragment fade-right"><span class="emoji">🌐</span><b>+ IIS</b></div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box gray fragment fade-right"><span class="emoji">⚙️</span><b>+ .NET</b></div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box gray fragment fade-right"><span class="emoji">📝</span><b>+ settings</b></div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box gray fragment fade-right"><span class="emoji">🧾</span><b>+ the site</b></div>
 </div>
 
-<p class="fragment">Every step done by a person. One step different, and it <strong>"works on my machine"</strong>.</p>
-
-Note:
-He has lived this. Ask him: how long does it take to stand up a new DNN
-server? How often did a new server not quite match the old one?
-
----
-
-## A container: the whole thing in one sealed box
-
-<div class="row">
-<div class="box wide fill"><span class="emoji">📦</span><b>The site + IIS-equivalent + runtime + settings</b>packed together once</div>
-</div>
+<div class="fragment fade-up">
 <div class="down">↓</div>
-<div class="row">
-<div class="box teal"><b>Your laptop</b>runs the same</div>
-<div class="box teal"><b>Our server room</b>runs the same</div>
-<div class="box teal"><b>Azure / AWS / Google</b>runs the same</div>
+<div class="row"><div class="box solid wide"><span class="emoji">📦</span><b>A container: all of it, sealed in one box</b>runs the same on a laptop, in our server room, in Azure</div></div>
 </div>
 
-<p class="fragment muted">Docker is just one tool for <em>making</em> boxes. You never need it on your PC.</p>
+<p class="hint">↓ why "Kubernetes"?</p>
 
 Note:
-Address the Docker install failure head-on: Docker Desktop on Windows needs
-a Linux layer underneath (WSL), which is fiddly. It has nothing to do with
-understanding or managing Kubernetes. Builders make the boxes; Kubernetes
-runs them on servers.
+He has lived the top row. Ask: how long does a new DNN server take? How
+often did it not match the old one? The container packs the app with
+everything it needs. Address Docker: Docker Desktop on Windows needs a
+Linux layer (WSL), which is why it failed; he never needs it.
 
----
+--
+
+<!-- .slide: data-transition="convex" -->
 
 ## Why "Kubernetes"?
 
 <div class="row">
-<div class="box"><span class="emoji">📦</span><b>Shipping container</b>One standard shape, any ship or truck</div>
-<div class="box"><span class="emoji">🚢</span><b>A ship full of them</b>Hundreds of apps, many servers</div>
-<div class="box teal"><span class="emoji">☸️</span><b>"Kubernetes"</b>Greek for <em>helmsman</em>: the one who steers</div>
+<div class="box fragment zoom-in"><span class="emoji">📦</span><b>Shipping container</b>one standard shape for any ship or truck</div>
+<div class="box blue fragment zoom-in"><span class="emoji">🚢</span><b>A ship full of them</b>hundreds of apps, many servers</div>
+<div class="box solid fragment zoom-in"><span class="emoji">☸️</span><b>"Kubernetes"</b>Greek for <i>helmsman</i>, the one who steers</div>
 </div>
 
 Note:
-The steel shipping container standardised cargo in the 1950s and changed
-world trade. Software containers did the same for programs. Kubernetes is
-the helmsman steering a ship full of them. The logo is a ship's wheel.
-
----
-
-## Kubernetes takes a work order
-
-<div class="takeaway big">"Run <strong>3 copies</strong> of the customer portal, <strong>version 2.4</strong>, at <strong>portal.example.com</strong>, with <strong>20 GB</strong> of storage."</div>
-
-<p class="fragment">You say <strong>what</strong> you want. Never <strong>how</strong>.</p>
-
-Note:
-This is the project-manager mindset he already has: you describe the
-outcome and the team figures out the steps. Kubernetes is that team, and
-it never sleeps.
+The steel shipping container standardised world trade; software
+containers did the same for programs. Kubernetes steers the ship. The
+logo is a ship's wheel.
 
 ---
 
 ## The thermostat
 
 <div class="row">
-<div class="box"><span class="emoji">📝</span><b>What we want</b>3 copies running</div>
-<div class="arrow">→</div>
-<div class="box teal fill"><span class="emoji">🔁</span><b>Compare</b>want vs. have, forever</div>
-<div class="arrow">←</div>
-<div class="box amber"><span class="emoji">👀</span><b>What is real</b>only 2 running</div>
+<div class="box fragment fade-right"><span class="emoji">📝</span><b>What we want</b>3 copies running</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box solid fragment fade-right"><span class="emoji">🔁</span><b>Compare, forever</b>want vs. have</div>
+<div class="arrow fragment fade-left" data-fragment-index="3">←</div>
+<div class="box sand fragment fade-left" data-fragment-index="3"><span class="emoji">👀</span><b>What is real</b>only 2 running</div>
 </div>
-<div class="down fragment">↓</div>
-<div class="row fragment">
-<div class="box red"><span class="emoji">🛠️</span><b>Fix the difference</b>start 1 more copy</div>
+<div class="fragment fade-up">
+<div class="down">↓</div>
+<div class="row"><div class="box green"><span class="emoji">🛠️</span><b>Fix the difference</b>start 1 more copy</div></div>
 </div>
 
-<p class="fragment muted">This loop is called a <strong>controller</strong>. Remember that word.</p>
+<p class="fragment fade-in">This loop is a <strong>controller</strong>. Remember that word.</p>
+
+<p class="hint">↓ 3 a.m.</p>
 
 Note:
-Most important slide of part 1. A thermostat doesn't take orders like "run
-the furnace 10 minutes". You set 70°F and it keeps checking and fixing.
-That checking program is a controller. Everything later builds on this.
+Most important idea of part 1. A thermostat doesn't take orders like "run
+the furnace 10 minutes": you set 70°F and it keeps checking and fixing.
+You say WHAT you want, never HOW. The checking program is a controller.
 
----
+--
+
+<!-- .slide: data-transition="fade" -->
 
 ## 3 a.m., a server dies
 
 <div class="row">
-<div class="box red fragment"><span class="emoji">💥</span><b>3:00</b>Server 2 dies</div>
-<div class="arrow fragment">→</div>
-<div class="box amber fragment"><span class="emoji">👀</span><b>3:00</b>Controller: "want 3, have 2"</div>
-<div class="arrow fragment">→</div>
-<div class="box teal fragment"><span class="emoji">✅</span><b>3:01</b>New copy on server 3</div>
-<div class="arrow fragment">→</div>
-<div class="box fragment"><span class="emoji">😴</span><b>Morning</b>Nobody was paged</div>
+<div class="box rose fragment fade-up"><span class="emoji">💥</span><b>3:00</b>server 2 dies</div>
+<div class="arrow fragment fade-up">→</div>
+<div class="box sand fragment fade-up"><span class="emoji">👀</span><b>3:00</b>"want 3, have 2"</div>
+<div class="arrow fragment fade-up">→</div>
+<div class="box green fragment fade-up"><span class="emoji">✅</span><b>3:01</b>new copy on server 3</div>
+<div class="arrow fragment fade-up">→</div>
+<div class="box blue fragment fade-up"><span class="emoji">😴</span><b>Morning</b>nobody was paged</div>
 </div>
 
-<div class="takeaway fragment">The runbook <em>"RDP in, restart the app pool"</em> is replaced by the work order itself.</div>
+<div class="takeaway fragment fade-up">The runbook <em>"RDP in, restart the app pool"</em> is replaced by writing down what good looks like.</div>
 
 Note:
-Ask him how many 3 a.m. calls his teams get. The team writes down what
-"good" looks like, and the platform does the restarting and moving.
+Ask how many 3 a.m. calls his teams get.
 
 ---
 
-<!-- .slide: data-background-color="#0f9d8a" -->
+## Kubernetes is an HTTP API
 
-<p class="section-number">Part 2</p>
+<p class="fragment fade-in">Everything is a record, at a route you already know how to read:</p>
 
-# Kubernetes is an API
+<div class="routes">
+<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">keep N copies running</span></div>
+<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+</div>
 
-One front door for everything
+<p class="fragment fade-up"><span class="verb">GET</span> <span class="verb post">POST</span> <span class="verb" style="background:var(--sand)">PUT</span> <span class="verb" style="background:var(--rose)">DELETE</span> &nbsp;= SELECT, INSERT, UPDATE, DELETE</p>
 
----
+<p class="hint">↓ one front door</p>
 
-## Windows Server: a different tool for every job
+Note:
+He understands HTTP routes and APIs; lean on that. Every part of a running
+system lives at a route. The four HTTP verbs map to the four SQL verbs.
+{namespace} is a folder, usually one per team or customer.
+
+--
+
+<!-- .slide: data-transition="convex" -->
+
+## One front door, instead of ten consoles
 
 <div class="row">
-<div class="box gray"><b>IIS Manager</b></div>
-<div class="box gray"><b>DNS console</b></div>
-<div class="box gray"><b>Disk Mgmt</b></div>
-<div class="box gray"><b>Task Scheduler</b></div>
-<div class="box gray"><b>AD Users</b></div>
+<div class="box gray fragment fade-down" data-fragment-index="1"><b>IIS Manager</b></div>
+<div class="box gray fragment fade-down" data-fragment-index="1"><b>DNS console</b></div>
+<div class="box gray fragment fade-down" data-fragment-index="1"><b>Disk Mgmt</b></div>
+<div class="box gray fragment fade-down" data-fragment-index="1"><b>Task Scheduler</b></div>
+<div class="box gray fragment fade-down" data-fragment-index="1"><b>AD Users</b></div>
+</div>
+<p class="muted fragment" data-fragment-index="1">Windows Server: a different tool for every job, over Remote Desktop.</p>
+
+<div class="fragment fade-up" data-fragment-index="2">
+<div class="row"><div class="box solid wide"><span class="emoji">🚪</span><b>One HTTP API</b>websites · names · disks · jobs · passwords</div></div>
 </div>
 
-<p class="muted">Each with its own screen, usually over Remote Desktop.</p>
-
-<div class="fragment">
-<h2>Kubernetes: one front door</h2>
-<div class="row"><div class="box wide fill"><span class="emoji">🚪</span><b>The Kubernetes API</b>websites · DNS names · disks · scheduled jobs · passwords</div></div>
-</div>
+<div class="takeaway fragment fade-up" data-fragment-index="3">Dashboards, automation, Argo CD, Flux, the command line: <strong>all use the same routes</strong>.</div>
 
 Note:
-He understands APIs. The point: every part of the system is managed
-through the same API, in the same way, by the same tools.
-
----
-
-## Everything is a record
-
-| Kind | One record means... | In Windows terms |
-| --- | --- | --- |
-| **Deployment** | Keep 3 copies of this app running | IIS site + app pool + a watcher |
-| **Service** | A stable name for those copies | DNS name + load balancer |
-| **Secret** | A password or certificate | Credential Manager |
-| **Volume claim** | "I need 20 GB of disk" | A new drive letter |
-| **CronJob** | Run this every night at 2 a.m. | Task Scheduler |
-
-<p class="fragment">Create · Read · Update · Delete. The same four verbs as SQL.</p>
-
-Note:
-Kubernetes calls the types "kinds" and the records "resources". CRUD maps
-to INSERT, SELECT, UPDATE, DELETE, which he knows from SQL.
+No screen scraping, no RDP, no "only Bob knows how to configure that".
+The records are saved in git, so we know who changed what and can undo.
 
 ---
 
 ## You already know this: Payload CMS
 
 <div class="row">
-<div class="box"><b>Payload</b></div>
-<div class="box"><span class="emoji">🗂️</span>Define a <b>collection</b></div>
-<div class="arrow">→</div>
-<div class="box"><span class="emoji">🔌</span>Get a <b>REST API</b> + admin screen</div>
-<div class="arrow">→</div>
-<div class="box"><span class="emoji">🪝</span><b>Hooks</b> run on every change</div>
+<div class="box blue fragment fade-right" data-fragment-index="1"><span class="emoji">📰</span><b>Payload</b>define a <em>collection</em>: Blog Posts</div>
+<div class="arrow fragment fade-right" data-fragment-index="1">→</div>
+<div class="box blue wide fragment fade-right" data-fragment-index="1"><b>You get a route</b><div class="routes"><div class="route"><span class="verb">GET</span><span class="path">/api/<span class="res">blog-posts</span>/<span class="name">42</span></span></div></div>+ an admin screen + hooks on every change</div>
 </div>
-<div class="row fragment">
-<div class="box teal"><b>Kubernetes</b></div>
-<div class="box teal"><span class="emoji">🗂️</span>Define a <b>kind</b></div>
-<div class="arrow">→</div>
-<div class="box teal"><span class="emoji">🔌</span>Get a <b>REST API</b> + dashboards</div>
-<div class="arrow">→</div>
-<div class="box teal"><span class="emoji">🔁</span><b>Controllers</b> act on every change</div>
+<div class="row">
+<div class="box fragment fade-right" data-fragment-index="2"><span class="emoji">☸️</span><b>Kubernetes</b>define a <em>CRD</em>: Virtual Machines</div>
+<div class="arrow fragment fade-right" data-fragment-index="2">→</div>
+<div class="box wide fragment fade-right" data-fragment-index="2"><b>You get a route</b><div class="routes"><div class="route"><span class="verb">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">acme</span>/<span class="res">virtualmachines</span>/<span class="name">sql-01</span></span></div></div>+ dashboards + a <strong>controller</strong> on every change</div>
 </div>
 
-<p class="fragment big">Same pattern. Content in Payload, <strong>infrastructure</strong> in Kubernetes.</p>
+<p class="big fragment fade-up" data-fragment-index="3">Same idea. Content in Payload, <strong>infrastructure</strong> in Kubernetes.</p>
 
 Note:
-This is the key bridge for the whole talk. He is excited about Payload;
-use that. Payload collection = Kubernetes kind. Payload hook = Kubernetes
-controller. Then pause and check it landed before moving on.
+The key bridge of the talk. Payload collection = Kubernetes CRD (Custom
+Resource Definition). Payload hook = Kubernetes controller. Pause and check
+it landed before going on.
 
 ---
 
-## Why "it's an API" matters
+<!-- .slide: data-transition="zoom" -->
 
-<div class="row">
-<div class="box fragment"><span class="emoji">🗣️</span><b>One language</b>Every tool reads and writes the same records</div>
-<div class="box teal fragment"><span class="emoji">📜</span><b>Work orders in git</b>Who changed what, when, and undo</div>
-<div class="box amber fragment"><span class="emoji">🌍</span><b>Same anywhere</b>Azure, AWS, Google, our racks</div>
-<div class="box purple fragment"><span class="emoji">🧩</span><b>We can add our own</b>New collections, like Payload</div>
+## Reading a route
+
+<div class="anatomy">
+<div class="fragment fade-up"><span class="seg" style="color:var(--green)">GET</span><span class="lbl">the verb: read it</span></div>
+<div><span class="sep">/apis/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--blue)">kubevirt.io</span><span class="lbl">who added this route</span></div>
+<div><span class="sep">/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--muted)">v1</span><span class="lbl">its version</span></div>
+<div><span class="sep">/namespaces/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--sand)">acme</span><span class="lbl">whose folder: the customer</span></div>
+<div><span class="sep">/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--clay)">virtualmachines</span><span class="lbl">the kind of thing</span></div>
+<div><span class="sep">/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--green)">sql-01</span><span class="lbl">this one record</span></div>
 </div>
+
+<p class="fragment fade-up big">"Acme's Windows SQL server" <span class="muted">is just an address.</span></p>
 
 Note:
-The last box is the bridge to Part 3, the heart of the headline.
+Walk left to right, one fragment at a time. The group (kubevirt.io) tells
+you which project taught Kubernetes this route. The namespace is the
+customer's folder. The resource is the kind of thing, like a table name.
+The last part is the one record, like a row id.
 
 ---
 
-<!-- .slide: data-background-color="#7d4cdb" -->
+<!-- .slide: data-auto-animate -->
 
-<p class="section-number">Part 3: the headline</p>
+<p class="kicker" data-id="kick">Teaching the API new tricks</p>
 
-# Teaching the API new tricks
+## Every Kubernetes starts with these
 
-The Extensible API
-
----
-
-## Three words
-
-<div class="row">
-<div class="box purple"><span class="emoji">📐</span><b>CRD</b>Defines a brand-new kind of record<br><span class="muted">= a new Payload collection</span></div>
-<div class="box purple fragment"><span class="emoji">🧾</span><b>Custom resource</b>One record of that kind<br><span class="muted">= one entry in it</span></div>
-<div class="box purple fragment"><span class="emoji">🔁</span><b>Controller</b>Makes the real world match<br><span class="muted">= a hook / the thermostat</span></div>
+<div class="routes tight" data-id="routes">
+<div class="route " data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route " data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">keep N copies running</span></div>
+<div class="route " data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route " data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route " data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
 </div>
 
-<div class="takeaway fragment">CRD + controller, packaged so anyone can install it = an <strong>operator</strong>.</div>
+<p class="muted" data-id="count">5 routes on our API</p>
 
 Note:
-CRD stands for Custom Resource Definition. Once installed, the API grows a
-new endpoint automatically, managed with the same tools, permissions and
-history as everything built in. Nobody had to change Kubernetes or wait for
-a vendor release.
+The built-in routes. Now watch what happens when we install things. Press down.
 
----
+--
 
-## An operator is an expert in a box
+<!-- .slide: data-auto-animate -->
 
-<div class="row">
-<div class="box"><span class="emoji">🧑‍💼</span><b>Your best DBA</b>replication · backups · restores · 3 a.m. failover · upgrades</div>
-<div class="arrow">→</div>
-<div class="box purple fill"><span class="emoji">🤖</span><b>Operator</b>the same knowledge, as a program, working 24/7</div>
+<p class="kicker" data-id="kick">Install #1</p>
+
+## 🐘 + A Postgres database route
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">keep N copies running</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route new" data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
 </div>
 
-<div class="takeaway fragment">Work order: <em>"A Postgres database, 2 standby copies, nightly backups."</em><br>The operator does the rest, and keeps doing it.</div>
+<p class="muted" data-id="count">6 routes on our API</p>
 
 Note:
-He has managed DBAs and sysadmins. An operator is their runbook turned into
-a program. The example here is CloudNativePG.
+Install the CloudNativePG operator. Every Postgres database is now a record at this route. Nobody rebuilt or restarted Kubernetes.
 
----
+--
 
-## Adding a new endpoint
+<!-- .slide: data-auto-animate -->
 
-<div class="row">
-<div class="box purple fragment"><span class="emoji">1️⃣</span>Install a CRD: <b>"PostgresCluster"</b></div>
-<div class="arrow fragment">→</div>
-<div class="box purple fragment"><span class="emoji">2️⃣</span>The API grows a <b>new endpoint</b></div>
-<div class="arrow fragment">→</div>
-<div class="box purple fragment"><span class="emoji">3️⃣</span>Someone files <b>"billing-db, please"</b></div>
-<div class="arrow fragment">→</div>
-<div class="box teal fill fragment"><span class="emoji">🐘</span><b>A real database</b>backed up, highly available</div>
+<p class="kicker" data-id="kick">Install #2</p>
+
+## 🪟 + A Windows VM route
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">keep N copies running</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
+<div class="route new" data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
 </div>
+
+<p class="muted" data-id="count">7 routes on our API</p>
 
 Note:
-Walk through slowly. Step 2 is the magic: the endpoint appears on our
-servers on its own, just like adding a collection in Payload gives you a
-REST endpoint.
+Install KubeVirt. A full Windows Server virtual machine is now just a POST. Nobody rebuilt or restarted Kubernetes.
 
----
+--
 
-## Things we can add to our API today
+<!-- .slide: data-auto-animate -->
 
-<div class="row">
-<div class="box fragment"><span class="emoji">☁️</span><b>Cloud infra</b>Google · AWS · Azure<br><span class="muted">Crossplane, Flux OpenTofu controller</span></div>
-<div class="box teal fragment"><span class="emoji">🐘</span><b>Postgres</b>with backups & failover<br><span class="muted">CloudNativePG</span></div>
-<div class="box amber fragment"><span class="emoji">🔒</span><b>A VPN per customer</b>on our own servers<br><span class="muted">headroom-operator</span></div>
-<div class="box red fragment"><span class="emoji">🪟</span><b>Windows VMs</b>next to the containers<br><span class="muted">KubeVirt</span></div>
-<div class="box purple fragment"><span class="emoji">🤖</span><b>AI agent sandbox</b>safe and locked down<br><span class="muted">NVIDIA OpenShell</span></div>
+<p class="kicker" data-id="kick">Install #3</p>
+
+## 🔀 + A workflow route
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">keep N copies running</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
+<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
+<div class="route new" data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step jobs <i>· Argo Workflows</i></span></div>
 </div>
 
-<p class="fragment">Each one: <strong>a new kind of record</strong>. Install it, and the platform can do something it couldn't yesterday.</p>
+<p class="muted" data-id="count">8 routes on our API</p>
 
 Note:
-Pause on Windows VMs: Kubernetes can run his Windows Server world too.
-For the cloud one, next slide tells the story.
+Install Argo Workflows. Pipelines, batch jobs and nightly reports get their own route. Nobody rebuilt or restarted Kubernetes.
 
----
+--
 
-## Our API as a remote control for every cloud
+<!-- .slide: data-auto-animate -->
 
-<div class="row">
-<div class="box"><span class="emoji">📝</span><b>A record in our API</b>"Azure SQL database, this size, this region"</div>
-<div class="arrow">→</div>
-<div class="box purple"><span class="emoji">🔁</span><b>Crossplane controller</b>calls Azure's own API for us</div>
-<div class="arrow">→</div>
-<div class="box teal"><span class="emoji">🗄️</span><b>The database exists</b>in Azure</div>
+<p class="kicker" data-id="kick">Install #4</p>
+
+## 🚪 + Front-door routes
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">keep N copies running</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
+<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
+<div class="route " data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step jobs <i>· Argo Workflows</i></span></div>
+<div class="route new" data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors <i>· Gateway API</i></span></div>
+<div class="route new" data-id="traefik"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">traefik.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">ingressroutes</span></span><span class="what">Traefik routing + mTLS <i>· Traefik</i></span></div>
 </div>
 
-<div class="takeaway fragment">Someone changes it by hand in the Azure portal? The controller <strong>puts it back</strong>. The thermostat again.</div>
-
-<p class="fragment muted">Swap "Azure" for Google Cloud or AWS: same process.</p>
+<p class="muted" data-id="count">10 routes on our API</p>
 
 Note:
-No logging into three different cloud portals. Our own API is the one
-front door to every cloud. Drift is corrected automatically.
+Even the official Gateway API is added this way, and so is Traefik's IngressRoute. Nobody rebuilt or restarted Kubernetes.
 
----
+--
 
-## KRO: new endpoints with no code at all
+<!-- .slide: data-auto-animate -->
 
-<div class="row">
-<div class="box wide fill"><span class="emoji">📝</span><b>One record: "New customer: Acme, plan: Gold"</b></div>
+<p class="kicker" data-id="kick">Install #5</p>
+
+## ☁️ + Cloud infrastructure routes
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">keep N copies running</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
+<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
+<div class="route " data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step jobs <i>· Argo Workflows</i></span></div>
+<div class="route " data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors <i>· Gateway API</i></span></div>
+<div class="route " data-id="traefik"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">traefik.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">ingressroutes</span></span><span class="what">Traefik routing + mTLS <i>· Traefik</i></span></div>
+<div class="route new" data-id="tofu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">infra.contrib.fluxcd.io</span>/v1alpha2/namespaces/<span class="ns">{namespace}</span>/<span class="res">terraforms</span></span><span class="what">cloud infra <i>· Flux + OpenTofu</i></span></div>
+<div class="route new" data-id="xp"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">compute.gcp.upbound.io</span>/v1beta1/<span class="res">instances</span></span><span class="what">Google Cloud servers <i>· Crossplane</i></span></div>
 </div>
-<div class="down">↓ KRO follows our recipe, a <strong>Resource Graph Definition</strong> called "Tenant"</div>
-<div class="row">
-<div class="box fragment"><span class="emoji">📁</span><b>Folder</b>Acme's own space</div>
-<div class="box teal fragment"><span class="emoji">🐘</span><b>Database</b>CloudNativePG</div>
-<div class="box amber fragment"><span class="emoji">🔒</span><b>VPN</b>headroom-operator</div>
-<div class="box red fragment"><span class="emoji">🌐</span><b>Website</b>+ public address</div>
-<div class="box purple fragment"><span class="emoji">☁️</span><b>Backups</b>cloud bucket</div>
-</div>
+
+<p class="muted" data-id="count">12 routes on our API</p>
 
 Note:
-KRO = Kube Resource Orchestrator. The recipe is configuration, not a
-program: what the new kind is called, what it asks for, and what it
-creates. KRO adds the kind to the API on the spot and acts as its
-controller. SQL comparison: like a view or stored procedure a non-programmer
-can write. One simple thing outside, many real things inside.
+Google Cloud, AWS, Azure: their servers, networks and databases become routes on OUR API. Nobody rebuilt or restarted Kubernetes.
 
----
+--
 
-## Who builds KRO?
+<!-- .slide: data-auto-animate -->
 
-<div class="row">
-<div class="box amber"><span class="emoji">🟧</span><b>Amazon</b>AWS</div>
-<div class="box"><span class="emoji">🟦</span><b>Google</b>Cloud</div>
-<div class="box teal"><span class="emoji">🪟</span><b>Microsoft</b>Azure</div>
+<p class="kicker" data-id="kick">Install #6</p>
+
+## 🏢 + Our own product as a route
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">keep N copies running</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
+<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
+<div class="route " data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step jobs <i>· Argo Workflows</i></span></div>
+<div class="route " data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors <i>· Gateway API</i></span></div>
+<div class="route " data-id="traefik"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">traefik.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">ingressroutes</span></span><span class="what">Traefik routing + mTLS <i>· Traefik</i></span></div>
+<div class="route " data-id="tofu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">infra.contrib.fluxcd.io</span>/v1alpha2/namespaces/<span class="ns">{namespace}</span>/<span class="res">terraforms</span></span><span class="what">cloud infra <i>· Flux + OpenTofu</i></span></div>
+<div class="route " data-id="xp"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">compute.gcp.upbound.io</span>/v1beta1/<span class="res">instances</span></span><span class="what">Google Cloud servers <i>· Crossplane</i></span></div>
+<div class="route new" data-id="tenant"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">tenants</span></span><span class="what">a whole new customer <i>· KRO, no code</i></span></div>
 </div>
 
-<p class="big fragment">Three fierce competitors, building it <strong>together</strong>.</p>
-
-<p class="fragment muted">Now part of the official Kubernetes project.</p>
+<p class="muted" data-id="count">13 routes on our API</p>
 
 Note:
-When the three biggest cloud companies, who compete for the same customers,
-agree to build one tool together, that tells you where the industry is
-going. Lead-in for Part 6 on community.
+With KRO we define our own route, Tenant, without writing a program. Nobody rebuilt or restarted Kubernetes.
 
----
+--
+
+<!-- .slide: data-transition="fade" -->
 
 ## A platform that develops itself
 
 <div class="row">
-<div class="box purple fragment"><span class="emoji">📥</span><b>Install</b>someone else's operator in minutes instead of building it</div>
-<div class="box teal fragment"><span class="emoji">🏗️</span><b>Publish</b>our own products ("Tenant") on our own API</div>
-<div class="box amber fragment"><span class="emoji">🔁</span><b>Automate</b>describe outcomes, stop clicking consoles</div>
-<div class="box fragment"><span class="emoji">🌍</span><b>Inherit</b>improvements from the whole world</div>
+<div class="box fragment fade-up"><span class="emoji">📥</span><b>Install</b>someone else's routes in minutes</div>
+<div class="box blue fragment fade-up"><span class="emoji">🏗️</span><b>Publish</b>our own products as routes</div>
+<div class="box green fragment fade-up"><span class="emoji">🔐</span><b>Same rules</b>same logins, permissions, history</div>
+<div class="box sand fragment fade-up"><span class="emoji">🌍</span><b>Inherit</b>improvements from the whole world</div>
 </div>
 
-Note:
-This is the headline explained. Restate it out loud: Kubernetes, the
-extensible API, a platform that develops itself.
-
----
-
-<!-- .slide: data-background-color="#1d2a44" -->
-
-<p class="section-number">Part 4</p>
-
-# A database built in
-
-Kubernetes is also a database
-
----
-
-## Every record lives in a built-in database
-
-| Key (the address) | Value (the record) |
-| --- | --- |
-| /deployments/acme/customer-portal | 3 copies, version 2.4 |
-| /secrets/acme/database-password | 🔒 encrypted |
-| /tenants/acme | plan: Gold, region: US-East |
-
-<p class="fragment">A <strong>key-value store</strong> called <strong>etcd</strong>. Think: the Windows <strong>Registry</strong>, made bulletproof.</p>
-
-<p class="fragment muted">On k3s it can even be SQLite, PostgreSQL or MySQL underneath.</p>
+<p class="big fragment fade-up">5 routes became <strong>13</strong>. Nobody rebuilt the server.</p>
 
 Note:
-A key-value store is a SQL table with only two columns. etcd is pronounced
-"et-see-dee". k3s (our edge Kubernetes) can use a SQL database instead.
+This is the headline. Every route added works exactly like the built-in
+ones: same tools, same permissions, same audit history in git.
 
 ---
+
+## An operator: an expert in a box
+
+<div class="routes">
+<div class="route new fragment fade-in"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">acme</span>/<span class="res">clusters</span></span><span class="what"><em>"billing-db, 3 copies, nightly backups"</em></span></div>
+</div>
+<div class="down fragment fade-in">↓ the CloudNativePG operator, 24/7</div>
+<div class="row">
+<div class="box fragment fade-up"><span class="emoji">🐘</span><b>Primary</b>database</div>
+<div class="box blue fragment fade-up"><span class="emoji">🐘🐘</span><b>2 standbys</b>live copies</div>
+<div class="box green fragment fade-up"><span class="emoji">💾</span><b>Backups</b>every night</div>
+<div class="box sand fragment fade-up"><span class="emoji">🚨</span><b>Failover</b>at 3 a.m., alone</div>
+<div class="box rose fragment fade-up"><span class="emoji">⬆️</span><b>Upgrades</b>no downtime</div>
+</div>
+
+<p class="fragment fade-in muted">CRD (the route) + controller (the thermostat) = an <strong>operator</strong>.</p>
+
+Note:
+Think of the best DBA he's ever managed. An operator is that person's
+runbook turned into a program that never sleeps. One POST, and the
+operator does everything the DBA would have done, and keeps doing it.
+
+---
+
+<!-- .slide: data-transition="convex" -->
+
+## KRO: our own route, no code
+
+<div class="routes">
+<div class="route new"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">acme</span>/<span class="res">tenants</span></span><span class="what"><em>"Acme, plan: Gold"</em></span></div>
+</div>
+<div class="down fragment fade-in">↓ KRO follows our recipe, a <strong>Resource Graph Definition</strong>, and calls:</div>
+<div class="routes">
+<div class="route  fragment fade-left"><span class="verb post">POST</span><span class="path">/api/v1/<span class="res">namespaces</span></span><span class="what">Acme's folder</span></div>
+<div class="route  fragment fade-left"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">acme</span>/<span class="res">clusters</span></span><span class="what">their database</span></div>
+<div class="route  fragment fade-left"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">acme</span>/<span class="res">virtualmachines</span></span><span class="what">their Windows VM</span></div>
+<div class="route  fragment fade-left"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">acme</span>/<span class="res">httproutes</span></span><span class="what">their website address</span></div>
+<div class="route  fragment fade-left"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">infra.contrib.fluxcd.io</span>/v1alpha2/namespaces/<span class="ns">acme</span>/<span class="res">terraforms</span></span><span class="what">their cloud backups bucket</span></div>
+</div>
+
+<p class="fragment fade-up">+ their private VPN <span class="muted">(headroom-operator)</span></p>
+
+<p class="hint">↓ who builds KRO?</p>
+
+Note:
+KRO = Kube Resource Orchestrator. The recipe is configuration, not a
+program: what our new route is called, what it asks for, and which routes
+it calls. KRO adds the route to the API on the spot. SQL comparison: a
+view or stored procedure a non-programmer can write.
+
+--
+
+<!-- .slide: data-transition="zoom" -->
+
+## Who builds KRO?
+
+<div class="row">
+<div class="box sand fragment zoom-in"><span class="emoji">🟧</span><b>Amazon</b>AWS</div>
+<div class="box blue fragment zoom-in"><span class="emoji">🟦</span><b>Google</b>Cloud</div>
+<div class="box green fragment zoom-in"><span class="emoji">🪟</span><b>Microsoft</b>Azure</div>
+</div>
+
+<p class="big fragment fade-up">Three fierce competitors, building it <strong>together</strong>.</p>
+
+<p class="fragment fade-in muted">Now part of the official Kubernetes project.</p>
+
+Note:
+When the three biggest cloud companies agree to build one tool together,
+that tells you where the industry is going.
+
+---
+
+## Behind every route: a built-in database
+
+<div class="routes">
+<div class="route "><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">acme</span>/<span class="res">secrets</span>/<span class="name">db-password</span></span><span class="what">the route</span></div>
+</div>
+<div class="down fragment fade-in">↓ is stored at the key</div>
+<div class="routes fragment fade-in">
+<div class="route new"><span class="verb" style="background:var(--muted)">KEY</span><span class="path">/registry/<span class="res">secrets</span>/<span class="ns">acme</span>/<span class="name">db-password</span></span><span class="what">in <strong>etcd</strong></span></div>
+</div>
+
+<p class="fragment fade-up">A key-value store: think the Windows <strong>Registry</strong>, made bulletproof.</p>
+
+<div class="routes fragment fade-up">
+<div class="route "><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">acme</span>/<span class="res">pods</span>?watch=true</span><span class="what"><em>"tell me the moment anything changes"</em></span></div>
+</div>
+
+<p class="hint">↓ what it adds · our apps can use it</p>
+
+Note:
+Kubernetes is also a database. Every record at every route is stored in
+etcd ("et-see-dee"). On k3s it can even be SQLite, Postgres or MySQL. The
+watch feature is what makes controllers possible: they are told instantly
+instead of polling.
+
+--
+
+<!-- .slide: data-transition="fade" -->
 
 ## What it adds on top of a plain table
 
 | Feature | Meaning | SQL Server |
 | --- | --- | --- |
-| **Replicated** | Kept on 3 or 5 servers | Always On |
-| **Watch** | Programs are told instantly when a record changes | Triggers |
-| **Versioned** | Nobody overwrites another's change | rowversion |
-| **Schema checked** | Bad records are refused | Constraints |
-| **Permissions** | Who can touch which kinds | GRANT / DENY |
-| **Audit log** | Who changed what, when | SQL Audit |
+| **Replicated** | kept on 3 or 5 servers | Always On |
+| **Watch** | apps told instantly about changes | triggers |
+| **Versioned** | nobody overwrites another's change | rowversion |
+| **Schema checked** | bad records refused | constraints |
+| **Permissions** | who can touch which routes | GRANT / DENY |
+| **Audit log** | who changed what, when | SQL Audit |
+<!-- .element: class="fragment fade-up" -->
+
+<div class="takeaway fragment fade-up">Our apps can keep their settings and state here for free. Millions of orders still go in a real database (one POST to CloudNativePG).</div>
 
 Note:
-Watch is what makes controllers possible: they are notified instead of
-polling.
+Small, important records: configuration and state. Not big business data.
 
 ---
 
-## Our apps can use it too
+<!-- .slide: data-transition="convex" -->
 
-<div class="row">
-<div class="box"><span class="emoji">🧩</span><b>Our app</b>stores its settings, customers, job status</div>
-<div class="arrow">⇄</div>
-<div class="box fill"><span class="emoji">🚪</span><b>Kubernetes API</b></div>
-<div class="arrow">→</div>
-<div class="box purple"><span class="emoji">🗄️</span><b>Built-in database</b>replicated, audited, free</div>
-</div>
-
-<div class="takeaway fragment">For <strong>small, important records</strong>. Millions of orders still go in a real database, which is just another work order (CloudNativePG).</div>
-
-Note:
-No separate database to set up and maintain for configuration and state.
-
----
-
-<!-- .slide: data-background-color="#e69b00" -->
-
-<p class="section-number">Part 5</p>
-
-# The plumbing comes free
-
----
-
-## Separate products before, built in now
+## The plumbing comes free
 
 | Job | Windows world | Kubernetes |
 | --- | --- | --- |
 | Names | Windows DNS, by hand | **CoreDNS**, automatic |
 | Network | VLANs, firewall tickets | **Cilium**, rules per app |
-| Encrypt app traffic | Certs per server | **Mesh network** |
-| Internet front door | IIS bindings, ARR, F5 | **Gateway API**, LoadBalancer |
-| Disks | SAN, iSCSI, drive letters | **CSI**: ask for 20 GB |
-| Crashes | A person or a script | Health checks, auto-replace |
-| Updates | Pull a server from the farm... | **Rolling updates** |
+| Front door | IIS bindings, ARR, F5 | **Gateway API**, LoadBalancer |
+| Disks | SAN, iSCSI, drive letters | **CSI**: "20 GB, please" |
+| Crashes | a person, a script | health checks, auto-replace |
+| Updates | pull a server from the farm | **rolling updates** |
+<!-- .element: class="fragment fade-up" -->
+
+<p class="hint">↓ how a visitor gets in · runs anywhere</p>
 
 Note:
 On Windows each row is a separate product, project and often team. In
-Kubernetes each row is just another kind of record in the same API, and a
-new app gets all of it on day one.
+Kubernetes each row is just more routes on the same API.
 
----
+--
+
+<!-- .slide: data-transition="fade" -->
 
 ## How a visitor reaches our site
 
 <div class="row">
-<div class="box"><span class="emoji">🌍</span><b>Visitor</b></div>
-<div class="arrow">→</div>
-<div class="box amber"><span class="emoji">⚖️</span><b>Load balancer</b>public address</div>
-<div class="arrow">→</div>
-<div class="box teal"><span class="emoji">🚪</span><b>Gateway</b>Traefik: right site, HTTPS</div>
-<div class="arrow">→</div>
-<div class="box"><span class="emoji">📇</span><b>Service</b>found by name</div>
-<div class="arrow">→</div>
-<div class="box purple"><span class="emoji">📦📦📦</span><b>3 copies</b>+ their disks</div>
+<div class="box fragment fade-right"><span class="emoji">🌍</span><b>Visitor</b></div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box sand fragment fade-right"><span class="emoji">⚖️</span><b>Load balancer</b>public address</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box fragment fade-right"><span class="emoji">🚪</span><b>Gateway</b>Traefik: right site, HTTPS</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box blue fragment fade-right"><span class="emoji">📇</span><b>Service</b>found by name</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box green fragment fade-right"><span class="emoji">📦📦📦</span><b>3 copies</b>+ their disks</div>
 </div>
 
-<p class="fragment">Every box is a record in the API. A server dies → traffic moves, a copy restarts, the disk follows.</p>
+<p class="fragment fade-up">Every box is a record at a route. A server dies: traffic moves, a copy restarts, the disk follows.</p>
 
-Note:
-Nobody touches anything when a server fails.
+--
 
----
+<!-- .slide: data-transition="fade" -->
 
 ## Runs anywhere
 
 <div class="row">
-<div class="box"><span class="emoji">🟦</span><b>Azure</b>AKS</div>
-<div class="box amber"><span class="emoji">🟧</span><b>AWS</b>EKS</div>
-<div class="box teal"><span class="emoji">🟩</span><b>Google</b>GKE</div>
-<div class="box gray"><span class="emoji">🏢</span><b>Our own racks</b>first-class too</div>
+<div class="box blue fragment zoom-in"><span class="emoji">🟦</span><b>Azure</b>AKS</div>
+<div class="box sand fragment zoom-in"><span class="emoji">🟧</span><b>AWS</b>EKS</div>
+<div class="box green fragment zoom-in"><span class="emoji">🟩</span><b>Google</b>GKE</div>
+<div class="box fragment zoom-in"><span class="emoji">🏢</span><b>Our own racks</b>first-class too</div>
 </div>
 
-<div class="takeaway fragment">"Which cloud?" stops being a 10-year lock-in. Moving is a migration of records, not a rewrite.</div>
+<div class="takeaway fragment fade-up">Same routes everywhere. "Which cloud?" stops being a 10-year lock-in.</div>
 
-<p class="fragment">🪟 Windows is welcome: Windows Server containers, and full Windows VMs with KubeVirt.</p>
-
-Note:
-Each cloud plugs its own load balancers, disks and networks in
-automatically. On our own servers we bring our own (Cilium BGP, OpenEBS)
-and apps cannot tell the difference.
+<p class="fragment fade-in">🪟 Windows is welcome: Windows containers, and full Windows VMs with KubeVirt.</p>
 
 ---
 
-<!-- .slide: data-background-color="#d64545" -->
+<!-- .slide: data-background-gradient="radial-gradient(circle at 30% 20%, #3a2a22, #1f1e1d 70%)" -->
 
-<p class="section-number">Part 6: the most important part</p>
-
-# Community and ownership
-
----
+<p class="kicker">The most important part</p>
 
 ## "Never heard of it" ≠ small
 
 <div class="row">
-<div class="box"><b>Kubernetes</b>started at <strong>Google</strong></div>
-<div class="box teal"><b>Argo CD</b>grown up at <strong>Intuit</strong></div>
-<div class="box amber"><b>Flux</b>used by <strong>Microsoft</strong> in Azure</div>
-<div class="box purple"><b>Cilium</b><strong>Cisco</strong>; inside Google &amp; Azure</div>
+<div class="box fragment fade-up"><b>Kubernetes</b>started at <strong>Google</strong></div>
+<div class="box blue fragment fade-up"><b>Argo</b>grown up at <strong>Intuit</strong></div>
+<div class="box green fragment fade-up"><b>Flux</b>used by <strong>Microsoft</strong> in Azure</div>
+<div class="box sand fragment fade-up"><b>Cilium</b><strong>Cisco</strong>; inside Google &amp; Azure</div>
 </div>
 <div class="row">
-<div class="box red"><b>KubeVirt</b>started by <strong>Red Hat</strong></div>
-<div class="box"><b>KRO</b><strong>AWS + Google + Microsoft</strong></div>
-<div class="box teal"><b>CloudNativePG</b><strong>EDB</strong>, Postgres experts</div>
-<div class="box amber"><b>RKE2 / k3s</b><strong>SUSE</strong>; RKE2 built for government</div>
+<div class="box rose fragment fade-up"><b>KubeVirt</b>started by <strong>Red Hat</strong></div>
+<div class="box fragment fade-up"><b>KRO</b><strong>AWS + Google + Microsoft</strong></div>
+<div class="box blue fragment fade-up"><b>CloudNativePG</b><strong>EDB</strong>, Postgres experts</div>
+<div class="box green fragment fade-up"><b>RKE2 / k3s</b><strong>SUSE</strong>; built for government</div>
 </div>
 
-<p class="fragment big">The most valuable software on earth runs on these.</p>
+<p class="big fragment fade-up">The most valuable software on earth runs on these.</p>
+
+<p class="hint">↓ how to tell a healthy project · open source</p>
 
 Note:
-Key emotional point. He has not heard of them because they live one layer
-below the products people see. That doesn't make them small or poorly
-maintained: they are built and run by the biggest companies on the planet.
+Key emotional point. He hasn't heard of them because they live one layer
+below the products people see. They are built and run by the biggest
+companies on the planet.
 
----
+--
+
+<!-- .slide: data-transition="fade" -->
 
 ## How to tell a healthy project
 
 <div class="row">
-<div class="box gray"><span class="emoji">🌱</span><b>Sandbox</b>promising, early</div>
-<div class="arrow">→</div>
-<div class="box amber"><span class="emoji">🌿</span><b>Incubating</b>in production, growing</div>
-<div class="arrow">→</div>
-<div class="box teal fill"><span class="emoji">🌳</span><b>Graduated</b>security audited, many companies, widely used</div>
+<div class="box gray fragment fade-right"><span class="emoji">🌱</span><b>Sandbox</b>promising, early</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box sand fragment fade-right"><span class="emoji">🌿</span><b>Incubating</b>in production, growing</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box solid fragment fade-right"><span class="emoji">🌳</span><b>Graduated</b>security audited, many companies</div>
 </div>
 
-<p class="fragment">Graduated: <strong>Kubernetes · Argo CD · Flux · Cilium · etcd · CoreDNS</strong></p>
+<p class="fragment fade-up">Graduated: <strong>Kubernetes · Argo · Flux · Cilium · etcd · CoreDNS</strong></p>
 
 Note:
-These are the CNCF (Cloud Native Computing Foundation) maturity levels.
-Graduation needs an independent security audit and maintainers from
-several different companies.
+CNCF (Cloud Native Computing Foundation) maturity levels. Graduation needs
+an independent security audit and maintainers from several companies.
 
----
+--
+
+<!-- .slide: data-transition="fade" -->
 
 ## Open source: you already depend on it
 
 <div class="row">
-<div class="box"><span class="emoji">🌐</span><b>DotNetNuke</b>open source</div>
-<div class="box teal"><span class="emoji">📰</span><b>Payload CMS</b>open source</div>
-<div class="box purple"><span class="emoji">⚙️</span><b>.NET</b>open source since 2016</div>
-<div class="box gray"><span class="emoji">🐙</span><b>GitHub</b>owned by Microsoft</div>
+<div class="box fragment zoom-in"><span class="emoji">🌐</span><b>DotNetNuke</b>open source</div>
+<div class="box blue fragment zoom-in"><span class="emoji">📰</span><b>Payload CMS</b>open source</div>
+<div class="box green fragment zoom-in"><span class="emoji">⚙️</span><b>.NET</b>open since 2016</div>
+<div class="box sand fragment zoom-in"><span class="emoji">🐙</span><b>GitHub</b>owned by Microsoft</div>
 </div>
-
-<p class="fragment big">Open source today = <strong>competitors building the foundation together</strong>.</p>
-
-Note:
-His two favourite frameworks are open source. Microsoft open-sourced .NET
-and bought GitHub. Open source isn't hobbyists; it is how the industry
-shares the costly foundation and competes on top of it.
-
----
-
-## Why build in the open
 
 <div class="row">
-<div class="box fragment"><span class="emoji">👀</span><b>More eyes</b>security found and fixed in public</div>
-<div class="box teal fragment"><span class="emoji">🔓</span><b>No lock-in</b>the code outlives any vendor</div>
-<div class="box amber fragment"><span class="emoji">🧑‍💻</span><b>Easier hiring</b>people already know it</div>
-<div class="box purple fragment"><span class="emoji">🎁</span><b>Free upgrades</b>others' fixes reach us</div>
-<div class="box red fragment"><span class="emoji">⭐</span><b>Reputation</b>customers see our work</div>
+<div class="box gray fragment fade-up"><b>👀 More eyes</b>security fixed in public</div>
+<div class="box gray fragment fade-up"><b>🔓 No lock-in</b>code outlives vendors</div>
+<div class="box gray fragment fade-up"><b>🧑‍💻 Easy hiring</b>people know it</div>
+<div class="box gray fragment fade-up"><b>🎁 Free upgrades</b>others' fixes reach us</div>
 </div>
 
-<div class="takeaway fragment">So we build in the open as much as we can, the same way Kubernetes is built.</div>
+<p class="fragment fade-up">So we build in the open as much as we can, like Kubernetes.</p>
 
 Note:
-Business value, not ideology. Each box is money: security costs, vendor
-risk, hiring and training costs, engineering time, sales.
+His two favourite frameworks are open source. Open source today means
+competitors building the expensive foundation together.
 
 ---
 
 ## Owned by a foundation, not a company
 
 <div class="row">
-<div class="box gray"><span class="emoji">🏛️</span><b>Linux Foundation</b>neutral non-profit</div>
-<div class="arrow">→</div>
-<div class="box"><span class="emoji">☁️</span><b>CNCF</b>Cloud Native Computing Foundation</div>
-<div class="arrow">→</div>
-<div class="box teal fill"><span class="emoji">☸️</span><b>Kubernetes</b>given by Google in 2015</div>
+<div class="box gray fragment fade-right"><span class="emoji">🏛️</span><b>Linux Foundation</b>neutral non-profit</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box blue fragment fade-right"><span class="emoji">☁️</span><b>CNCF</b>Microsoft, Google, Amazon, Red Hat, ...</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box solid fragment fade-right"><span class="emoji">☸️</span><b>Kubernetes</b>given by Google in 2015</div>
 </div>
 
-<div class="takeaway fragment"><strong>2023:</strong> Terraform's company changed its license. The community copied the open code into <strong>OpenTofu</strong> at the Linux Foundation. A foundation-owned project <strong>can't be taken away</strong>.</div>
+<div class="takeaway fragment fade-up"><strong>2023:</strong> Terraform's company changed its license. The community copied the open code into <strong>OpenTofu</strong> at the Linux Foundation. A foundation-owned project <strong>can't be taken away</strong>.</div>
+
+<p class="hint">↓ it gets better underneath us</p>
 
 Note:
-Members include Microsoft, Google, Amazon, IBM/Red Hat, Oracle, Cisco and
-hundreds more. The Terraform story is why our cloud controller uses
-OpenTofu. Kubernetes has had that protection from day one.
+That story is why our cloud controller uses OpenTofu. Kubernetes has had
+that protection from day one.
 
----
+--
+
+<!-- .slide: data-transition="convex" -->
 
 ## It gets better underneath us
 
-<div class="row top">
-<div class="box gray"><b>2003+</b>Google runs Borg internally</div>
-<div class="box"><b>2014</b>Kubernetes open sourced</div>
-<div class="box"><b>2015</b>1.0, given to CNCF</div>
-<div class="box teal"><b>2019</b>Windows containers supported</div>
-<div class="box teal"><b>2023</b>Gateway API stable</div>
-<div class="box purple fill"><b>Today</b>every cloud, AI &amp; GPUs</div>
+<div class="row">
+<div class="box gray fragment fade-up"><b>2003+</b>Google runs Borg</div>
+<div class="box fragment fade-up"><b>2014</b>open sourced</div>
+<div class="box fragment fade-up"><b>2015</b>1.0, to CNCF</div>
+<div class="box blue fragment fade-up"><b>2019</b>Windows containers</div>
+<div class="box green fragment fade-up"><b>2023</b>Gateway API stable</div>
+<div class="box solid fragment fade-up"><b>Today</b>every cloud, AI, GPUs</div>
 </div>
 
-<p class="fragment">A new release <strong>every 4 months</strong>. We upgrade, and get better networking, storage and AI support for free.</p>
+<p class="fragment fade-up">A new release <strong>every 4 months</strong>. We upgrade and get better routes for free.</p>
 
-<p class="fragment big">Over a decade old, here to stay, and only now getting really good.</p>
+<p class="big fragment fade-up">Over a decade old, here to stay, and only now getting really good.</p>
 
 Note:
 Every operator improves on its own schedule too: a new CloudNativePG
-version makes every tenant's database better with no work from our team.
+version makes every tenant's database better with no work from us.
 
 ---
 
-<!-- .slide: data-background-color="#0f9d8a" -->
+<!-- .slide: data-background-gradient="radial-gradient(circle at 70% 80%, #2a3340, #1f1e1d 70%)" -->
 
-<p class="section-number">Part 7</p>
+## Our platform, floor by floor
 
-# Our platform
+<div class="layer fragment fade-down" data-fragment-index="6" style="border-left-color:var(--clay); width:96%"><span>🧩 Our routes: tenants, Postgres, VPNs, cloud, Windows VMs</span><span>KRO · operators</span></div>
+<div class="layer fragment fade-down" data-fragment-index="5" style="border-left-color:var(--rose); width:91%"><span>🚪 Front door</span><span>Traefik × N · Cilium Gateway API · Cloudflare mTLS</span></div>
+<div class="layer fragment fade-down" data-fragment-index="4" style="border-left-color:var(--sand); width:86%"><span>🛣️ Networking</span><span>Cilium · Cluster Mesh · BGP + BIRD</span></div>
+<div class="layer fragment fade-down" data-fragment-index="3" style="border-left-color:var(--blue); width:81%"><span>⚙️ Kubernetes</span><span>RKE2 (production) · k3s (edge) · OpenEBS</span></div>
+<div class="layer fragment fade-down" data-fragment-index="2" style="border-left-color:var(--green); width:76%"><span>🔒 Encrypted network</span><span>WireGuard, layer 3, every server</span></div>
+<div class="layer fragment fade-down" data-fragment-index="1" style="border-left-color:var(--muted); width:71%"><span>🖥️ Servers</span><span>NixOS · any cloud + our racks</span></div>
 
-How we put it all together
-
----
-
-## Our layer cake
-
-<div class="layer" style="background:#7d4cdb; width:96%"><span>🧩 Our API: tenants, Postgres, VPNs, cloud infra, Windows VMs</span><span>KRO · operators</span></div>
-<div class="layer" style="background:#d64545; width:90%"><span>🚪 Front door</span><span>Traefik · Cilium Gateway API · Cloudflare mTLS</span></div>
-<div class="layer" style="background:#e69b00; width:84%"><span>🛣️ Networking</span><span>Cilium · Cluster Mesh · BGP + BIRD</span></div>
-<div class="layer" style="background:#2f6fde; width:78%"><span>⚙️ Kubernetes</span><span>RKE2 (production) · k3s (edge) · OpenEBS</span></div>
-<div class="layer" style="background:#0f9d8a; width:72%"><span>🔒 Encrypted network</span><span>WireGuard between every server</span></div>
-<div class="layer" style="background:#1d2a44; width:66%"><span>🖥️ Servers</span><span>NixOS · any cloud + our racks</span></div>
+<p class="hint">↓ servers · network · front door</p>
 
 Note:
-Walk bottom to top. Each layer sits on the one below like floors in a
-building. The next slides take a few floors one at a time.
+Builds bottom to top. Each floor sits on the one below. Press down for a
+closer look at three of them.
 
----
+--
 
-## Floor 1: every server is a recipe
+<!-- .slide: data-transition="fade" -->
+
+## Every server is a recipe
 
 <div class="row">
-<div class="box"><span class="emoji">📄</span><b>NixOS</b>the whole server described in text files</div>
-<div class="arrow">→</div>
-<div class="box amber"><span class="emoji">🧪</span><b>Tested first</b>whole clusters built as VMs and checked automatically</div>
-<div class="arrow">→</div>
-<div class="box teal fill"><span class="emoji">🚀</span><b>Then production</b>identical, every time</div>
+<div class="box fragment fade-right"><span class="emoji">📄</span><b>NixOS</b>the whole server in text files</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box sand fragment fade-right"><span class="emoji">🧪</span><b>Tested first</b>whole clusters built as VMs, checked automatically</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box solid fragment fade-right"><span class="emoji">🚀</span><b>Production</b>identical, every time</div>
 </div>
 
-<div class="takeaway fragment">Windows terms: the server image + all Group Policy + every setting, in one document. Bad change? Pick yesterday's version at boot.</div>
+<div class="takeaway fragment fade-up">Windows terms: the server image + all Group Policy + every setting, in one document. Bad change? Pick yesterday's version at boot.</div>
 
 Note:
-Every RKE2 and k3s feature is first tested and validated in a full NixOS
-VM test suite before it ever hits production. Think: a brand-new staging
-environment built from scratch and thrown away, for every single change.
+Every RKE2 and k3s feature is tested in a full NixOS VM test suite before
+it hits production: a fresh staging environment for every change.
 
----
+--
 
-## Floors 2 and 4: the network
+<!-- .slide: data-transition="fade" -->
+
+## Every server is a router
 
 <div class="row">
-<div class="box teal"><span class="emoji">🔒</span><b>WireGuard</b>every server-to-server link encrypted</div>
-<div class="box"><span class="emoji">🗺️</span><b>Layer 3 only</b>routing, not one stretched office network</div>
-<div class="box amber"><span class="emoji">☁️🏢</span><b>Mixed</b>clouds + our racks in one cluster</div>
-<div class="box purple"><span class="emoji">🕸️</span><b>Cluster Mesh</b>many clusters act as one</div>
+<div class="box green fragment fade-up"><span class="emoji">🔒</span><b>WireGuard</b>every link encrypted</div>
+<div class="box blue fragment fade-up"><span class="emoji">🗺️</span><b>Layer 3 only</b>routing, not stretched networks</div>
+<div class="box sand fragment fade-up"><span class="emoji">☁️🏢</span><b>Mixed</b>clouds + racks, one cluster</div>
+<div class="box fragment fade-up"><span class="emoji">🕸️</span><b>Cluster Mesh</b>many clusters act as one</div>
 </div>
 
-<div class="takeaway fragment"><strong>Every server is a router.</strong> Cilium + BIRD speak BGP, the internet's own routing language, to make load-balancer addresses from the servers' IPs. Add a server → more routing and front-door capacity. No F5 to buy.</div>
+<div class="takeaway fragment fade-up">Cilium + BIRD speak <strong>BGP</strong>, the internet's routing language, to make load-balancer addresses from our servers' own IPs. <strong>Add a server = more routing and front-door capacity.</strong> No F5 to buy.</div>
+
+--
+
+<!-- .slide: data-transition="fade" -->
+
+## The front door
+
+<div class="row">
+<div class="box fragment fade-right"><span class="emoji">🌍</span><b>Visitor</b></div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box sand fragment fade-right"><span class="emoji">☁️</span><b>Cloudflare</b>protection</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box rose fragment fade-right"><span class="emoji">🤝</span><b>mTLS</b>both sides show certificates</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box solid fragment fade-right"><span class="emoji">🚪</span><b>Traefik × N</b>on our servers</div>
+<div class="arrow fragment fade-right">→</div>
+<div class="box green fragment fade-right"><span class="emoji">📦🪟</span><b>Apps + VMs</b></div>
+</div>
+
+<p class="fragment fade-up">Every protocol: <strong>HTTP · HTTPS · TCP · UDP · TLS · mTLS · QUIC</strong>, public or private.</p>
+
+<p class="fragment fade-in muted">Gateway API preferred over the older Ingress.</p>
 
 Note:
-Cilium is the only network plugin we use. BGP is how routers on the
-internet tell each other where addresses live. Our servers speak it
-themselves.
+1 to N Traefik copies, each with a load balancer address from Cilium BGP.
+Traefik's IngressRoute only accepts connections proven to come from
+Cloudflare, so nobody can go around Cloudflare.
 
 ---
 
-## Floor 5: the front door
+<!-- .slide: data-transition="zoom" -->
 
+## One POST = one new customer
+
+<div class="routes">
+<div class="route new"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">acme</span>/<span class="res">tenants</span></span><span class="what"><em>"Acme, Gold, US-East"</em></span></div>
+</div>
 <div class="row">
-<div class="box"><span class="emoji">🌍</span><b>Visitor</b></div>
-<div class="arrow">→</div>
-<div class="box amber"><span class="emoji">☁️</span><b>Cloudflare</b>protection, caching</div>
-<div class="arrow">→</div>
-<div class="box red"><span class="emoji">🤝</span><b>mTLS</b>both sides show certificates</div>
-<div class="arrow">→</div>
-<div class="box teal"><span class="emoji">🚪</span><b>Traefik × N</b>on our servers</div>
-<div class="arrow">→</div>
-<div class="box purple"><span class="emoji">📦🪟</span><b>Apps + Windows VMs</b></div>
+<div class="box fragment zoom-in">📁 folder</div>
+<div class="box blue fragment zoom-in">🐘 database</div>
+<div class="box green fragment zoom-in">🔒 VPN</div>
+<div class="box sand fragment zoom-in">🌐 website</div>
+<div class="box rose fragment zoom-in">🪟 Windows VM</div>
 </div>
 
-<p class="fragment">Every protocol: <strong>HTTP · HTTPS · TCP · UDP · TLS · mTLS · QUIC</strong>, public or private.</p>
+<div class="takeaway fragment fade-up">Any cloud or our racks · encrypted end to end · tested before production · kept healthy 24/7</div>
 
-<p class="fragment muted">Gateway API preferred over the older Ingress.</p>
+<p class="big fragment fade-up">Kubernetes, the extensible API: <strong>a platform that develops itself.</strong></p>
 
 Note:
-1 to N Traefik copies, each with a public load balancer address from Cilium
-BGP using the nodes' IPs. Traefik's own record types (IngressRoute) let it
-only accept connections that prove they came from Cloudflare, so nobody
-can go around Cloudflare's protection.
+The whole talk in one slide. Ask him to explain one of the five ideas back
+in his own words.
 
 ---
 
-## One record = one new customer
-
-<div class="row">
-<div class="box wide fill"><span class="emoji">📝</span><b>"New customer: Acme, Gold, US-East"</b></div>
-</div>
-<div class="down">↓</div>
-<div class="row">
-<div class="box">📁 folder</div>
-<div class="box teal">🐘 database</div>
-<div class="box amber">🔒 VPN</div>
-<div class="box red">🌐 website + address</div>
-<div class="box purple">☁️ backups</div>
-</div>
-
-<div class="takeaway fragment">On any cloud or our racks · encrypted end to end · tested before production · kept healthy 24/7</div>
-
-Note:
-This is the whole talk in one slide. Everything we discussed tonight is
-working together to make this one record do all of that.
-
----
-
-## The five ideas
-
-<div class="row">
-<div class="box"><span class="emoji">🚪</span><b>An API</b>describe what you want</div>
-<div class="box teal"><span class="emoji">🧩</span><b>Extensible</b>add our own endpoints, even with no code</div>
-<div class="box purple"><span class="emoji">🗄️</span><b>A database</b>built right in</div>
-<div class="box amber"><span class="emoji">🔧</span><b>Plumbing</b>included, anywhere</div>
-<div class="box red"><span class="emoji">🌍</span><b>Everyone's</b>community, open, foundation-owned</div>
-</div>
-
-<p class="fragment big">Kubernetes, the extensible API: <strong>a platform that develops itself.</strong></p>
-
-Note:
-Ask him to explain one of the five back to you in his own words. That is
-the best check of what landed.
-
----
-
-<!-- .slide: data-background-color="#1d2a44" -->
+<!-- .slide: data-background-gradient="radial-gradient(circle at 50% 40%, #3a2a22, #141413 70%)" data-transition="zoom" -->
 
 # Questions?
 
-Everything from tonight, slower and in more detail, is on the website next to these slides.
+<p class="big">Everything from tonight, slower, is on the website.</p>
 
-<small>Chapters 1 to 7 · plain-language dictionary · no code anywhere</small>
+<small>Seven short chapters · a plain-language dictionary</small>
 
 Note:
 Point him to the docs site, especially the dictionary page, which maps
