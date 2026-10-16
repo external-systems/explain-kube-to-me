@@ -1,24 +1,25 @@
-# Presentation
+# The presentation
 
-The slide deck from `slides/`, embedded in this site. Click it and use the
-arrow keys, or <a href="../slides/index.html" target="_blank">open it on its own</a>.
+**Kubernetes, The Extensible API, a Platform that Develops itself.**
 
-<!-- Plain HTML links on purpose: MkDocs checks Markdown links against
-     documentation/docs/, where the deck only exists during
-     `nix build .#documentation`, and strict mode would fail the live
-     preview. URLs are relative to this page's URL, /presentation/. -->
+Click the slides and use the arrow keys, or
+<a href="../slides/index.html" target="_blank">open them full screen in a new tab</a>
+(press ++f++ there for full screen, ++esc++ for an overview of every slide).
+
+<!-- Plain HTML links on purpose: the deck only exists inside the site
+     after `nix build .#documentation`, and strict mode would fail the live
+     preview on a Markdown link. URLs are relative to /presentation/. -->
 
 <iframe src="../slides/index.html" title="Slide deck"
   style="width: 100%; aspect-ratio: 16 / 9; border: 0;"
   allowfullscreen></iframe>
 
-!!! info "How the deck gets here"
-    `nix build .#documentation` builds the deck (`nix build .#slides`)
-    first and copies it into the site at `/slides/` before MkDocs runs
-    (`mkdocs-preBuildHook` in `flake-parts/default.nix`). The deck still
-    builds and works on its own, too.
+Every slide has a matching chapter on this site with more detail. The
+slides are the conversation; the chapters are there to read afterwards, at
+your own pace.
 
-    The live preview (`nix run .#watch-documentation`) serves only
-    `documentation/`, so the frame above is empty there. Preview the deck
-    with `nix run .#serve-slides`, or build the whole site and serve it:
-    `nix build .#documentation && python3 -m http.server -d result`.
+??? info "For the presenter"
+    Press ++s++ on the slides to open the speaker view, which shows the
+    talking points for each slide and a timer. The deck is built from
+    `slides/slides.md`; see the repository README for how to preview and
+    edit it.

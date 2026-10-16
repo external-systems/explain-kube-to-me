@@ -1,0 +1,130 @@
+# 6. Community and ownership
+
+This is the most important chapter. Technology comes and goes; what makes
+Kubernetes a safe, long-term bet is **who builds it, who owns it, and how it
+keeps getting better**.
+
+## "I have never heard of it" does not mean "small"
+
+Names like Argo CD, Flux, Cilium, KubeVirt, Crossplane or KRO are not
+household names, even among IT people who grew up on Windows. That is
+because they live one layer below the products people see. But they are not
+hobby projects. They are built and run by the largest technology companies
+on earth, and the most valuable software in the world runs on them.
+
+| Project | What it does for us | Who is behind it |
+| --- | --- | --- |
+| **Kubernetes** | The platform itself | Started at Google, now thousands of companies |
+| **Argo CD** | Deploys from git, automatically | Grown up at **Intuit** (TurboTax, QuickBooks) |
+| **Flux** | Deploys from git, automatically | Used by **Microsoft** for GitOps in Azure (AKS and Azure Arc) |
+| **Cilium** | Networking, security, load balancing | Created by Isovalent, now part of **Cisco**; built into **Google** GKE and **Azure** networking |
+| **KubeVirt** | Virtual machines, including Windows | Started by **Red Hat** (IBM); powers OpenShift Virtualization |
+| **Crossplane** | Manages cloud resources from Kubernetes | Created by Upbound, used by large enterprises to run their cloud |
+| **KRO** | New API endpoints without code | Started jointly by **Amazon, Google and Microsoft** |
+| **CloudNativePG** | PostgreSQL databases | Created by **EDB**, one of the main PostgreSQL companies |
+| **k3s / RKE2** | The Kubernetes we install | **SUSE Rancher**; RKE2 is built for US government security standards |
+| **OpenTofu** | Infrastructure as code | The **Linux Foundation** |
+
+!!! tip "How to tell a healthy project: the CNCF maturity levels"
+    Most of these projects are part of the **Cloud Native Computing
+    Foundation (CNCF)**, which rates them in three levels:
+
+    1. **Sandbox**: promising and early.
+    2. **Incubating**: used in production by real companies, growing.
+    3. **Graduated**: proven. Independent security audit passed, maintained
+       by people from several different companies, widely used in production.
+
+    Kubernetes, Argo CD, Flux, Cilium, etcd and CoreDNS are all
+    **graduated**.
+
+## Open source is where the important software lives
+
+Open source can sound like "free software made by volunteers". Today it
+means something different: **software built in public by companies that
+compete with each other, because sharing the foundation is cheaper and
+better than each building their own.**
+
+You already rely on it:
+
+- **DotNetNuke** (DNN Platform) is open source.
+- **Payload CMS** is open source.
+- **.NET** itself has been open source since 2016, and Microsoft owns
+  **GitHub**, the largest home for open source in the world.
+
+Why building in the open brings more value to a business:
+
+- **More eyes, fewer surprises.** Security problems are found and fixed in
+  public, by thousands of reviewers, not hidden until a vendor decides to
+  patch.
+- **No lock-in.** If a vendor raises prices or disappears, the code is still
+  there and someone else can support it.
+- **Easier hiring.** Engineers already know the tools. Nobody needs to learn
+  a proprietary product from scratch.
+- **Free improvements.** When another company fixes a bug or adds a
+  feature, we get it too.
+- **Reputation.** Work done in the open shows customers and future hires
+  what we can do.
+
+That is why we build in the open as much as possible, the same way
+Kubernetes is built.
+
+## Owned by a foundation, not a company
+
+Kubernetes is not owned by Google, even though Google started it. In 2015
+Google gave it to the **Cloud Native Computing Foundation**, part of the
+**Linux Foundation**, a neutral non-profit. Its members include Microsoft,
+Google, Amazon, IBM / Red Hat, Oracle, Cisco and hundreds more.
+
+```mermaid
+flowchart TB
+    LF["🏛️ Linux Foundation<br/>(neutral non-profit)"] --> CNCF["Cloud Native Computing Foundation"]
+    CNCF --> K["Kubernetes"]
+    CNCF --> P["Flux · Argo CD · Cilium · etcd ·<br/>CoreDNS · KubeVirt · Crossplane · ..."]
+    M["Microsoft · Google · Amazon ·<br/>Red Hat · Cisco · SUSE · ...<br/>and thousands of individuals"] -- "contribute code<br/>and money" --> CNCF
+```
+
+!!! warning "Why this matters: a real story"
+    In 2023, the company behind **Terraform**, a very popular tool for
+    managing cloud infrastructure, changed its license so competitors could
+    no longer use it freely. Because the code was open, the community made a
+    copy, **OpenTofu**, and gave it to the Linux Foundation, where no single
+    company can do that again. That is the tool our cloud controller uses.
+    **A foundation-owned project cannot be taken away from its users.**
+    Kubernetes has had that protection from the start.
+
+## It gets better underneath us
+
+Kubernetes was first released in **2014**, built on more than ten years of
+Google running its own internal version (called Borg). It is over a decade
+old, it is here to stay, and it is only now hitting its stride:
+
+- A **new release every four months**, like clockwork, with a published
+  schedule and support window.
+- Each release brings improvements we get **just by upgrading**: better
+  networking (Gateway API replaced the older Ingress), Windows container
+  support, resizing running apps without restarting them, first-class
+  support for GPUs and AI workloads.
+- Every operator we use improves on its own schedule too: a new CloudNativePG
+  version means better databases for every tenant, without any work from
+  our team.
+- More companies support it every year: every major cloud, every major
+  hardware vendor, every major security and monitoring product.
+
+```mermaid
+timeline
+    title Kubernetes, growing up
+    2003-2013 : Google runs Borg internally, the idea is proven at huge scale
+    2014 : Kubernetes released as open source
+    2015 : Version 1.0, given to the new CNCF
+    2018 : Kubernetes is the first CNCF project to graduate
+    2019 : Windows Server containers fully supported
+    2023 : Gateway API, the modern front door, becomes stable
+    Today : Every major cloud, AI and GPU workloads, still a new release every 4 months
+```
+
+!!! quote "The short version"
+    When we build on Kubernetes, we are not betting on a product. We are
+    joining the place where the whole industry has decided to work together,
+    and every year the platform underneath us gets better because of it.
+
+[Next: Our platform :material-arrow-right:](our-platform.md){ .md-button .md-button--primary }

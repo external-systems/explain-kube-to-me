@@ -4,19 +4,19 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<title>My Slides</title>
+		<title>Kubernetes, The Extensible API</title>
 
 		<!-- reveal.js core styles. `reveal/` is added by the Nix build
 		     (flake-parts/slides.nix); it is not in this folder. -->
 		<link rel="stylesheet" href="reveal/reset.css" />
 		<link rel="stylesheet" href="reveal/reveal.css" />
 
-		<!-- Theme: swap black.css for white, league, moon, dracula, ...
-		     (see reveal/theme/ in the built output) -->
-		<link rel="stylesheet" href="reveal/theme/black.css" />
+		<!-- Theme: a light theme reads best on a TV or projector.
+		     Others: black, league, moon, ... (reveal/theme/ in the build) -->
+		<link rel="stylesheet" href="reveal/theme/white.css" />
 
-		<!-- Colours for highlighted code blocks -->
-		<link rel="stylesheet" href="reveal/plugin/highlight/monokai.css" />
+		<!-- Our boxes, arrows and layers for picture-style slides -->
+		<link rel="stylesheet" href="custom.css" />
 	</head>
 	<body>
 		<div class="reveal">
@@ -37,14 +37,16 @@
 
 		<script src="reveal/reveal.js"></script>
 		<script src="reveal/plugin/markdown.js"></script>
-		<script src="reveal/plugin/highlight.js"></script>
 		<script src="reveal/plugin/notes.js"></script>
 		<script>
 			// All options: https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true, // keep the slide number in the URL, so refresh stays put
-				slideNumber: true,
-				plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+				slideNumber: "c/t", // "current / total" in the corner
+				progress: true,
+				width: 1280,
+				height: 720,
+				plugins: [RevealMarkdown, RevealNotes],
 			});
 		</script>
 	</body>
