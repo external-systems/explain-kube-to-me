@@ -1,32 +1,42 @@
-# MkDocs configuration — the one file that turns docs/*.md into a website.
+# MkDocs configuration: the one file that turns docs/*.md into a website.
 # Reference: https://www.mkdocs.org/user-guide/configuration/
-site_name: My Site
+site_name: Kubernetes, The Extensible API
+site_description: A Platform that Develops itself. Kubernetes explained in plain language.
 
 # The sidebar, in order. Each entry is "Title: file under docs/".
-# Pages left out of nav still build but nobody can click to them.
 nav:
-  - Home: index.md
-  - Getting started: getting-started.md
-  - MkDocs basics: mkdocs.md
-  - reveal.js basics: reveal-js.md
-  - Presentation: presentation.md
-  - How the Nix flake works: nix.md
+  - Start here: index.md
+  - The presentation: presentation.md
+  - 1. The big idea: big-idea.md
+  - 2. Kubernetes is an API: api.md
+  - 3. Teaching the API new tricks: extending.md
+  - 4. A database built in: database.md
+  - 5. The plumbing comes free: plumbing.md
+  - 6. Community and ownership: community.md
+  - 7. Our platform: our-platform.md
+  - 8. Example, Payload CMS sites: payload-sites.md
+  - Plain-language dictionary: dictionary.md
 
-# Material for MkDocs — the theme. Options:
+# Material for MkDocs: the theme. Options:
 # https://squidfunk.github.io/mkdocs-material/setup/
 theme:
   name: material
   features:
-    - content.code.copy
     - navigation.footer
+    - navigation.instant
+    - content.tooltips
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -34,15 +44,29 @@ theme:
 plugins:
   - search
 
-# Markdown add-ons used in these pages: callout boxes, highlighted code
-# blocks, and tabs. https://squidfunk.github.io/mkdocs-material/reference/
+# Claude colours + bigger body text (docs/stylesheets/extra.css).
+extra_css:
+  - stylesheets/extra.css
+
+# Markdown add-ons: callout boxes, collapsible boxes, tabs, icons, and
+# Mermaid diagrams (```mermaid blocks, drawn in the browser by Material).
+# https://squidfunk.github.io/mkdocs-material/reference/
 markdown_extensions:
+  - abbr
   - admonition
   - attr_list
+  - md_in_html
+  - tables
   - pymdownx.details
-  - pymdownx.highlight
   - pymdownx.keys
-  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - toc:
