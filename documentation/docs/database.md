@@ -13,9 +13,9 @@ have it:
 
 | Key (the "address" of the record) | Value (the record itself) |
 | --- | --- |
-| /deployments/acme/customer-portal | 3 copies, version 2.4, ... |
-| /secrets/acme/database-password | (encrypted) |
-| /tenants/acme | plan: Gold, region: US-East |
+| /deployments/tjs-catfish-and-wings/customer-portal | 3 copies, version 2.4, ... |
+| /secrets/tjs-catfish-and-wings/database-password | (encrypted) |
+| /tenants/tjs-catfish-and-wings | plan: Gold, region: US-East |
 
 !!! tip "You have used one before"
     The Windows **Registry** is a key-value store: a path like

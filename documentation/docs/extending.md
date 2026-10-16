@@ -52,12 +52,12 @@ Kubernetes record lives at a route too, and it always reads the same way:
 | --- | --- | --- |
 | who added it | `kubevirt.io` | the project that taught Kubernetes this route |
 | version | `v1` | which version of that route |
-| folder | `namespaces/acme` | whose it is: usually one folder per team or customer |
+| folder | `namespaces/dev-team` | whose it is: usually one folder per team or customer |
 | kind of thing | `virtualmachines` | like a table name, or a Payload collection |
 | one record | `sql-01` | like a row id |
 
-So `GET /apis/kubevirt.io/v1/namespaces/acme/virtualmachines/sql-01` simply
-means *"show me Acme's Windows SQL server"*.
+So `GET /apis/kubevirt.io/v1/namespaces/dev-team/virtualmachines/sql-01` simply
+means *"show me dev-team's Windows SQL server"*.
 
 Every Kubernetes starts with built-in routes. Each thing we install adds
 more, and they work exactly like the built-in ones:
@@ -117,8 +117,8 @@ compiling, no deploying a new program.
 
 ```mermaid
 flowchart TB
-    T["📝 One record:<br/>'New customer: Acme, plan: Gold'"] --> K{{"KRO, following our<br/>Resource Graph Definition<br/>called 'Tenant'"}}
-    K --> N["📁 A namespace<br/>(Acme's own folder)"]
+    T["📝 One record:<br/>'New customer: michael, plan: Gold'"] --> K{{"KRO, following our<br/>Resource Graph Definition<br/>called 'Tenant'"}}
+    K --> N["📁 A namespace<br/>(michael's own folder)"]
     K --> P["🐘 A Postgres database<br/>(CloudNativePG)"]
     K --> V["🔒 A private VPN<br/>(headroom-operator)"]
     K --> S["🌐 The website + its<br/>public address"]

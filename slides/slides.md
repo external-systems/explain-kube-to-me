@@ -14,8 +14,339 @@ Note:
 Right arrow = next topic, down arrow = a deeper look at the same topic.
 Tonight's one idea: Kubernetes is not a container manager, it is an
 extensible API that can run and manage anything our business needs, and it
-grows with us. The only "code" is web addresses and a few short settings
-files, all read like a form.
+grows with us. We start with the routes, because the routes are the
+platform. The only "code" is web addresses and one short order form.
+
+---
+
+<!-- .slide: data-transition="zoom" -->
+
+<p class="kicker">Start here: the routes</p>
+
+## Every Kubernetes route has the same shape
+
+<div class="anatomy">
+<div class="fragment fade-up"><span class="seg" style="color:var(--green)">GET</span><span class="lbl">the verb: what to do</span></div>
+<div><span class="sep">/apis/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--blue)">{group}</span><span class="lbl">who added this route</span></div>
+<div><span class="sep">/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--muted)">{version}</span><span class="lbl">its version</span></div>
+<div><span class="sep">/namespaces/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--sand)">{namespace}</span><span class="lbl">whose folder: the tenant</span></div>
+<div><span class="sep">/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--clay)">{resource}</span><span class="lbl">the kind of thing: the capability</span></div>
+<div><span class="sep">/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--green)">{name}</span><span class="lbl">one record</span></div>
+</div>
+
+<div class="takeaway fragment fade-up">The list of <strong>{resource}</strong> routes <strong>is</strong> the platform. If there is a route for it, the platform can do it. If not, it can't, <em>yet</em>.</div>
+
+<p class="hint">↓ with real tenants · verbs · one front door</p>
+
+Note:
+This is the most important slide. Kubernetes is a web API, and every
+route has the same six parts. The resource part is a capability: pods,
+databases, VMs, websites. The routes on our cluster are the full list of
+what our platform can do. Add a route, add a capability.
+(The original built-in kinds use the shorter /api/v1/... form; same idea.)
+
+--
+
+<!-- .slide: data-transition="fade" -->
+
+## The same shape, for every tenant
+
+<div class="routes ">
+<div class="route  fragment fade-left" data-id="tjs"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span>/<span class="name">main-site</span></span><span class="what">TJ's website</span></div>
+<div class="route  fragment fade-left" data-id="bff"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">bff</span>/<span class="res">clusters</span>/<span class="name">orders-db</span></span><span class="what">bff's database</span></div>
+<div class="route  fragment fade-left" data-id="dev"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">dev-team</span>/<span class="res">virtualmachines</span>/<span class="name">sql-01</span></span><span class="what">a Windows SQL VM</span></div>
+<div class="route  fragment fade-left" data-id="matt"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">matt</span>/<span class="res">workflows</span>/<span class="name">nightly-report</span></span><span class="what">Matt's nightly job</span></div>
+<div class="route  fragment fade-left" data-id="michael"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">michael</span>/<span class="res">payloadsites</span></span><span class="what"><em>a new site for Michael</em></span></div>
+</div>
+
+<p class="fragment fade-up"><span class="muted">Folder</span> <em>tjs-catfish-and-wings</em> · <em>bff</em> · <em>dev-team</em> · <em>matt</em> · <em>michael</em> <span class="muted">= one namespace per tenant</span></p>
+
+<div class="takeaway fragment fade-up">Read any route left to right: <strong>who added it · whose folder · what kind · which one</strong>.</div>
+
+Note:
+Five tenants, five different capabilities, one shape. The sand part is
+the tenant's folder (namespace); the orange part is the capability.
+
+--
+
+<!-- .slide: data-transition="fade" -->
+
+## Verbs you already know
+
+<div class="routes ">
+<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+</div>
+
+<p class="fragment fade-up"><span class="verb">GET</span> <span class="verb post">POST</span> <span class="verb" style="background:var(--sand)">PUT</span> <span class="verb" style="background:var(--rose)">DELETE</span> &nbsp;= SELECT, INSERT, UPDATE, DELETE</p>
+
+Note:
+These five come with every Kubernetes. {namespace} is a tenant's folder.
+
+--
+
+<!-- .slide: data-transition="convex" -->
+
+## One front door, instead of ten consoles
+
+<div class="row">
+<div class="box gray fragment fade-down" data-fragment-index="1"><b>IIS Manager</b></div>
+<div class="box gray fragment fade-down" data-fragment-index="1"><b>DNS console</b></div>
+<div class="box gray fragment fade-down" data-fragment-index="1"><b>Azure portal</b></div>
+<div class="box gray fragment fade-down" data-fragment-index="1"><b>Google console</b></div>
+<div class="box gray fragment fade-down" data-fragment-index="1"><b>Task Scheduler</b></div>
+</div>
+<div class="fragment fade-up" data-fragment-index="2">
+<div class="row"><div class="box solid wide"><span class="emoji">🚪</span><b>One HTTP API</b>apps · names · VMs · cloud · jobs · passwords</div></div>
+</div>
+<div class="takeaway fragment fade-up" data-fragment-index="3">Dashboards, automation, our own portal: <strong>all use the same routes</strong>.</div>
+
+---
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Routes add up over time</p>
+
+## Day 1: every Kubernetes starts with these
+
+<div class="routes tight" data-id="routes">
+<div class="route " data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route " data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route " data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route " data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route " data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>5</strong> routes = <strong>5</strong> things our platform can do</p>
+
+Note:
+The built-in routes. Now press down: each step installs one more capability, months apart.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Month 2 · install #1</p>
+
+## 🧮 + GPUs
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route new" data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>6</strong> routes = <strong>6</strong> things our platform can do</p>
+
+Note:
+Install NVIDIA's driver. Apps can now claim a GPU through a route. Nobody rebuilt or restarted Kubernetes.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Month 3 · install #2</p>
+
+## 🐘 + Databases
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
+<div class="route new" data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>7</strong> routes = <strong>7</strong> things our platform can do</p>
+
+Note:
+Install CloudNativePG. Every Postgres database is a record. Nobody rebuilt or restarted Kubernetes.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Month 5 · install #3</p>
+
+## 🪟 + Windows VMs
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
+<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
+<div class="route new" data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>8</strong> routes = <strong>8</strong> things our platform can do</p>
+
+Note:
+Install KubeVirt. A Windows Server VM is just a POST. Nobody rebuilt or restarted Kubernetes.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Month 6 · install #4</p>
+
+## 🔀 + Workflows
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
+<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
+<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
+<div class="route new" data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step workflows <i>· Argo</i></span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>9</strong> routes = <strong>9</strong> things our platform can do</p>
+
+Note:
+Install Argo Workflows. Pipelines and batch jobs get a route. Nobody rebuilt or restarted Kubernetes.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Month 8 · install #5</p>
+
+## 🚪 + Front doors
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
+<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
+<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
+<div class="route " data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step workflows <i>· Argo</i></span></div>
+<div class="route new" data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors <i>· Gateway API</i></span></div>
+<div class="route new" data-id="traefik"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">traefik.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">ingressroutes</span></span><span class="what">routing + mTLS <i>· Traefik</i></span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>11</strong> routes = <strong>11</strong> things our platform can do</p>
+
+Note:
+Even the official Gateway API is added this way, and so is Traefik. Nobody rebuilt or restarted Kubernetes.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Year 2 · install #6</p>
+
+## ☁️ + The clouds
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
+<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
+<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
+<div class="route " data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step workflows <i>· Argo</i></span></div>
+<div class="route " data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors <i>· Gateway API</i></span></div>
+<div class="route " data-id="traefik"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">traefik.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">ingressroutes</span></span><span class="what">routing + mTLS <i>· Traefik</i></span></div>
+<div class="route new" data-id="bucket"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">storage.gcp.upbound.io</span>/v1beta1/<span class="res">buckets</span></span><span class="what">Google Cloud buckets <i>· Crossplane</i></span></div>
+<div class="route new" data-id="azpg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">dbforpostgresql.azure.upbound.io</span>/v1beta1/<span class="res">flexibleservers</span></span><span class="what">Azure Postgres <i>· Crossplane</i></span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>13</strong> routes = <strong>13</strong> things our platform can do</p>
+
+Note:
+Crossplane mirrors Azure and Google Cloud into OUR API. Their resources become our routes. Nobody rebuilt or restarted Kubernetes.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Year 2 · install #7</p>
+
+## 🧩 + Our own product
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
+<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
+<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
+<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
+<div class="route " data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step workflows <i>· Argo</i></span></div>
+<div class="route " data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors <i>· Gateway API</i></span></div>
+<div class="route " data-id="traefik"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">traefik.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">ingressroutes</span></span><span class="what">routing + mTLS <i>· Traefik</i></span></div>
+<div class="route " data-id="bucket"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">storage.gcp.upbound.io</span>/v1beta1/<span class="res">buckets</span></span><span class="what">Google Cloud buckets <i>· Crossplane</i></span></div>
+<div class="route " data-id="azpg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">dbforpostgresql.azure.upbound.io</span>/v1beta1/<span class="res">flexibleservers</span></span><span class="what">Azure Postgres <i>· Crossplane</i></span></div>
+<div class="route new" data-id="payload"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">payloadsites</span></span><span class="what">a customer's Payload CMS site <i>· KRO</i></span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>14</strong> routes = <strong>14</strong> things our platform can do</p>
+
+Note:
+With KRO we add our own route, PayloadSite, without writing a program. Nobody rebuilt or restarted Kubernetes.
+
+--
+
+<!-- .slide: data-transition="zoom" -->
+
+<p class="big">5 routes became <strong>14</strong>.</p>
+
+# Nobody rebuilt the server.
+
+<p class="fragment fade-up">Same logins · same permissions · same history · same tools, on every new route.</p>
+
+<p class="big fragment fade-up">More routes = <strong>more platform</strong>.</p>
+
+Note:
+This is the headline. Every added route behaves exactly like a built-in one.
+The routes only ever add up: the platform grows as the business needs it.
+
+---
+
+<!-- .slide: data-transition="convex" -->
+
+## Routes are capabilities, for every tenant
+
+<table style="margin:0.4em auto"><thead><tr><th>Tenant (folder)</th><th>🌐 Apps</th><th>🐘 Postgres</th><th>🪟 Windows VMs</th><th>🔀 Workflows</th><th class="fragment fade-in" data-fragment-index="1">🧩 Payload sites</th></tr></thead><tbody>
+<tr><td><em>tjs-catfish-and-wings</em></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
+<tr><td><em>bff</em></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
+<tr><td><em>dev-team</em></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
+<tr><td><em>matt</em></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td class="fragment fade-in" data-fragment-index="1"><span class="muted">·</span></td></tr>
+<tr><td><em>michael</em></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
+</tbody></table>
+
+<div class="takeaway fragment fade-up" data-fragment-index="2">Install a route <strong>once</strong>: every tenant can have it the same minute. <strong>Permissions and limits</strong> decide who actually gets it.</div>
+
+Note:
+Rows are tenants (namespaces), columns are routes (capabilities). Press
+next: the Payload sites column appears when KRO adds the payloadsites
+route, and it is there for every tenant at once. Which ticks each tenant
+gets is just permissions (RBAC) and limits (quota), more on that later.
 
 ---
 
@@ -93,287 +424,6 @@ customer's website.
 
 ---
 
-## It's an HTTP API
-
-<p class="fragment fade-in">Everything is a record, at a route you already know how to read:</p>
-
-<div class="routes ">
-<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
-<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-</div>
-
-<p class="fragment fade-up"><span class="verb">GET</span> <span class="verb post">POST</span> <span class="verb" style="background:var(--sand)">PUT</span> <span class="verb" style="background:var(--rose)">DELETE</span> &nbsp;= SELECT, INSERT, UPDATE, DELETE</p>
-
-<p class="hint">↓ one front door</p>
-
-Note:
-He knows HTTP routes and APIs. Every part of a running system lives at a
-route. {namespace} is a folder, one per team or customer.
-
---
-
-<!-- .slide: data-transition="convex" -->
-
-## One front door, instead of ten consoles
-
-<div class="row">
-<div class="box gray fragment fade-down" data-fragment-index="1"><b>IIS Manager</b></div>
-<div class="box gray fragment fade-down" data-fragment-index="1"><b>DNS console</b></div>
-<div class="box gray fragment fade-down" data-fragment-index="1"><b>Azure portal</b></div>
-<div class="box gray fragment fade-down" data-fragment-index="1"><b>Google console</b></div>
-<div class="box gray fragment fade-down" data-fragment-index="1"><b>Task Scheduler</b></div>
-</div>
-<div class="fragment fade-up" data-fragment-index="2">
-<div class="row"><div class="box solid wide"><span class="emoji">🚪</span><b>One HTTP API</b>apps · names · VMs · cloud · jobs · passwords</div></div>
-</div>
-<div class="takeaway fragment fade-up" data-fragment-index="3">Dashboards, automation, our own portal: <strong>all use the same routes</strong>.</div>
-
----
-
-<!-- .slide: data-transition="zoom" -->
-
-## Reading a route
-
-<div class="anatomy">
-<div class="fragment fade-up"><span class="seg" style="color:var(--green)">GET</span><span class="lbl">the verb: read it</span></div>
-<div><span class="sep">/apis/</span></div>
-<div class="fragment fade-up"><span class="seg" style="color:var(--blue)">kubevirt.io</span><span class="lbl">who added this route</span></div>
-<div><span class="sep">/</span></div>
-<div class="fragment fade-up"><span class="seg" style="color:var(--muted)">v1</span><span class="lbl">its version</span></div>
-<div><span class="sep">/namespaces/</span></div>
-<div class="fragment fade-up"><span class="seg" style="color:var(--sand)">acme</span><span class="lbl">whose folder: the customer</span></div>
-<div><span class="sep">/</span></div>
-<div class="fragment fade-up"><span class="seg" style="color:var(--clay)">virtualmachines</span><span class="lbl">the kind of thing</span></div>
-<div><span class="sep">/</span></div>
-<div class="fragment fade-up"><span class="seg" style="color:var(--green)">sql-01</span><span class="lbl">this one record</span></div>
-</div>
-
-<p class="fragment fade-up big">"Acme's Windows SQL server" <span class="muted">is just an address.</span></p>
-
-Note:
-Left to right: the group says which project taught Kubernetes this route,
-the namespace is the customer's folder, the resource is like a table name,
-the last part is the one record, like a row id.
-
----
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Teaching the API new tricks</p>
-
-## Every Kubernetes starts with these
-
-<div class="routes tight" data-id="routes">
-<div class="route " data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route " data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route " data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
-<div class="route " data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route " data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-</div>
-
-<p class="muted" data-id="count">5 routes on our API</p>
-
-Note:
-The built-in routes. Now press down: each step installs something.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Install #1</p>
-
-## 🧮 + GPUs
-
-<div class="routes tight" data-id="routes">
-<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
-<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-<div class="route new" data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
-</div>
-
-<p class="muted" data-id="count">6 routes on our API</p>
-
-Note:
-Install NVIDIA's driver. Apps can now claim a GPU through a route. Nobody rebuilt or restarted Kubernetes.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Install #2</p>
-
-## 🐘 + Databases
-
-<div class="routes tight" data-id="routes">
-<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
-<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
-<div class="route new" data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
-</div>
-
-<p class="muted" data-id="count">7 routes on our API</p>
-
-Note:
-Install CloudNativePG. Every Postgres database is a record. Nobody rebuilt or restarted Kubernetes.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Install #3</p>
-
-## 🪟 + Windows VMs
-
-<div class="routes tight" data-id="routes">
-<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
-<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
-<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
-<div class="route new" data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
-</div>
-
-<p class="muted" data-id="count">8 routes on our API</p>
-
-Note:
-Install KubeVirt. A Windows Server VM is just a POST. Nobody rebuilt or restarted Kubernetes.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Install #4</p>
-
-## 🔀 + Workflows
-
-<div class="routes tight" data-id="routes">
-<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
-<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
-<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
-<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
-<div class="route new" data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step workflows <i>· Argo</i></span></div>
-</div>
-
-<p class="muted" data-id="count">9 routes on our API</p>
-
-Note:
-Install Argo Workflows. Pipelines and batch jobs get a route. Nobody rebuilt or restarted Kubernetes.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Install #5</p>
-
-## 🚪 + Front doors
-
-<div class="routes tight" data-id="routes">
-<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
-<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
-<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
-<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
-<div class="route " data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step workflows <i>· Argo</i></span></div>
-<div class="route new" data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors <i>· Gateway API</i></span></div>
-<div class="route new" data-id="traefik"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">traefik.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">ingressroutes</span></span><span class="what">routing + mTLS <i>· Traefik</i></span></div>
-</div>
-
-<p class="muted" data-id="count">11 routes on our API</p>
-
-Note:
-Even the official Gateway API is added this way, and so is Traefik. Nobody rebuilt or restarted Kubernetes.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Install #6</p>
-
-## ☁️ + The clouds
-
-<div class="routes tight" data-id="routes">
-<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
-<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
-<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
-<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
-<div class="route " data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step workflows <i>· Argo</i></span></div>
-<div class="route " data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors <i>· Gateway API</i></span></div>
-<div class="route " data-id="traefik"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">traefik.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">ingressroutes</span></span><span class="what">routing + mTLS <i>· Traefik</i></span></div>
-<div class="route new" data-id="bucket"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">storage.gcp.upbound.io</span>/v1beta1/<span class="res">buckets</span></span><span class="what">Google Cloud buckets <i>· Crossplane</i></span></div>
-<div class="route new" data-id="azpg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">dbforpostgresql.azure.upbound.io</span>/v1beta1/<span class="res">flexibleservers</span></span><span class="what">Azure Postgres <i>· Crossplane</i></span></div>
-</div>
-
-<p class="muted" data-id="count">13 routes on our API</p>
-
-Note:
-Crossplane mirrors Azure and Google Cloud into OUR API. Their resources become our routes. Nobody rebuilt or restarted Kubernetes.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Install #7</p>
-
-## 🧩 + Our own product
-
-<div class="routes tight" data-id="routes">
-<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a stable name + address</span></div>
-<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-<div class="route " data-id="gpu"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">resource.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">resourceclaims</span></span><span class="what">GPUs for AI <i>· NVIDIA driver</i></span></div>
-<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases <i>· CloudNativePG</i></span></div>
-<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs <i>· KubeVirt</i></span></div>
-<div class="route " data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">multi-step workflows <i>· Argo</i></span></div>
-<div class="route " data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors <i>· Gateway API</i></span></div>
-<div class="route " data-id="traefik"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">traefik.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">ingressroutes</span></span><span class="what">routing + mTLS <i>· Traefik</i></span></div>
-<div class="route " data-id="bucket"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">storage.gcp.upbound.io</span>/v1beta1/<span class="res">buckets</span></span><span class="what">Google Cloud buckets <i>· Crossplane</i></span></div>
-<div class="route " data-id="azpg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">dbforpostgresql.azure.upbound.io</span>/v1beta1/<span class="res">flexibleservers</span></span><span class="what">Azure Postgres <i>· Crossplane</i></span></div>
-<div class="route new" data-id="payload"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">payloadsites</span></span><span class="what">a customer's Payload CMS site <i>· KRO</i></span></div>
-</div>
-
-<p class="muted" data-id="count">14 routes on our API</p>
-
-Note:
-With KRO we add our own route, PayloadSite, without writing a program. Nobody rebuilt or restarted Kubernetes.
-
---
-
-<!-- .slide: data-transition="zoom" -->
-
-<p class="big">5 routes became <strong>14</strong>.</p>
-
-# Nobody rebuilt the server.
-
-<p class="fragment fade-up">Same logins · same permissions · same history · same tools, on every new route.</p>
-
-Note:
-This is the headline. Every added route behaves exactly like a built-in one.
-
----
-
 ## A new route, without writing an application
 
 <div class="cols">
@@ -390,9 +440,7 @@ This is the headline. Every added route behaves exactly like a built-in one.
 </div>
 <div class="fragment fade-left">
 <h3>Kubernetes: describe the route</h3>
-<pre class="spec"><span class="k">kind</span>: CustomResourceDefinition   <span class="c"># &quot;add a route&quot;</span>
-<span class="k">names</span>:   payloadsites
-<span class="k">fields</span>:  domain, target, size</pre>
+<div class="box solid" style="text-align:left"><b>Describe the new route</b>name: payloadsites · fields: domain, where, size</div>
 <ul class="ticks">
 <li>storage, in the built-in database</li>
 <li>logins and permissions (RBAC)</li>
@@ -455,22 +503,22 @@ part of the official Kubernetes project.
 <pre class="spec fragment fade-up"><span class="k">apiVersion</span>: kro.run/v1alpha1
 <span class="k">kind</span>: PayloadSite
 <span class="k">metadata</span>:
-  <span class="k">name</span>: bakery-site
-  <span class="k">namespace</span>: tenant-smith-bakery    <span class="c"># the customer&#x27;s folder</span>
+  <span class="k">name</span>: main-site
+  <span class="k">namespace</span>: tjs-catfish-and-wings  <span class="c"># the tenant&#x27;s folder</span>
 <span class="k">spec</span>:
-  <span class="k">domain</span>: smithbakery.com
+  <span class="k">domain</span>: tjscatfishandwings.com
   <span class="k">target</span>: azure-container-apps      <span class="c"># aks | azure-container-apps | gke | cloud-run</span>
   <span class="k">size</span>: small                       <span class="c"># small | medium | large</span></pre>
 
 <div class="routes ">
-<div class="route new fragment fade-up"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">tenant-smith-bakery</span>/<span class="res">payloadsites</span></span><span class="what"><em>= one new Payload CMS site</em></span></div>
+<div class="route new fragment fade-up"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span></span><span class="what"><em>= one new Payload CMS site</em></span></div>
 </div>
 
 <p class="hint">↓ what it builds · mixed clouds</p>
 
 Note:
 This is the whole order form: which domain, where to run it, how big. The
-customer's folder (namespace) is "tenant-smith-bakery". Swap in your own
+tenant's folder (namespace) is "tjs-catfish-and-wings". Swap in your own
 company's name for the group if you like; kro.run is KRO's default.
 
 --
@@ -487,7 +535,7 @@ company's name for the group if you like; kro.run is KRO's default.
 | **Address + HTTPS** | Cloudflare | Cloudflare | Cloudflare | Cloudflare |
 <!-- .element: class="fragment fade-up" -->
 
-<p class="fragment fade-up">Then the record fills in <span class="verb">status</span> <em>url: https://smithbakery.com, ready: true</em></p>
+<p class="fragment fade-up">Then the record fills in <span class="verb">status</span> <em>url: https://tjscatfishandwings.com, ready: true</em></p>
 
 Note:
 Payload CMS needs three things: somewhere to run, a database, and a place
@@ -505,10 +553,10 @@ cloud was chosen.
 </div>
 <div class="down">↓ &nbsp; ↓ &nbsp; ↓ &nbsp; ↓</div>
 <div class="row">
-<div class="box blue fragment fade-up"><b>Smith Bakery</b>Azure Container Apps</div>
-<div class="box blue fragment fade-up"><b>Acme Law</b>AKS</div>
-<div class="box green fragment fade-up"><b>Riverside Church</b>GKE</div>
-<div class="box green fragment fade-up"><b>Main St Dental</b>Cloud Run</div>
+<div class="box blue fragment fade-up"><b>tjs-catfish-and-wings</b>Azure Container Apps</div>
+<div class="box blue fragment fade-up"><b>bff</b>AKS</div>
+<div class="box green fragment fade-up"><b>matt</b>GKE</div>
+<div class="box green fragment fade-up"><b>michael</b>Cloud Run</div>
 </div>
 
 <div class="takeaway fragment fade-up">Mixed, multi-tenant, multi-cloud: one API manages all of it.</div>
@@ -519,111 +567,39 @@ makes sense for them (price, region, Azure credits, and so on).
 
 ---
 
-## How it works, in plain pseudocode
-
-<pre class="spec fragment fade-up"><span class="kw">ROUTE</span>  POST /apis/kro.run/v1alpha1/namespaces/{tenant}/payloadsites
-<span class="kw">INPUT</span>  domain, target, size
-
-<span class="kw">ALWAYS</span>
-  database = Crossplane: Azure Postgres  <span class="kw">OR</span>  Google Cloud SQL
-  media    = Crossplane: Azure Blob      <span class="kw">OR</span>  Google Cloud Storage
-  address  = Crossplane: Cloudflare DNS record for domain
-
-<span class="kw">WHEN</span> target is &quot;aks&quot; <span class="kw">OR</span> &quot;gke&quot;
-  app = Deployment + HTTPRoute on that cluster
-<span class="kw">WHEN</span> target is &quot;azure-container-apps&quot;
-  app = Crossplane: Azure Container App
-<span class="kw">WHEN</span> target is &quot;cloud-run&quot;
-  app = Crossplane: Google Cloud Run service
-
-<span class="kw">RETURN</span> status.url = &quot;https://&quot; + domain</pre>
-
-<p class="hint">↓ as a KRO recipe · with Terraform</p>
-
-Note:
-Read it like a recipe. ALWAYS: every site gets a database, media storage
-and an address. WHEN: the place the site runs depends on the target the
-customer picked.
-
---
-
-<!-- .slide: data-transition="fade" -->
-
-## The same recipe, for KRO
-
-<pre class="spec fragment fade-up"><span class="k">kind</span>: ResourceGraphDefinition          <span class="c"># KRO: this adds the PayloadSite route</span>
-<span class="k">spec</span>:
-  <span class="k">schema</span>:
-    <span class="k">kind</span>: PayloadSite
-    <span class="k">spec</span>: { domain: string, target: string, size: string }
-  <span class="k">resources</span>:
-    - <span class="k">id</span>: database                         <span class="c"># Crossplane resource, Azure or Google</span>
-    - <span class="k">id</span>: media
-    - <span class="k">id</span>: dnsRecord
-    - <span class="k">id</span>: containerApp                     <span class="c"># Crossplane: Azure Container App</span>
-      <span class="k">includeWhen</span>: target == &#x27;azure-container-apps&#x27;
-    - <span class="k">id</span>: cloudRun                         <span class="c"># Crossplane: Google Cloud Run</span>
-      <span class="k">includeWhen</span>: target == &#x27;cloud-run&#x27;
-    - <span class="k">id</span>: deployment                       <span class="c"># plain Kubernetes, on AKS or GKE</span>
-      <span class="k">includeWhen</span>: target in [&#x27;aks&#x27;, &#x27;gke&#x27;]</pre>
-
-<p class="fragment fade-in">A settings file, not a program. KRO reads it and the route appears.</p>
-
-Note:
-Simplified: real KRO writes conditions like
-${schema.spec.target == "cloud-run"}. KRO handles the order: database
-first, then the app that needs its address.
-
---
-
-<!-- .slide: data-transition="fade" -->
-
-## Or: Crossplane alone, or Terraform
-
-<div class="row">
-<div class="box blue fragment fade-up"><span class="emoji">☁️</span><b>Crossplane only</b>a Composition: one PayloadSite in, the cloud pieces out</div>
-<div class="box sand fragment fade-up"><span class="emoji">🧱</span><b>Terraform / OpenTofu</b>the Flux OpenTofu controller runs one module per target</div>
-<div class="box solid fragment fade-up"><span class="emoji">🧩</span><b>KRO + Crossplane</b>our pick: KRO for the recipe, Crossplane for the clouds</div>
-</div>
-
-<div class="takeaway fragment fade-up">Whichever we use, the customer still just POSTs a PayloadSite. We can switch engines later without changing the route.</div>
-
----
-
 ## Tenants: who can do what, and how much
 
 <div class="cols">
 <div class="fragment fade-right">
-<h3>Permissions (RBAC)</h3>
+<h3>Permissions (RBAC): which routes, in which folder</h3>
 <table><thead><tr><th>Who</th><th>Can</th><th>Where</th></tr></thead><tbody>
-<tr><td>Smith Bakery staff</td><td>see + edit their sites</td><td>only <em>tenant-smith-bakery</em></td></tr>
+<tr><td>TJ's staff</td><td>edit their sites</td><td><em>tjs-catfish-and-wings</em></td></tr>
+<tr><td>Matt</td><td>VMs + workflows</td><td><em>matt</em></td></tr>
 <tr><td>Our portal</td><td>create sites</td><td>every tenant folder</td></tr>
-<tr><td>Our engineers</td><td>everything</td><td>everywhere</td></tr>
+<tr><td>dev-team</td><td>everything</td><td>everywhere</td></tr>
 </tbody></table>
 </div>
 <div class="fragment fade-left">
-<h3>Limits (ResourceQuota)</h3>
-<pre class="spec"><span class="k">kind</span>: ResourceQuota
-<span class="k">metadata</span>:
-  <span class="k">namespace</span>: tenant-smith-bakery
-<span class="k">spec</span>:
-  <span class="k">hard</span>:
-    <span class="k">count/payloadsites.kro.run</span>: &quot;2&quot;   <span class="c"># max 2 sites</span>
-    <span class="k">requests.cpu</span>: &quot;4&quot;
-    <span class="k">requests.memory</span>: 8Gi</pre>
+<h3>Limits (quota): how many, per folder</h3>
+<table><thead><tr><th>Tenant</th><th>Payload sites</th><th>CPU</th></tr></thead><tbody>
+<tr><td><em>tjs-catfish-and-wings</em></td><td>2</td><td>4</td></tr>
+<tr><td><em>bff</em></td><td>2</td><td>4</td></tr>
+<tr><td><em>matt</em></td><td>0</td><td>8</td></tr>
+<tr><td><em>michael</em></td><td>1</td><td>2</td></tr>
+</tbody></table>
 </div>
 </div>
 
 <div class="routes fragment fade-up">
-<div class="route "><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">tenant-smith-bakery</span>/<span class="res">payloadsites</span></span><span class="what"><span style="color:var(--rose)">3rd site: 403 Forbidden, quota exceeded</span></span></div>
+<div class="route "><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span></span><span class="what"><span style="color:var(--rose)">TJ&#39;s 3rd site: 403 Forbidden, quota exceeded</span></span></div>
 </div>
 
 <p class="fragment fade-in muted">And Cilium network rules keep tenants from seeing each other.</p>
 
 Note:
 RBAC = role-based access control: who may use which routes, in which
-folders. ResourceQuota = limits per folder, including "at most 2
-PayloadSites" for a plan. Both are just more records on the same API.
+folders. Quota = limits per folder, including "at most 2 Payload sites"
+for TJ's plan. Both are just more records on the same API, set per tenant.
 
 ---
 
@@ -949,12 +925,31 @@ Builds bottom to top.
 
 ---
 
+<!-- .slide: data-transition="convex" -->
+
+## Five things to remember
+
+<div class="row">
+<div class="box  fragment zoom-in"><span class="emoji">🛣️</span><b>Routes</b>every capability is a route</div>
+<div class="box blue fragment zoom-in"><span class="emoji">➕</span><b>They add up</b>install a route, gain a capability, no rebuild</div>
+<div class="box green fragment zoom-in"><span class="emoji">🗄️</span><b>A database built in</b>records, history, watch</div>
+<div class="box sand fragment zoom-in"><span class="emoji">🔌</span><b>Plumbing included</b>DNS, network, disks, front door</div>
+<div class="box rose fragment zoom-in"><span class="emoji">🏛️</span><b>Nobody owns it alone</b>a foundation, built in the open</div>
+</div>
+
+<div class="takeaway fragment fade-up">The routes on our cluster are the list of what our platform can do, and that list <strong>only grows</strong>.</div>
+
+Note:
+Ask him to name the five back.
+
+---
+
 <!-- .slide: data-background-gradient="radial-gradient(circle at 50% 40%, #3a2a22, #141413 70%)" data-transition="zoom" -->
 
 ## One POST = one customer's website, on any cloud
 
 <div class="routes ">
-<div class="route new"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">tenant-smith-bakery</span>/<span class="res">payloadsites</span></span><span class="what"><em>"smithbakery.com, ACA, small"</em></span></div>
+<div class="route new"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span></span><span class="what"><em>"tjscatfishandwings.com, ACA, small"</em></span></div>
 </div>
 
 <p class="big fragment fade-up">Kubernetes, the extensible API: <strong>a platform that develops itself.</strong></p>

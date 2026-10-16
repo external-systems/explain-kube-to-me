@@ -15,16 +15,16 @@ like a short form:
 apiVersion: kro.run/v1alpha1
 kind: PayloadSite
 metadata:
-  name: bakery-site
-  namespace: tenant-smith-bakery    # the customer's folder
+  name: main-site
+  namespace: tjs-catfish-and-wings  # the tenant's folder
 spec:
-  domain: smithbakery.com
+  domain: tjscatfishandwings.com
   target: azure-container-apps      # aks | azure-container-apps | gke | cloud-run
   size: small                       # small | medium | large
 ```
 
 Creating it is one request:
-`POST /apis/kro.run/v1alpha1/namespaces/tenant-smith-bakery/payloadsites`.
+`POST /apis/kro.run/v1alpha1/namespaces/tjs-catfish-and-wings/payloadsites`.
 (`kro.run` is KRO's default group; it can carry our company's name instead.)
 
 ## What one POST builds
@@ -40,39 +40,30 @@ media. The same form builds all three, on the cloud the customer picked:
 | **Address + HTTPS** | Cloudflare | Cloudflare | Cloudflare | Cloudflare |
 
 When everything is ready, the record fills in its status:
-`url: https://smithbakery.com, ready: true`.
+`url: https://tjscatfishandwings.com, ready: true`.
 
 ```mermaid
 flowchart TB
-    B["🧠 Our Kubernetes cluster<br/>API + KRO + Crossplane"] --> T1["Smith Bakery<br/>Azure Container Apps"]
-    B --> T2["Acme Law<br/>AKS"]
-    B --> T3["Riverside Church<br/>GKE"]
-    B --> T4["Main St Dental<br/>Cloud Run"]
+    B["🧠 Our Kubernetes cluster<br/>API + KRO + Crossplane"] --> T1["tjs-catfish-and-wings<br/>Azure Container Apps"]
+    B --> T2["bff<br/>AKS"]
+    B --> T3["matt<br/>GKE"]
+    B --> T4["michael<br/>Cloud Run"]
 ```
 
 Our cluster is the brain; each customer's site runs wherever makes sense
 for them. Mixed, multi-tenant, multi-cloud, all through one API.
 
-## How it is built, in pseudocode
+## How it is built
 
-```text
-ROUTE  POST /apis/kro.run/v1alpha1/namespaces/{tenant}/payloadsites
-INPUT  domain, target, size
+Behind the route sits a short recipe, in plain words:
 
-ALWAYS
-  database = Crossplane: Azure Postgres  OR  Google Cloud SQL
-  media    = Crossplane: Azure Blob      OR  Google Cloud Storage
-  address  = Crossplane: Cloudflare DNS record for domain
-
-WHEN target is "aks" OR "gke"
-  app = Deployment + HTTPRoute on that cluster
-WHEN target is "azure-container-apps"
-  app = Crossplane: Azure Container App
-WHEN target is "cloud-run"
-  app = Crossplane: Google Cloud Run service
-
-RETURN status.url = "https://" + domain
-```
+- **Every site** gets a database (Azure Postgres or Google Cloud SQL),
+  a place for media files (Azure Blob Storage or Google Cloud Storage), and
+  a Cloudflare address for its domain.
+- **Where the site itself runs** depends on the target: on AKS or GKE it is
+  an ordinary Kubernetes app with a front door; on Azure Container Apps or
+  Cloud Run, Crossplane creates that cloud service directly.
+- **When it is ready**, the record's status shows the site's address.
 
 **KRO** writes that recipe down as a *Resource Graph Definition*: a
 settings file listing the pieces and when each one applies (`includeWhen`).
@@ -97,24 +88,20 @@ Each customer gets a **namespace** (their folder), and two kinds of records
 keep them safe and fair:
 
 - **RBAC** (role-based access control) says who may use which routes,
-  where. Smith Bakery's staff can see and edit sites only in
-  `tenant-smith-bakery`; our portal can create sites in every tenant
-  folder; our engineers can do everything.
-- **ResourceQuota** sets limits per folder. For a plan that includes two
-  sites:
+  where. TJ's staff can see and edit sites only in
+  `tjs-catfish-and-wings`; Matt can run VMs and workflows only in `matt`;
+  our portal can create sites in every tenant folder; `dev-team` can do
+  everything.
+- **ResourceQuota** sets limits per folder, for example:
 
-```yaml
-kind: ResourceQuota
-metadata:
-  namespace: tenant-smith-bakery
-spec:
-  hard:
-    count/payloadsites.kro.run: "2"   # at most 2 Payload sites
-    requests.cpu: "4"
-    requests.memory: 8Gi
-```
+| Tenant | Payload sites | CPU |
+| --- | --- | --- |
+| `tjs-catfish-and-wings` | 2 | 4 |
+| `bff` | 2 | 4 |
+| `matt` | 0 | 8 |
+| `michael` | 1 | 2 |
 
-A third POST is refused with *403 Forbidden: exceeded quota*. On top of
+For TJ's, a third POST is refused with *403 Forbidden: exceeded quota*. On top of
 that, Cilium network rules keep tenants from seeing each other's traffic.
 
 ## A customer portal on top
