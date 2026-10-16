@@ -137,4 +137,4 @@ with KRO and no code at all.
     before it ever ran in production, and kept healthy around the clock.
     **That is a platform that develops itself.**
 
-[Plain-language dictionary :material-arrow-right:](dictionary.md){ .md-button .md-button--primary }
+[Next: Example, Payload CMS sites :material-arrow-right:](payload-sites.md){ .md-button .md-button--primary }

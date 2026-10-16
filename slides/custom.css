@@ -320,3 +320,68 @@
 .routes.tight .route {
 	padding: 0.1em 0.55em;
 }
+
+/* Two columns side by side. */
+.cols {
+	display: flex;
+	gap: 0.8em;
+	align-items: flex-start;
+	text-align: left;
+}
+.cols > div {
+	flex: 1 1 0;
+}
+.cols h3 {
+	font-size: 0.75em;
+	color: var(--clay);
+	margin: 0 0 0.3em;
+}
+
+/* Short YAML / pseudocode listings: keys sand, comments muted. */
+.reveal pre.spec {
+	box-sizing: border-box;
+	width: 100%;
+	margin: 0.3em 0;
+	box-shadow: none;
+	background: var(--bg-deep);
+	border: 1px solid var(--surface-2);
+	border-left: 6px solid var(--clay);
+	border-radius: 0.35em;
+	padding: 0.5em 0.8em;
+	font-size: 0.58em;
+	line-height: 1.4;
+	text-align: left;
+	color: var(--cream);
+	white-space: pre;
+}
+.reveal pre.spec .k {
+	color: var(--sand);
+}
+.reveal pre.spec .c {
+	color: var(--muted);
+	font-style: italic;
+}
+.reveal pre.spec .v {
+	color: var(--clay-soft);
+}
+.reveal pre.spec .kw {
+	color: var(--blue);
+	font-weight: 700;
+}
+
+/* A plain checklist (✓ / ✗ rows). */
+.reveal ul.ticks {
+	list-style: none;
+	margin: 0;
+	font-size: 0.74em;
+	line-height: 1.5;
+}
+.reveal ul.ticks li::before {
+	content: "✓ ";
+	color: var(--green);
+	font-weight: 700;
+}
+.reveal ul.ticks.cross li::before {
+	content: "✗ ";
+	color: var(--rose);
+}

@@ -19,23 +19,48 @@ on earth, and the most valuable software in the world runs on them.
 | **Flux** | Deploys from git, automatically | Used by **Microsoft** for GitOps in Azure (AKS and Azure Arc) |
 | **Cilium** | Networking, security, load balancing | Created by Isovalent, now part of **Cisco**; built into **Google** GKE and **Azure** networking |
 | **KubeVirt** | Virtual machines, including Windows | Started by **Red Hat** (IBM); powers OpenShift Virtualization |
-| **Crossplane** | Manages cloud resources from Kubernetes | Created by Upbound, used by large enterprises to run their cloud |
+| **Crossplane** | Manages cloud resources from Kubernetes | Created by Upbound; a CNCF **Graduated** project since 2025 |
 | **KRO** | New API endpoints without code | Started jointly by **Amazon, Google and Microsoft** |
 | **CloudNativePG** | PostgreSQL databases | Created by **EDB**, one of the main PostgreSQL companies |
 | **k3s / RKE2** | The Kubernetes we install | **SUSE Rancher**; RKE2 is built for US government security standards |
-| **OpenTofu** | Infrastructure as code | The **Linux Foundation** |
+| **OpenTofu** | Infrastructure as code | The **Linux Foundation**; a CNCF project since 2025 |
 
-!!! tip "How to tell a healthy project: the CNCF maturity levels"
-    Most of these projects are part of the **Cloud Native Computing
-    Foundation (CNCF)**, which rates them in three levels:
+## How the CNCF grades its projects
 
-    1. **Sandbox**: promising and early.
-    2. **Incubating**: used in production by real companies, growing.
-    3. **Graduated**: proven. Independent security audit passed, maintained
-       by people from several different companies, widely used in production.
+Most of these projects live in the **Cloud Native Computing Foundation
+(CNCF)**, part of the Linux Foundation. The CNCF only moves a project up a
+level after checking it, a bit like vendor due diligence:
 
-    Kubernetes, Argo CD, Flux, Cilium, etcd and CoreDNS are all
-    **graduated**.
+| Level | What it takes | What it means for us |
+| --- | --- | --- |
+| 🌱 **Sandbox** | Accepted by the CNCF; a neutral home and open governance. Early, may change a lot. | Try it at the edges. |
+| 🌿 **Incubating** | Used in production by at least three independent companies; a healthy, growing team; steady releases. | Use it, and keep an eye on it. |
+| 🌳 **Graduated** | An independent security audit; maintainers from several companies; a public list of production users; formal governance. | Build the business on it. |
+
+## Our rule: CNCF on the pathway
+
+The **pathway** is everything a customer's order passes through: our
+portal, the Kubernetes API, KRO, Crossplane, the network and the site
+itself. Our rule for it:
+
+1. **Only CNCF projects** (or Kubernetes itself) on the pathway.
+2. **Prefer Graduated** for anything critical.
+3. **Incubating** where needed, and watched.
+4. **Sandbox** only off the critical path, or with a way out.
+
+Where our stack stands today:
+
+| Level | Projects |
+| --- | --- |
+| 🌳 Graduated | Kubernetes, etcd, CoreDNS, Cilium, Crossplane (2025), Argo, Flux |
+| 🧩 Part of Kubernetes itself | KRO, Gateway API |
+| 🌿 Incubating | KubeVirt (heading for graduation) |
+| 🌱 Sandbox | CloudNativePG, OpenTofu, k3s, OpenEBS |
+| ➖ Not CNCF (open source, company-backed) | Traefik, RKE2 |
+
+The core of the pathway is already Graduated. Traefik is the one
+non-CNCF piece on it; Cilium's Gateway API is the CNCF option for the front
+door if we want the pathway CNCF-only.
 
 ## Open source is where the important software lives
 
