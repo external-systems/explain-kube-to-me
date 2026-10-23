@@ -52,15 +52,14 @@ Where our stack stands today:
 
 | Level | Projects |
 | --- | --- |
-| 🌳 Graduated | Kubernetes, etcd, CoreDNS, Cilium, Crossplane (2025), Argo, Flux |
+| 🌳 Graduated | Kubernetes, etcd, CoreDNS, Cilium, Envoy (including Envoy Gateway), Crossplane (2025), Argo, Flux |
 | 🧩 Part of Kubernetes itself | KRO, Gateway API |
 | 🌿 Incubating | KubeVirt (heading for graduation) |
 | 🌱 Sandbox | CloudNativePG, OpenTofu, k3s, OpenEBS |
-| ➖ Not CNCF (open source, company-backed) | Traefik, RKE2 |
+| ➖ Not CNCF (open source, company-backed) | RKE2 |
 
-The core of the pathway is already Graduated. Traefik is the one
-non-CNCF piece on it; Cilium's Gateway API is the CNCF option for the front
-door if we want the pathway CNCF-only.
+With Envoy Gateway as the front door, the whole pathway is Graduated or
+part of Kubernetes itself.
 
 ## Open source is where the important software lives
 

@@ -15,7 +15,7 @@
 		     Others: white, league, moon, ... (reveal/theme/ in the build) -->
 		<link rel="stylesheet" href="reveal/theme/black.css" />
 
-		<!-- Claude colours + boxes, arrows, layers and route pills -->
+		<!-- Claude colours, icons, hand-drawn diagrams and route pills -->
 		<link rel="stylesheet" href="custom.css" />
 	</head>
 	<body>
@@ -38,6 +38,9 @@
 		<script src="reveal/reveal.js"></script>
 		<script src="reveal/plugin/markdown.js"></script>
 		<script src="reveal/plugin/notes.js"></script>
+		<!-- Hand-drawn diagrams: rough.js (MIT) + sketch.js -->
+		<script src="vendor/rough.js"></script>
+		<script src="sketch.js"></script>
 		<script>
 			// All options: https://revealjs.com/config/
 			Reveal.initialize({
@@ -50,7 +53,7 @@
 				width: 1280,
 				height: 720,
 				plugins: [RevealMarkdown, RevealNotes],
-			});
+			}).then(sketchDiagrams); // draw the <svg class="sketch"> diagrams
 		</script>
 	</body>
 </html>

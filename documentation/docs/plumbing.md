@@ -28,7 +28,7 @@ on day one.
 ```mermaid
 flowchart LR
     U["🌍 Visitor"] --> LB["⚖️ Load balancer<br/>(public address)"]
-    LB --> GW["🚪 Gateway<br/>(Traefik / Cilium Gateway API)<br/>picks the right site,<br/>handles HTTPS"]
+    LB --> GW["🚪 Envoy Gateway<br/>picks the right site,<br/>handles HTTPS and logins"]
     GW --> SVC["📇 Service<br/>'customer-portal'<br/>(found by name via CoreDNS)"]
     SVC --> P1["📦 copy 1"]
     SVC --> P2["📦 copy 2"]
@@ -39,6 +39,65 @@ flowchart LR
 Every box in that picture is a record in the Kubernetes API. If copy 2's
 server dies, the Service stops sending visitors there, the controller starts
 copy 4 elsewhere, and the disk follows it. Nobody touched anything.
+
+## DNS: how programs find each other
+
+Every cluster has its own DNS server, **CoreDNS**: a phone book for
+everything inside the cluster that keeps itself up to date.
+
+```mermaid
+sequenceDiagram
+    participant W as TJ's website
+    participant D as CoreDNS (phone book)
+    participant S as payload-db (service)
+    participant P as database copies
+    W->>D: 1. Where is payload-db?
+    D-->>W: 2. 10.43.0.12
+    W->>S: 3. connect
+    S->>P: 4. passed to a healthy copy
+```
+
+**A name says where it lives.** The full name of TJ's database is
+`payload-db.tjs-catfish-and-wings.svc.cluster.local`: the service, the
+tenant's folder, "it's a service", and "this cluster". Inside its own
+folder, an app only needs the short name `payload-db`. So TJ's site and
+bff's site run with **identical settings** and each still reaches its own
+database: the folder decides. Adding a tenant needs no reconfiguring.
+
+**Things move, names don't.** Copies of apps move between servers all the
+time (a server is patched, a server dies). The name stays; only the address
+behind it changes, and CoreDNS updates in seconds. No hosts files, no
+hard-coded IP addresses, no DNS tickets.
+
+**Two phone books.** From the internet, Cloudflare's public DNS turns
+`tjscatfishandwings.com` into our front door. Envoy Gateway then reads an
+HTTPRoute record ("this domain goes to the `payload` service in TJ's
+folder"), and CoreDNS finds that service.
+
+## The front door: Envoy Gateway
+
+Traffic between the internet and our apps is called **north-south**
+traffic; traffic between apps inside the cluster is **east-west**
+(handled by CoreDNS names and Cilium rules). **Envoy Gateway only handles
+north-south**: it is the front door, and nothing else.
+
+For a developer, publishing an app is **one record**, an HTTPRoute: "this
+address goes to my app". No firewall ticket, no IIS bindings, no
+certificate juggling.
+
+Every request then passes a chain of Envoy **filters** before it reaches
+the app:
+
+1. **HTTPS**: certificates handled at the door.
+2. **External auth**: Envoy asks our login service whether this visitor is
+   allowed in.
+3. **Rate limits**: nobody can flood the app.
+4. **Routing**: on to the right app, in the right folder.
+
+The app only ever sees a request from a signed-in user. It has **no login
+code and no HTTPS setup**, and every app gets the same protection, like IIS
+authentication modules in front of every site at once, set up with records
+instead of server settings.
 
 ## Runs anywhere: cloud and our own servers
 

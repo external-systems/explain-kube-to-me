@@ -23,10 +23,13 @@ from the Windows and web world.
 | **Deployment** | "Keep N copies of this app running, at this version" | An IIS site + app pool, with someone watching it |
 | **Desired state** | Describing the result you want, not the steps | Setting a thermostat to 70°F |
 | **Docker** | A tool for building and running containers on one machine | (Not needed to use Kubernetes) |
+| **Docker Swarm** | Docker's own way to run containers on several servers | A simple web farm: runs apps, but can't be taught new things |
 | **etcd** | The built-in database where every record is kept | The Windows Registry, replicated and made bulletproof |
+| **Envoy Gateway** | Our front door for traffic from the internet; its filters handle HTTPS, logins and limits | IIS with ARR and authentication modules, in front of every site |
 | **Gateway API** | The modern way to let outside traffic in | IIS bindings + ARR, as records |
 | **Ingress** | The older way to let outside traffic in | Same as above, the previous generation |
 | **k3s** | Small, lightweight Kubernetes for edge sites | Windows Server Core for small branch offices |
+| **Kata Containers** | Runs a risky container inside its own small virtual machine | Hyper-V isolation for Windows containers |
 | **KRO / Resource Graph Definition** | A recipe that creates a new kind of record out of existing ones, no code | A SQL view or stored procedure anyone can write |
 | **Kubernetes** | An API that runs software and can be taught new things | A tireless operations team with one front door |
 | **KubeVirt** | Runs virtual machines inside Kubernetes | Hyper-V, managed by the same API |
@@ -35,6 +38,7 @@ from the Windows and web world.
 | **Namespace** | A folder that groups records, per team or customer | A separate site or server per client |
 | **NixOS** | Linux where the whole server is described in text files | A server image + Group Policy, in one document |
 | **Node** | One server in the cluster | One server in the farm |
+| **North-south / east-west** | Traffic in and out of the cluster / traffic between apps inside it | Internet-facing traffic / LAN traffic |
 | **OpenEBS** | Storage built from our servers' own disks | A SAN without buying a SAN |
 | **OpenTofu** | An open, foundation-owned tool for creating cloud infrastructure | Terraform, without the license risk |
 | **Operator** | A CRD + controller that does an expert's job, 24/7 | A DBA in a box |
@@ -42,5 +46,4 @@ from the Windows and web world.
 | **RKE2** | Security-hardened Kubernetes for production | Windows Server Datacenter edition |
 | **Secret** | A password, key or certificate stored safely | Windows Credential Manager |
 | **Service** | A stable name for a group of app copies | A DNS name behind a load balancer |
-| **Traefik** | Our front-door proxy for all incoming traffic | IIS with ARR, much more capable |
 | **WireGuard** | A fast, modern encrypted tunnel between servers | A site-to-site VPN |

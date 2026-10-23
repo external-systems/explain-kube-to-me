@@ -124,6 +124,24 @@ billing. That makes the portal an operator too.
 
 The customer buys a website. Kubernetes is invisible to them.
 
+### How the portal is built: a Kubernetes app and an operator
+
+The portal is itself an app running in Kubernetes, made of four records:
+
+| Record | What it gives the portal |
+| --- | --- |
+| **Deployment** | the portal program itself (.NET, or anything), three copies, always running |
+| **HTTPRoute** | its public address, `portal.our-company.com`, through Envoy Gateway |
+| **ServiceAccount + RBAC** | its own login: it may create PayloadSites, and nothing else |
+| **watch** | it is told about every PayloadSite change the moment it happens |
+
+A program that watches records and acts on them is an **operator** (or
+controller). The portal's loop is the thermostat again: **watch** every
+PayloadSite, **compare** it with billing, **act** (start, change or stop a
+bill), forever. If the portal restarts, it simply looks again and catches
+up. There is no server to build, no database to set up and no login system
+to write.
+
 ## Why programs inside Kubernetes are cheap to build
 
 Our portal runs inside the cluster, so it gets, for free:

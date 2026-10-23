@@ -70,8 +70,8 @@ more, and they work exactly like the built-in ones:
 | `/apis/postgresql.cnpg.io/v1/namespaces/{namespace}/clusters` | Postgres databases | CloudNativePG |
 | `/apis/kubevirt.io/v1/namespaces/{namespace}/virtualmachines` | Windows Server VMs | KubeVirt |
 | `/apis/argoproj.io/v1alpha1/namespaces/{namespace}/workflows` | multi-step jobs and pipelines | Argo Workflows |
-| `/apis/gateway.networking.k8s.io/v1/namespaces/{namespace}/httproutes` | website front doors | Gateway API |
-| `/apis/traefik.io/v1alpha1/namespaces/{namespace}/ingressroutes` | Traefik routing with mTLS | Traefik |
+| `/apis/gateway.networking.k8s.io/v1/namespaces/{namespace}/httproutes` | website front doors | Gateway API (Envoy Gateway) |
+| `/apis/gateway.envoyproxy.io/v1alpha1/namespaces/{namespace}/securitypolicies` | front-door logins and security | Envoy Gateway |
 | `/apis/infra.contrib.fluxcd.io/v1alpha2/namespaces/{namespace}/terraforms` | cloud infrastructure via OpenTofu | Flux OpenTofu controller |
 | `/apis/compute.gcp.upbound.io/v1beta1/instances` | Google Cloud servers | Crossplane |
 | `/apis/kro.run/v1alpha1/namespaces/{namespace}/tenants` | a whole new customer (ours) | KRO, no code |
@@ -93,6 +93,9 @@ could not do yesterday.
 | :material-vpn: **A private VPN for one customer**, hosted on our own servers | **headroom-operator** | Each tenant gets their own isolated VPN, created and torn down from a single record. |
 | :material-microsoft-windows: **A Windows Server virtual machine** | **KubeVirt** | A real Windows VM, running on the same servers and managed through the same API as the containers next to it. |
 | :material-robot: **A safe sandbox for an AI agent** | **NVIDIA OpenShell** on Kubernetes | An isolated, locked-down space where an AI agent can work without touching anything it should not. |
+| :material-paperclip: **A Paperclip instance** | the **Paperclip operator** | A ready-to-use Paperclip, created, upgraded and backed up from one record. |
+| :material-minecraft: **A Minecraft server** | **our own CRD** | "A world for the grandkids, 10 players": the server, its disk and its address, from one record. |
+| :material-language-csharp: **A .NET app** | built in (*Deployment*) | Three copies always running, replaced when they crash, updated one at a time. |
 
 !!! example "The cloud example, in plain words"
     Normally, to create a database in Azure, someone logs into the Azure

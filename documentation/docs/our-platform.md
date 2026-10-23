@@ -12,7 +12,7 @@ flowchart TB
     end
     subgraph L5["🚪 Front door"]
         direction LR
-        f1["Traefik, 1 to N copies"] ~~~ f2["Cilium Gateway API"] ~~~ f3["Cloudflare in front, mTLS"]
+        f1["Envoy Gateway, 1 to N copies"] ~~~ f3["Cloudflare in front, mTLS"]
     end
     subgraph L4["🛣️ Networking"]
         direction LR
@@ -20,7 +20,7 @@ flowchart TB
     end
     subgraph L3["⚙️ Kubernetes"]
         direction LR
-        k1["RKE2 for production"] ~~~ k2["k3s for the edge"] ~~~ k3["OpenEBS for storage"]
+        k1["RKE2 for production"] ~~~ k2["k3s for the edge"] ~~~ k3["OpenEBS for storage"] ~~~ k4["Kata Containers for risky work"]
     end
     subgraph L2["🔒 Private encrypted network"]
         direction LR
@@ -74,6 +74,7 @@ very fast encrypted tunnel (a VPN between servers), set up by NixOS itself.
 | Small sites, "the edge" | **k3s** (from SUSE Rancher) | The same Kubernetes API in a single small program, for small machines |
 | Disks | **OpenEBS** | Storage for apps, built from the disks in our own servers |
 | Virtual machines | **KubeVirt** on bare-metal servers | Windows and other VMs, managed by the same API |
+| Extra walls | **Kata Containers** | Risky work (AI agents, customer code, Minecraft plugins) runs in its own tiny VM instead of sharing the server's kernel |
 
 Because RKE2 and k3s are both real Kubernetes, **everything on this site
 works the same on both**.
@@ -101,24 +102,27 @@ inside the Linux kernel.
 
 ## Floor 5: the front door
 
-Visitors come in through **Traefik**, our preferred front-door proxy
-(reverse proxy).
+Visitors come in through **Envoy Gateway**, our front-door proxy (reverse
+proxy), built on Envoy, a CNCF Graduated project. It handles north-south
+traffic only (see [chapter 5](plumbing.md#the-front-door-envoy-gateway)).
 
-- We run **1 to N copies of Traefik**, each with a public or private
-  load balancer address provided by Cilium BGP.
+- We run **1 to N copies of Envoy Gateway's proxy**, each with a public or
+  private load balancer address provided by Cilium BGP.
 - **Every protocol is supported**: HTTP, HTTPS, TCP, UDP, TLS, mutual TLS
   (mTLS) and QUIC (the fast protocol behind HTTP/3).
-- **Cloudflare** sits in front of our public sites. Using Traefik's own
-  record types (like *IngressRoute*), Traefik only accepts connections that
-  prove they really come from Cloudflare (that proof is **mTLS**: both sides
-  show a certificate). Nobody can go around Cloudflare's protection.
-- We prefer the newer **Gateway API** over the older Ingress, and also use
-  **Cilium's Gateway API** support.
+- **Cloudflare** sits in front of our public sites. Envoy Gateway only
+  accepts connections that prove they really come from Cloudflare (that
+  proof is **mTLS**: both sides show a certificate). Nobody can go around
+  Cloudflare's protection.
+- Envoy's filters handle **logins (external auth)**, rate limits and
+  HTTPS for every app, so the apps themselves don't have to.
+- Everything is set up with **Gateway API** records (HTTPRoute), the modern
+  replacement for the older Ingress.
 
 ```mermaid
 flowchart LR
     V["🌍 Visitor"] --> CF["☁️ Cloudflare<br/>(protection, caching)"]
-    CF -- "mTLS: both sides<br/>show certificates" --> T["🚪 Traefik copies<br/>on our servers"]
+    CF -- "mTLS: both sides<br/>show certificates" --> T["🚪 Envoy Gateway copies<br/>on our servers"]
     T --> A["📦 Our apps"]
     T --> VM["🖥️ Windows VMs<br/>(KubeVirt)"]
 ```

@@ -1,6 +1,6 @@
 /* Claude-coloured look for slides.md: a warm dark background, cream
-   text and clay-orange accents, plus the building blocks the slides use
-   instead of code: boxes, arrows, layers and HTTP "route" pills.
+   text and clay-orange accents, plus the building blocks the slides use:
+   route pills, logo tiles, layers and hand-drawn diagrams.
    Loaded after the reveal.js theme in index.html, so it overrides it. */
 
 :root {
@@ -51,8 +51,7 @@
 	border-radius: 2px;
 	background: var(--clay);
 }
-.reveal strong,
-.reveal .accent {
+.reveal strong {
 	color: var(--clay);
 }
 .reveal em {
@@ -88,78 +87,6 @@
 }
 .reveal table td {
 	border-bottom: 1px solid var(--surface-2);
-}
-
-/* Rows of boxes, with optional arrows (.arrow) between them. */
-.row {
-	display: flex;
-	align-items: stretch;
-	justify-content: center;
-	gap: 0.45em;
-	margin: 0.5em 0;
-}
-.box {
-	flex: 1 1 0;
-	background: var(--surface);
-	border: 2px solid var(--surface-2);
-	border-top: 6px solid var(--clay);
-	border-radius: 0.45em;
-	padding: 0.45em 0.5em;
-	font-size: 0.72em;
-	line-height: 1.3;
-	color: var(--cream);
-}
-.box b {
-	display: block;
-	font-size: 1.15em;
-	margin-bottom: 0.15em;
-}
-.box .emoji {
-	display: block;
-	font-size: 1.9em;
-	line-height: 1.2;
-}
-.box.blue {
-	border-top-color: var(--blue);
-}
-.box.green {
-	border-top-color: var(--green);
-}
-.box.sand {
-	border-top-color: var(--sand);
-}
-.box.rose {
-	border-top-color: var(--rose);
-}
-.box.gray {
-	border-top-color: var(--muted);
-}
-.box.solid {
-	background: var(--clay);
-	border-color: var(--clay);
-	color: var(--bg-deep);
-}
-.box.solid b {
-	color: var(--bg-deep);
-}
-.box.wide {
-	flex: 3 1 0;
-}
-.arrow {
-	align-self: center;
-	flex: 0 0 auto;
-	font-size: 1.3em;
-	color: var(--clay);
-}
-.down {
-	color: var(--clay);
-	font-size: 1.1em;
-	line-height: 1;
-	margin: 0.15em 0;
-}
-.reveal .emoji {
-	font-size: 2.6em;
-	line-height: 1.1;
 }
 
 /* A short takeaway line. */
@@ -200,9 +127,6 @@
 }
 .route.dim {
 	opacity: 0.55;
-}
-.box .route {
-	font-size: 0.85em;
 }
 .route .path {
 	flex: 1 1 auto;
@@ -321,22 +245,6 @@
 	padding: 0.1em 0.55em;
 }
 
-/* Two columns side by side. */
-.cols {
-	display: flex;
-	gap: 0.8em;
-	align-items: flex-start;
-	text-align: left;
-}
-.cols > div {
-	flex: 1 1 0;
-}
-.cols h3 {
-	font-size: 0.75em;
-	color: var(--clay);
-	margin: 0 0 0.3em;
-}
-
 /* Short YAML / pseudocode listings: keys sand, comments muted. */
 .reveal pre.spec {
 	box-sizing: border-box;
@@ -384,4 +292,145 @@
 .reveal ul.ticks.cross li::before {
 	content: "✗ ";
 	color: var(--rose);
+}
+
+/* ------------------------------------------------------------------
+   Icons and hand-drawn diagrams
+   ------------------------------------------------------------------ */
+
+/* Virgil, Excalidraw's handwriting font (SIL Open Font License). */
+@font-face {
+	font-family: "Virgil";
+	src: url("fonts/Virgil-Regular.woff2") format("woff2");
+	font-display: swap;
+}
+.reveal .hand {
+	font-family: Virgil, "Comic Sans MS", cursive;
+}
+
+/* <div class="diagram"><svg class="sketch">: see sketch.js */
+.diagram {
+	margin: 0.1em auto 0;
+}
+.diagram svg {
+	display: block;
+	width: 100%;
+	height: auto;
+	overflow: visible;
+}
+svg.sketch text {
+	font-family: Virgil, "Comic Sans MS", cursive;
+	fill: var(--cream);
+}
+svg.sketch text.sans {
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+}
+svg.sketch text.mono {
+	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+/* Product logos. */
+.reveal img.icon {
+	display: inline-block;
+	height: 1.15em;
+	width: auto;
+	margin: 0 0.12em;
+	vertical-align: -0.22em;
+}
+.reveal img.hero {
+	height: 2.6em;
+	margin: 0 auto 0.2em;
+}
+
+/* Icon tiles: a logo, a name and a short line. No box around it. */
+.tiles {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5em 1.2em;
+	margin: 0.5em 0;
+}
+.tile {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 6.4em;
+	font-size: 0.62em;
+	line-height: 1.25;
+	text-align: center;
+}
+.reveal .tile img {
+	height: 2.7em;
+	width: auto;
+	max-width: 5.5em;
+	margin: 0 0 0.35em;
+}
+.tile b {
+	font-size: 1.05em;
+}
+.tile span {
+	color: var(--muted);
+}
+
+/* Rows of "kinds of record": logo | kind | in plain words | added by. */
+.kinds {
+	display: flex;
+	flex-direction: column;
+	width: 92%;
+	margin: 0.3em auto;
+	font-size: 0.62em;
+	text-align: left;
+}
+.kind {
+	display: grid;
+	grid-template-columns: 2.6em 10.5em 1fr 9em;
+	align-items: center;
+	gap: 0.8em;
+	padding: 0.22em 0.6em;
+	border-bottom: 1px solid var(--surface-2);
+}
+.reveal .kind img {
+	justify-self: center;
+	height: 1.9em;
+	width: auto;
+	max-width: 2.6em;
+	margin: 0;
+}
+.kind code {
+	color: var(--clay);
+	font-weight: 700;
+}
+.kind .who {
+	color: var(--muted);
+	font-size: 0.9em;
+	text-align: right;
+}
+
+/* Three CNCF levels side by side, an outline instead of a filled box. */
+.levels {
+	display: flex;
+	gap: 1em;
+	margin: 0.4em 0;
+	text-align: left;
+}
+.level {
+	flex: 1 1 0;
+	padding: 0.3em 0.2em 0 0.7em;
+	border-left: 4px solid var(--muted);
+	font-size: 0.66em;
+	line-height: 1.35;
+}
+.reveal .level img {
+	height: 1.8em;
+	margin: 0 0 0.2em;
+}
+.level b {
+	display: block;
+	font-size: 1.3em;
+}
+.level.sand {
+	border-left-color: var(--sand);
+}
+.level.green {
+	border-left-color: var(--green);
 }

@@ -87,6 +87,22 @@ a healthy server. Nobody gets paged.
     replaced by the work order itself. The team writes down **what good looks
     like**, and the platform does the restarting, moving and replacing.
 
+## Why not Docker Swarm?
+
+Docker Swarm also runs containers on several servers, and it is simpler.
+But it stops there:
+
+| | Docker Swarm | Kubernetes |
+| --- | --- | --- |
+| **Manages** | containers | containers, VMs, databases, clouds, anything we add |
+| **Automation** | restart and scale containers | a controller for every kind of record: heal, scale, update, back up |
+| **Its database** | internal; apps can't use it | an API our own apps read, write and *watch* |
+| **Extending it** | not really | **operators**: install new kinds of records |
+| **Who supports it** | mostly Docker, shrinking | every cloud, thousands of projects |
+
+Swarm runs containers. Kubernetes is a **platform we extend**, and
+operators are how we extend it.
+
 ## Where the rest of this site goes
 
 The thermostat idea, *describe what you want and a controller makes it
