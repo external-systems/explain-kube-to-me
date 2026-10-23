@@ -7,7 +7,7 @@ all the work.
 
 ## The order form: a PayloadSite route
 
-With KRO ([chapter 3](extending.md)) we add our own route to the API,
+With KRO ([chapter 4](extending.md)) we add our own route to the API,
 `payloadsites`. One record is one customer's Payload CMS site, and it reads
 like a short form:
 
@@ -16,61 +16,64 @@ apiVersion: kro.run/v1alpha1
 kind: PayloadSite
 metadata:
   name: main-site
-  namespace: tjs-catfish-and-wings  # the tenant's folder
+  namespace: tjs-catfish-and-wings   # the tenant's folder
 spec:
   domain: tjscatfishandwings.com
-  target: azure-container-apps      # aks | azure-container-apps | gke | cloud-run
-  size: small                       # small | medium | large
+  target: cloudflare-workers         # where it runs (7 choices, below)
+  size: small                        # small | medium | large
 ```
 
 Creating it is one request:
 `POST /apis/kro.run/v1alpha1/namespaces/tjs-catfish-and-wings/payloadsites`.
 (`kro.run` is KRO's default group; it can carry our company's name instead.)
 
-## What one POST builds
+## Seven places a PayloadSite can run
 
 Payload CMS needs somewhere to run, a database, and a place for uploaded
-media. The same form builds all three, on the cloud the customer picked:
+media. The same three fields build all of it, wherever the customer picked:
 
-| | AKS | Azure Container Apps | GKE | Cloud Run |
-| --- | --- | --- | --- | --- |
-| **Payload runs on** | Azure Kubernetes Service | Azure Container Apps | Google Kubernetes Engine | Google Cloud Run |
-| **Database** | Azure Database for PostgreSQL | Azure Database for PostgreSQL | Cloud SQL | Cloud SQL |
-| **Media files** | Azure Blob Storage | Azure Blob Storage | Cloud Storage | Cloud Storage |
-| **Address + HTTPS** | Cloudflare | Cloudflare | Cloudflare | Cloudflare |
+| Target | Payload runs on | Database + media files |
+| --- | --- | --- |
+| `cloudflare-workers` | Cloudflare Workers | D1 + R2 |
+| `cloud-run` | Google Cloud Run | Cloud SQL + Cloud Storage |
+| `azure-container-apps` | Azure Container Apps | Azure Database for PostgreSQL + Blob Storage |
+| `aks` | Azure Kubernetes Service | Azure Database for PostgreSQL + Blob Storage |
+| `gke` | Google Kubernetes Engine | Cloud SQL + Cloud Storage |
+| `ours` | one of our Kubernetes clusters | CloudNativePG + OpenEBS |
+| `on-prem` | another on-premises Kubernetes | CloudNativePG + that site's disks |
 
-When everything is ready, the record fills in its status:
+Every site also gets an HTTPS certificate and a DNS record in **GoDaddy**,
+where Dad's domains live, written by **ExternalDNS**. When everything is
+ready, the record fills in its status:
 `url: https://tjscatfishandwings.com, ready: true`.
 
 ```mermaid
 flowchart TB
-    B["🧠 Our Kubernetes cluster<br/>API + KRO + Crossplane"] --> T1["tjs-catfish-and-wings<br/>Azure Container Apps"]
-    B --> T2["bff<br/>AKS"]
-    B --> T3["matt<br/>GKE"]
-    B --> T4["michael<br/>Cloud Run"]
+    B["🧠 Our Kubernetes cluster<br/>API + KRO + Crossplane"] --> T1["tjs-catfish-and-wings<br/>Cloudflare Workers"]
+    B --> T2["bff<br/>Azure Container Apps"]
+    B --> T3["michael<br/>Google Cloud Run"]
+    B --> T4["dev-team<br/>one of our clusters"]
 ```
 
 Our cluster is the brain; each customer's site runs wherever makes sense
 for them. Mixed, multi-tenant, multi-cloud, all through one API.
 
-## How it is built
+## KRO shows the basics, Crossplane builds the rest
 
-Behind the route sits a short recipe, in plain words:
+The customer only ever sees **three fields**: domain, target and size.
+Everything else is our recipe, the same for every tenant:
 
-- **Every site** gets a database (Azure Postgres or Google Cloud SQL),
-  a place for media files (Azure Blob Storage or Google Cloud Storage), and
-  a Cloudflare address for its domain.
-- **Where the site itself runs** depends on the target: on AKS or GKE it is
-  an ordinary Kubernetes app with a front door; on Azure Container Apps or
-  Cloud Run, Crossplane creates that cloud service directly.
-- **When it is ready**, the record's status shows the site's address.
+- **KRO** reads our recipe (a *Resource Graph Definition*), adds the
+  `payloadsites` route, and for each PayloadSite creates the **Crossplane**
+  records that target needs: the database and its backups, media storage,
+  the GoDaddy DNS record, the HTTPS certificate, the app itself, its
+  secrets, and its scaling and region.
+- **Crossplane** turns each of those records into the real thing in
+  Cloudflare, Azure, Google or one of our clusters, and keeps it that way.
 
-**KRO** writes that recipe down as a *Resource Graph Definition*: a
-settings file listing the pieces and when each one applies (`includeWhen`).
-KRO reads it, adds the `payloadsites` route on the spot, and creates the
-pieces in the right order. **Crossplane** does the cloud part: every Azure
-or Google resource in the recipe is itself a Kubernetes record that
-Crossplane turns into the real thing, and keeps in line.
+Because the customer only sees the basics, we can improve the recipe (a
+better database setting, a new region) without changing the route or
+asking anyone to fill in a new form.
 
 Other ways to build the same route:
 

@@ -5,7 +5,7 @@ icons/ (product logos)
     https://github.com/homarr-labs/dashboard-icons
   cncf-*.svg, envoy-gateway.svg, cncf.svg: cncf/artwork (Apache-2.0),
     https://github.com/cncf/artwork
-  dotnet.svg: devicon (MIT), https://github.com/devicons/devicon
+  dotnet.svg, cloudflare-workers.svg: devicon (MIT), https://github.com/devicons/devicon
   Logos are trademarks of their owners, used here to name their products.
 
 icons/lucide-*.svg (line icons, recoloured)

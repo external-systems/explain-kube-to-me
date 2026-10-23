@@ -26,6 +26,7 @@ from the Windows and web world.
 | **Docker Swarm** | Docker's own way to run containers on several servers | A simple web farm: runs apps, but can't be taught new things |
 | **etcd** | The built-in database where every record is kept | The Windows Registry, replicated and made bulletproof |
 | **Envoy Gateway** | Our front door for traffic from the internet; its filters handle HTTPS, logins and limits | IIS with ARR and authentication modules, in front of every site |
+| **ExternalDNS** | Watches our routes and writes the matching public DNS records (in GoDaddy) | A DNS admin who never forgets a change |
 | **Gateway API** | The modern way to let outside traffic in | IIS bindings + ARR, as records |
 | **Ingress** | The older way to let outside traffic in | Same as above, the previous generation |
 | **k3s** | Small, lightweight Kubernetes for edge sites | Windows Server Core for small branch offices |

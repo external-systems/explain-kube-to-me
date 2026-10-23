@@ -8,9 +8,9 @@ nav:
   - Start here: index.md
   - The presentation: presentation.md
   - 1. The big idea: big-idea.md
-  - 2. Kubernetes is an API: api.md
-  - 3. Teaching the API new tricks: extending.md
-  - 4. A database built in: database.md
+  - 2. First, a reliable database: database.md
+  - 3. Kubernetes is an API: api.md
+  - 4. Teaching the API new tricks: extending.md
   - 5. The plumbing comes free: plumbing.md
   - 6. Community and ownership: community.md
   - 7. Our platform: our-platform.md

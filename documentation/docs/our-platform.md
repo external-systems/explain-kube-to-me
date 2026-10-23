@@ -129,7 +129,7 @@ flowchart LR
 
 ## Floor 6: our own API
 
-On top of everything, we add the products from [chapter 3](extending.md):
+On top of everything, we add the products from [chapter 4](extending.md):
 tenants, databases, VPNs, cloud infrastructure and virtual machines, each
 one a new kind of record in our own Kubernetes API, many of them defined
 with KRO and no code at all.

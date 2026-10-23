@@ -109,6 +109,6 @@ The thermostat idea, *describe what you want and a controller makes it
 true*, is not limited to running containers. Kubernetes lets us apply it to
 **anything**: databases, cloud servers, VPNs, Windows virtual machines.
 That is what makes it an *extensible API* and a *platform that develops
-itself*, and it is what the next two chapters are about.
+itself*, and it is what the next chapters are about.
 
-[Next: Kubernetes is an API :material-arrow-right:](api.md){ .md-button .md-button--primary }
+[Next: First, a reliable database :material-arrow-right:](database.md){ .md-button .md-button--primary }

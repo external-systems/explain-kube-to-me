@@ -1,9 +1,10 @@
-# 4. A database built in
+# 2. First, a reliable database
 
-Every record from the last two chapters, every Deployment, every Secret,
-every custom "Tenant" or "PostgresCluster", has to be stored somewhere. That
-somewhere is a database that ships inside Kubernetes. Which means
-**Kubernetes is also a database**, and our applications can use it.
+Before anything else, **Kubernetes is a database**: a reliable datastore
+that holds every record about everything it runs (every app, VM, website,
+tenant and setting), **wrapped in an API** that we can extend. Everything
+in the following chapters is built on those two pieces, and our own
+applications can use them too.
 
 ## A key-value store: the simplest kind of database
 
@@ -22,10 +23,27 @@ have it:
     `HKEY_LOCAL_MACHINE\SOFTWARE\...` pointing to a value. etcd is the same
     idea, made reliable enough to run a data center.
 
-!!! note "And sometimes it really is SQL"
-    **k3s**, the lightweight Kubernetes we run at the edge, can store its
-    records in **SQLite, PostgreSQL or MySQL** instead of etcd. Same API on
-    top, a SQL database underneath.
+!!! note "etcd is the default, not the only choice"
+    We use **etcd** in our clusters. Kubernetes can also keep its records in
+    **PostgreSQL** or **NATS** (k3s, the lightweight Kubernetes we run at
+    the edge, can even use SQLite or MySQL). Same API on top, a different
+    database underneath.
+
+## Why it is reliable
+
+etcd keeps every record on **three (or five) servers**. A change only
+counts once **most of them agree** they have it. One server can die, or
+be patched, and nothing is lost and nothing stops: the others carry on.
+That is a SQL Server Always On availability group, built in and free.
+
+## The API wraps the database
+
+Nobody talks to the datastore directly. Every read and write goes through
+the Kubernetes API, which checks **who you are**, whether you are
+**allowed**, whether the record is **valid**, **keeps history**, and
+**tells everyone watching** that something changed. The verbs are the
+ones you know: GET, POST, PUT and DELETE are SELECT, INSERT, UPDATE and
+DELETE.
 
 ## What it gives us that a plain database does not
 
@@ -65,7 +83,7 @@ flowchart LR
     The built-in database is for **small, important records**: configuration
     and state, not millions of orders or customer files. Big business data
     still belongs in a real database, and thanks to operators like
-    CloudNativePG ([chapter 3](extending.md)), getting one of those is just
+    CloudNativePG ([chapter 4](extending.md)), getting one of those is just
     another work order.
 
-[Next: The plumbing comes free :material-arrow-right:](plumbing.md){ .md-button .md-button--primary }
+[Next: Kubernetes is an API :material-arrow-right:](api.md){ .md-button .md-button--primary }

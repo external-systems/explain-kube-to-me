@@ -1,4 +1,4 @@
-# 2. Kubernetes is an API
+# 3. Kubernetes is an API
 
 Most people describe Kubernetes as "a container platform". That is true,
 but it misses the part that matters most for our business. **Kubernetes is

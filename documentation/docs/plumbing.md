@@ -69,10 +69,17 @@ time (a server is patched, a server dies). The name stays; only the address
 behind it changes, and CoreDNS updates in seconds. No hosts files, no
 hard-coded IP addresses, no DNS tickets.
 
-**Two phone books.** From the internet, Cloudflare's public DNS turns
-`tjscatfishandwings.com` into our front door. Envoy Gateway then reads an
+**Two phone books.** From the internet, **GoDaddy's** public DNS (where
+Dad's domains live) turns `tjscatfishandwings.com` into our front door. Envoy Gateway then reads an
 HTTPRoute record ("this domain goes to the `payload` service in TJ's
 folder"), and CoreDNS finds that service.
+
+**ExternalDNS keeps GoDaddy up to date.** ExternalDNS is a small
+Kubernetes program (from the Kubernetes project) that watches our HTTPRoute
+records. When a developer or our portal adds a site, it writes the matching
+DNS record into GoDaddy through GoDaddy's API; change or delete the route
+and the GoDaddy record follows. Nobody logs into GoDaddy to edit DNS by
+hand.
 
 ## The front door: Envoy Gateway
 
@@ -127,7 +134,7 @@ the difference.
 
 !!! info "Windows is welcome too"
     Kubernetes can run **Windows Server containers** (Azure's AKS supports
-    Windows nodes), and with **KubeVirt** ([chapter 3](extending.md)) it can
+    Windows nodes), and with **KubeVirt** ([chapter 4](extending.md)) it can
     run full **Windows Server virtual machines** next to everything else.
     Older Windows-only systems can join the platform before they are ever
     modernized.

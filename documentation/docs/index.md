@@ -23,9 +23,9 @@ you want more detail on a slide.
 | Chapter | The question it answers |
 | --- | --- |
 | [1. The big idea](big-idea.md) | What are containers, and what does Kubernetes actually do with them? |
-| [2. Kubernetes is an API](api.md) | Why do we keep calling it an API instead of a server product? |
-| [3. Teaching the API new tricks](extending.md) | How can we add our own "endpoints" for databases, cloud servers, VPNs and Windows VMs? |
-| [4. A database built in](database.md) | Where does Kubernetes keep its information, and how can our apps use it? |
+| [2. First, a reliable database](database.md) | Where does Kubernetes keep its information, and why can we trust it? |
+| [3. Kubernetes is an API](api.md) | How does the API wrap that database, and why does that matter? |
+| [4. Teaching the API new tricks](extending.md) | How can we add our own "endpoints" for databases, cloud servers, VMs and AI agents? |
 | [5. The plumbing comes free](plumbing.md) | What do we get without building it ourselves? |
 | [6. Community and ownership](community.md) | Who builds this, who owns it, and why should we trust it? |
 | [7. Our platform](our-platform.md) | How do all these pieces fit together in what we run? |
@@ -38,6 +38,11 @@ term in one place, each with a Windows-world comparison.
 
 <div class="grid cards" markdown>
 
+-   :material-database:{ .lg } **It is a database first**
+
+    Everything it knows lives in a built-in database that our apps can use
+    too.
+
 -   :material-api:{ .lg } **It is an API**
 
     You describe what you want, Kubernetes makes it happen and keeps it
@@ -47,11 +52,6 @@ term in one place, each with a Windows-world comparison.
 
     We can add our own types of things to that API, like adding a new
     collection in Payload CMS.
-
--   :material-database:{ .lg } **It is a database**
-
-    Everything it knows lives in a built-in database that our apps can use
-    too.
 
 -   :material-pipe:{ .lg } **The plumbing is included**
 

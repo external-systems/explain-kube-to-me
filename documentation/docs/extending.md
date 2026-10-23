@@ -1,4 +1,4 @@
-# 3. Teaching the API new tricks
+# 4. Teaching the API new tricks
 
 This chapter is the heart of the headline: **the extensible API, a platform
 that develops itself.**
@@ -153,4 +153,4 @@ flowchart TB
   improvements keep coming from the whole world, not only from us. That is
   the subject of [chapter 6](community.md).
 
-[Next: A database built in :material-arrow-right:](database.md){ .md-button .md-button--primary }
+[Next: The plumbing comes free :material-arrow-right:](plumbing.md){ .md-button .md-button--primary }
