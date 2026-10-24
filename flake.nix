@@ -17,22 +17,20 @@
     };
     import-tree.url = "github:denful/import-tree";
 
-    # Mkdocs — flake-parts module: set `documentation.mkdocs-root` and get
-    # `packages.documentation` + `apps.watch-documentation`
-    # (flake-parts/default.nix). Ships mkdocs + Material + common plugins.
-    mkdocs-flake = {
-      url = "github:applicative-systems/mkdocs-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
-    };
-
-    # reveal.js — source only (not a flake). Release tags commit the
-    # prebuilt `dist/` (reveal.js, themes, plugins), so the slides need
-    # zero npm: flake-parts/slides.nix copies `dist/` next to slides/.
-    # Upgrade by bumping the tag, then `nix flake update reveal-js`.
-    reveal-js = {
-      url = "github:hakimel/reveal.js?ref=6.0.2";
-      flake = false;
+    # Presenting — docs site (MkDocs) + slide deck (reveal.js) as one
+    # flake-parts module (github:external-systems/presenting). It carries
+    # mkdocs-flake, the reveal.js pin and the deck build, so this repo only
+    # sets `presenting.slides.dir` + `documentation.*` (flake-parts/default.nix).
+    # Upgrade docs tooling or reveal.js with `nix flake update presenting`.
+    presenting = {
+      url = "github:external-systems/presenting";
+      # Nested `inputs = {...}`: flat `inputs.<x>.follows` lines trip
+      # statix's repeated-keys lint (W20).
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        import-tree.follows = "import-tree";
+      };
     };
   };
 
@@ -47,7 +45,9 @@
         # Every .nix file under ./flake-parts is a flake-parts module,
         # loaded automatically — no import list to keep in sync.
         (inputs.import-tree ./flake-parts)
-        inputs.mkdocs-flake.flakeModules.default
+        # packages.{documentation,slides}, apps.{watch-documentation,serve-slides},
+        # and the deck embedded in the site at /slides/.
+        inputs.presenting.flakeModules.default
       ];
     };
 }

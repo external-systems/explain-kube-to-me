@@ -15,8 +15,10 @@ comparisons; the only code is one short PayloadSite order form.
 - `slides/icons/`: product logos and line icons, with their sources and
   licenses in `slides/CREDITS.txt`.
 
-Created from the [presenting](https://github.com/external-systems/presenting)
-template: a Nix flake (flake-parts + mkdocs-flake + reveal.js), zero npm.
+Built with the [presenting](https://github.com/external-systems/presenting)
+flake-parts module: `flake.nix` imports `inputs.presenting.flakeModules.default`
+and sets `presenting.slides.dir`; mkdocs-flake, the reveal.js pin and the deck
+build all come from that one input (`nix flake update presenting`). Zero npm.
 
 ```bash
 nix run .#serve-slides          # rehearse the deck → http://127.0.0.1:8000 (S = speaker notes)
@@ -29,6 +31,7 @@ nix flake check                 # build both + lint the Nix code
 
 Pushes to `main` publish the website, deck included, to GitHub Pages
 (`.github/workflows/pages.yml`). One-time setup: Settings → Pages → Source:
-"GitHub Actions".
+"GitHub Actions". Build output is never committed: CI builds and deploys
+it, and `result`, `_site/` and `site/` are gitignored.
 
 Remember to `git add` new files: Nix only sees files git tracks.
