@@ -4,6 +4,35 @@ This is the most important chapter. Technology comes and goes; what makes
 Kubernetes a safe, long-term bet is **who builds it, who owns it, and how it
 keeps getting better**.
 
+## How the CNCF works
+
+The **Cloud Native Computing Foundation (CNCF)** is part of the **Linux
+Foundation**, a neutral non-profit that holds the project names and the
+code. Three groups run it:
+
+```mermaid
+flowchart TB
+    LF["🏛️ Linux Foundation<br/>neutral non-profit: holds the names and the code"] --> C["CNCF"]
+    C --> B["Governing Board<br/>the member companies who pay:<br/>budget, events, marketing"]
+    C --> T["Technical Oversight Committee<br/>11 elected engineers decide which<br/>projects join and move up"]
+    C --> M["Each project's maintainers<br/>engineers from several companies<br/>decide its code, in public"]
+```
+
+- **The members.** Hundreds of companies pay dues. The biggest, such as
+  Google, Microsoft, AWS, Red Hat and IBM, Apple, Oracle, Intel, Cisco and
+  Huawei, get a seat on the Governing Board, which runs the budget and
+  events like KubeCon.
+- **The Technical Oversight Committee (TOC).** Eleven elected engineers
+  decide which projects are accepted and when they move up a level.
+- **The maintainers.** Each project is run by its own team, in public, and
+  a project cannot graduate until its maintainers come from more than one
+  company.
+- **The users.** Companies that only use the software have a voice too,
+  through the CNCF end-user community.
+
+Money buys a seat at the table, **not the code**. No single company is in
+charge.
+
 ## "I have never heard of it" does not mean "small"
 
 Names like Argo CD, Flux, Cilium, KubeVirt, Crossplane or KRO are not
@@ -36,6 +65,17 @@ level after checking it, a bit like vendor due diligence:
 | 🌱 **Sandbox** | Accepted by the CNCF; a neutral home and open governance. Early, may change a lot. | Try it at the edges. |
 | 🌿 **Incubating** | Used in production by at least three independent companies; a healthy, growing team; steady releases. | Use it, and keep an eye on it. |
 | 🌳 **Graduated** | An independent security audit; maintainers from several companies; a public list of production users; formal governance. | Build the business on it. |
+
+### Why Graduated is safe for years
+
+- **Nobody can take it away.** The foundation owns the name and the code,
+  so no company can close it or change its license.
+- **It does not depend on one company.** Maintainers come from several
+  companies; if one walks away, the project goes on.
+- **It has been checked.** An independent security audit, real production
+  users and steady, public releases.
+- **It has a track record.** Kubernetes and Envoy have been Graduated
+  since 2018, etcd since 2020.
 
 ## When our projects joined the CNCF
 

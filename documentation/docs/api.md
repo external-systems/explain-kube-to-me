@@ -34,16 +34,21 @@ customer 42"* or *"create a new order"*, and gets an answer back.
 
 The Kubernetes API works the same way, and **everything in it is a record
 of a certain type**. Kubernetes calls the types *kinds* and the records
-*resources* (or *objects*). A few of the built-in kinds:
+*resources* (or *objects*). The built-in kinds, in one line each:
 
-| Kind (the "type") | What one record means | Windows-world comparison |
+| Kind (the "type") | In one line | Windows-world comparison |
 | --- | --- | --- |
-| **Pod** | One running copy of an app (one or more containers) | A running w3wp.exe worker process |
-| **Deployment** | "Keep N copies of this app running, at this version" | An IIS site + app pool, plus someone watching it |
-| **Service** | A stable name and address for a group of copies | A DNS name pointing at a load balancer |
+| **Pod** | One running container, the smallest piece | A running w3wp.exe worker process |
+| **Deployment** | Containers spread across the cluster, N copies always on | A web farm: an IIS site on several servers |
+| **StatefulSet** | Stable containers spread out: each keeps its own name and disk | Named SQL Server nodes, each with its own drive |
+| **DaemonSet** | One copy on every server | Antivirus or a monitoring agent on each box |
+| **Job** | Run once until done | A batch script |
+| **CronJob** | A scheduled job: "every night at 2 a.m." | A Task Scheduler task |
+| **Service** | A load balancer with a fixed name | A DNS name pointing at a load balancer |
+| **HTTPRoute** | Proxy config: "this address goes to that app" | An IIS URL Rewrite / ARR rule |
+| **PersistentVolumeClaim** (PVC) | A disk: "I need 20 GB" | Asking the storage team for a new drive letter |
+| **ConfigMap** | Settings | web.config |
 | **Secret** | A password, key or certificate | Credentials in the Windows Credential Manager |
-| **PersistentVolumeClaim** | "I need 20 GB of disk" | Asking the storage team for a new drive letter |
-| **CronJob** | "Run this every night at 2 a.m." | A Task Scheduler task |
 | **Namespace** | A folder that groups records, per team or per customer | A separate IIS server per client |
 
 Every one of these is just **a record you create, read, update or delete**
