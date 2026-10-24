@@ -47,10 +47,10 @@ everything inside the cluster that keeps itself up to date.
 
 ```mermaid
 sequenceDiagram
-    participant W as TJ's website
+    participant W as bff's website
     participant D as CoreDNS (phone book)
     participant S as payload-db (service)
-    participant P as database copies
+    participant P as MongoDB copies
     W->>D: 1. Where is payload-db?
     D-->>W: 2. 10.43.0.12
     W->>S: 3. connect
@@ -62,7 +62,7 @@ sequenceDiagram
 tenant's folder, "it's a service", and "this cluster". Inside its own
 folder, an app only needs the short name `payload-db`. So TJ's site and
 bff's site run with **identical settings** and each still reaches its own
-database: the folder decides. Adding a tenant needs no reconfiguring.
+database (Postgres for TJ's, MongoDB for bff): the folder decides. Adding a tenant needs no reconfiguring.
 
 **Things move, names don't.** Copies of apps move between servers all the
 time (a server is patched, a server dies). The name stays; only the address

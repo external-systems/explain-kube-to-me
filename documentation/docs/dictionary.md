@@ -13,6 +13,7 @@ from the Windows and web world.
 | **Cluster** | A group of servers that Kubernetes manages as one | A server farm |
 | **Cluster Mesh** | Joining several clusters so they act like one | Linking two data centers |
 | **CNCF** | The foundation that owns Kubernetes and many related projects | A neutral standards body |
+| **ConfigMap** | Settings for an app, stored as a record | web.config |
 | **Container** | An app sealed in a box with everything it needs to run | A website + IIS + .NET, packaged together |
 | **Controller** | A program that keeps reality matching a record | A thermostat |
 | **CoreDNS** | Automatic name lookup inside the cluster | Windows DNS Server, but self-updating |
@@ -20,15 +21,17 @@ from the Windows and web world.
 | **Crossplane** | Creates cloud resources from Kubernetes records | A remote control for Azure, AWS and Google Cloud |
 | **CSI** | The standard plug for storage | Drivers for a SAN |
 | **Custom resource** | One record of a custom kind | One entry in a Payload collection |
+| **DaemonSet** | One copy of a program on every server | Antivirus or a monitoring agent on each box |
 | **Deployment** | "Keep N copies of this app running, at this version" | An IIS site + app pool, with someone watching it |
 | **Desired state** | Describing the result you want, not the steps | Setting a thermostat to 70°F |
 | **Docker** | A tool for building and running containers on one machine | (Not needed to use Kubernetes) |
 | **Docker Swarm** | Docker's own way to run containers on several servers | A simple web farm: runs apps, but can't be taught new things |
-| **etcd** | The built-in database where every record is kept | The Windows Registry, replicated and made bulletproof |
 | **Envoy Gateway** | Our front door for traffic from the internet; its filters handle HTTPS, logins and limits | IIS with ARR and authentication modules, in front of every site |
+| **etcd** | The built-in database where every record is kept | The Windows Registry, replicated and made bulletproof |
 | **ExternalDNS** | Watches our routes and writes the matching public DNS records (in GoDaddy) | A DNS admin who never forgets a change |
 | **Gateway API** | The modern way to let outside traffic in | IIS bindings + ARR, as records |
 | **Ingress** | The older way to let outside traffic in | Same as above, the previous generation |
+| **Job** | A program that runs once until it is done | A batch script |
 | **k3s** | Small, lightweight Kubernetes for edge sites | Windows Server Core for small branch offices |
 | **Kata Containers** | Runs a risky container inside its own small virtual machine | Hyper-V isolation for Windows containers |
 | **KRO / Resource Graph Definition** | A recipe that creates a new kind of record out of existing ones, no code | A SQL view or stored procedure anyone can write |
@@ -44,7 +47,9 @@ from the Windows and web world.
 | **OpenTofu** | An open, foundation-owned tool for creating cloud infrastructure | Terraform, without the license risk |
 | **Operator** | A CRD + controller that does an expert's job, 24/7 | A DBA in a box |
 | **Pod** | One running copy of an app | A running w3wp.exe process |
+| **PVC (PersistentVolumeClaim)** | A disk an app asks for: "I need 20 GB" | A new drive letter from the storage team |
 | **RKE2** | Security-hardened Kubernetes for production | Windows Server Datacenter edition |
 | **Secret** | A password, key or certificate stored safely | Windows Credential Manager |
 | **Service** | A stable name for a group of app copies | A DNS name behind a load balancer |
+| **StatefulSet** | Stable copies of a program: each keeps its own name and disk | Named SQL Server nodes, each with its own drive |
 | **WireGuard** | A fast, modern encrypted tunnel between servers | A site-to-site VPN |

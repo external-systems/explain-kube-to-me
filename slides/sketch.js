@@ -6,9 +6,11 @@
  * (<text>, <image>) are left as they are, so labels stay crisp and easy to
  * read.
  *
- *   stroke / stroke-width / fill   used as given (fill="none" = outline only)
+ *   stroke / stroke-width / fill   fill is drawn as a soft, flat tint of the
+ *                                  colour so text on top stays easy to read
+ *                                  (fill="none" = outline only)
  *   rx                             rounded corners on a rect (default 12)
- *   data-fill="solid"              solid fill instead of hachure lines
+ *   data-fill="solid"              the fill colour at full strength
  *   data-arrow                     arrowhead at the end of a line / polyline
  *   data-dash                      dashed outline
  *
@@ -47,6 +49,12 @@
 			.map((p) => p.split(",").map(Number));
 	}
 
+	// "#d97757" -> "rgba(217, 119, 87, 0.22)"
+	function tint(hex) {
+		const n = parseInt(hex.slice(1), 16);
+		return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, 0.22)`;
+	}
+
 	function options(el, seed) {
 		const fill = el.getAttribute("fill");
 		const o = {
@@ -55,12 +63,12 @@
 			bowing: 1.2,
 			stroke: el.getAttribute("stroke") || CREAM,
 			strokeWidth: num(el, "stroke-width", 2),
-			fillStyle: el.getAttribute("data-fill") || "hachure",
-			fillWeight: 1.4,
-			hachureGap: 7,
-			hachureAngle: -41,
+			fillStyle: "solid",
 		};
-		if (fill && fill !== "none") o.fill = fill;
+		if (fill && fill !== "none") {
+			const solid = el.getAttribute("data-fill") === "solid" || !/^#[0-9a-f]{6}$/i.test(fill);
+			o.fill = solid ? fill : tint(fill);
+		}
 		if (el.hasAttribute("data-dash")) o.strokeLineDash = [10, 8];
 		return o;
 	}

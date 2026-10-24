@@ -68,16 +68,17 @@ ready, the record fills in its status:
 
 ```mermaid
 flowchart TB
-    B["🧠 Our Kubernetes cluster<br/>API + KRO + Crossplane"] --> T1["tjs-catfish-and-wings<br/>always Google"]
-    B --> T2["michael<br/>always Azure"]
-    B --> T3["bff<br/>on-prem, Google and ours"]
-    B --> T4["dev-team<br/>our clusters + Cloudflare"]
+    B["🧠 Our Kubernetes cluster<br/>API + KRO + Crossplane"] --> T0["matt (super admin)<br/>always Google"]
+    B --> T1["michael<br/>always Azure"]
+    B --> T2["tjs-catfish-and-wings<br/>Google Cloud Run"]
+    B --> T3["bff<br/>a mix of Matt's and Andrew's"]
+    B --> T4["dev-team (Andrew)<br/>on-prem + AKS / GKE"]
 ```
 
-Our cluster is the brain; each customer's site runs wherever they prefer:
-TJ's always picks Google, Michael always picks Azure, bff mixes on-prem,
-Google and our own clusters, and our own sites run in our clusters or on
-Cloudflare. Mixed, multi-tenant, multi-cloud, all through one API.
+Our cluster is the brain; each site runs wherever its owner prefers:
+Matt always picks Google, Michael always picks Azure, Andrew prefers our
+on-prem clusters and cloud Kubernetes (AKS, GKE), and bff uses a mix of
+Matt's and Andrew's infrastructure. Mixed, multi-tenant, multi-cloud, all through one API.
 
 ## KRO shows the basics, Crossplane builds the rest
 
@@ -113,16 +114,17 @@ keep them safe and fair:
 
 - **RBAC** (role-based access control) says who may use which routes,
   where. TJ's staff can see and edit sites only in
-  `tjs-catfish-and-wings`; Matt can run VMs and workflows only in `matt`;
-  our portal can create sites in every tenant folder; `dev-team` can do
-  everything.
+  `tjs-catfish-and-wings`; Matt is the super admin and can create
+  anything, anywhere; our portal can create sites in every tenant folder;
+  `dev-team` can do everything in its own folder.
 - **ResourceQuota** sets limits per folder, for example:
 
 | Tenant | Payload sites | CPU |
 | --- | --- | --- |
-| `tjs-catfish-and-wings` | 2 | 4 |
+| `matt` | no limit | no limit |
+| `dev-team` | no limit | no limit |
 | `bff` | 2 | 4 |
-| `matt` | 0 | 8 |
+| `tjs-catfish-and-wings` | 2 | 4 |
 | `michael` | 1 | 2 |
 
 For TJ's, a third POST is refused with *403 Forbidden: exceeded quota*. On top of
