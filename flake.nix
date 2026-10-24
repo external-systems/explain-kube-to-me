@@ -1,5 +1,5 @@
 {
-  description = "Static website (MkDocs) + slide deck (reveal.js), built with Nix";
+  description = "Kubernetes, The Extensible API: docs site (MkDocs) + slide deck (reveal.js)";
 
   # Every outside dependency is an input below. `flake.lock` records the
   # exact commit + content hash of each one, so every machine builds the
