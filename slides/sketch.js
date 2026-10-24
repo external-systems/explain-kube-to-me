@@ -3,8 +3,8 @@
  * Write a diagram as a plain <svg class="sketch">. Once reveal.js is ready,
  * every rect, ellipse, circle, line and polyline inside it is redrawn with
  * rough.js (vendor/rough.js) so it looks sketched by hand. Text and icons
- * (<text>, <image>) are left as they are; custom.css gives the text a
- * handwritten font.
+ * (<text>, <image>) are left as they are, so labels stay crisp and easy to
+ * read.
  *
  *   stroke / stroke-width / fill   used as given (fill="none" = outline only)
  *   rx                             rounded corners on a rect (default 12)

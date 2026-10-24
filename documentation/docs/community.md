@@ -37,6 +37,22 @@ level after checking it, a bit like vendor due diligence:
 | 🌿 **Incubating** | Used in production by at least three independent companies; a healthy, growing team; steady releases. | Use it, and keep an eye on it. |
 | 🌳 **Graduated** | An independent security audit; maintainers from several companies; a public list of production users; formal governance. | Build the business on it. |
 
+## When our projects joined the CNCF
+
+| Project | Started | Joined the CNCF | Graduated |
+| --- | --- | --- | --- |
+| Kubernetes | 2014, Google | 2016 (its first project) | 2018 |
+| etcd | 2013, CoreOS | 2018 | 2020 |
+| CoreDNS | 2016 | 2017 | 2019 |
+| Envoy (and Envoy Gateway) | 2016, Lyft | 2017 | 2018 |
+| Flux | 2016, Weaveworks | 2019 | 2022 |
+| KubeVirt | 2017, Red Hat | 2019 | incubating |
+| Argo | 2017, Applatix (later Intuit) | 2020 | 2022 |
+| Crossplane | 2018, Upbound | 2020 | 2025 |
+| Cilium | 2016, Isovalent | 2021 | 2023 |
+| CloudNativePG | 2022, EDB | 2025 | sandbox |
+| OpenTofu | 2023, from Terraform | 2025 | sandbox |
+
 ## Our rule: CNCF on the pathway
 
 The **pathway** is everything a customer's order passes through: our
@@ -140,10 +156,13 @@ timeline
     2003-2013 : Google runs Borg internally, the idea is proven at huge scale
     2014 : Kubernetes released as open source
     2015 : Version 1.0, given to the new CNCF
-    2018 : Kubernetes is the first CNCF project to graduate
+    2017 : Custom kinds of record (CRDs) and permissions (RBAC)
+    2018 : First CNCF project to graduate : CoreDNS becomes its DNS : CSI, the storage plug-in, is stable
     2019 : Windows Server containers fully supported
-    2023 : Gateway API, the modern front door, becomes stable
-    Today : Every major cloud, AI and GPU workloads, still a new release every 4 months
+    2020 : Ingress, the first front door, is stable
+    2023 : Gateway API, the modern front door, reaches 1.0
+    2025 : GPUs as a first-class resource : resize running apps
+    Today : Every major cloud, still a new release every 4 months
 ```
 
 !!! quote "The short version"

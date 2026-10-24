@@ -12,8 +12,8 @@ comparisons; the only code is one short PayloadSite order form.
   has speaker notes (press `S`).
 - `slides/sketch.js` + `slides/vendor/rough.js`: turn the `<svg class="sketch">`
   diagrams in the deck into hand-drawn, Excalidraw-style drawings.
-- `slides/icons/`, `slides/fonts/`: product logos, line icons and the
-  handwriting font, with their sources and licenses in `slides/CREDITS.txt`.
+- `slides/icons/`: product logos and line icons, with their sources and
+  licenses in `slides/CREDITS.txt`.
 
 Created from the [presenting](https://github.com/external-systems/presenting)
 template: a Nix flake (flake-parts + mkdocs-flake + reveal.js), zero npm.

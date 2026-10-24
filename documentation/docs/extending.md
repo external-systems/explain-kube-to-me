@@ -74,7 +74,7 @@ more, and they work exactly like the built-in ones:
 | `/apis/gateway.envoyproxy.io/v1alpha1/namespaces/{namespace}/securitypolicies` | front-door logins and security | Envoy Gateway |
 | `/apis/infra.contrib.fluxcd.io/v1alpha2/namespaces/{namespace}/terraforms` | cloud infrastructure via OpenTofu | Flux OpenTofu controller |
 | `/apis/compute.gcp.upbound.io/v1beta1/instances` | Google Cloud servers | Crossplane |
-| `/apis/kro.run/v1alpha1/namespaces/{namespace}/tenants` | a whole new customer (ours) | KRO, no code |
+| `/apis/netsam.com/v1alpha1/namespaces/{namespace}/tenants` | a whole new customer | NetSam, with KRO (no code) |
 
 Nobody rebuilt or restarted Kubernetes to get those routes. Logins,
 permissions, history and dashboards all work on them from the moment

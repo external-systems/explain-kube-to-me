@@ -8,7 +8,7 @@
 
 <h2>The Extensible API</h2>
 
-<p class="big hand" style="color: var(--clay)">a platform that develops itself</p>
+<p class="big" style="color: var(--clay); font-family: Georgia, serif; font-style: italic">a platform that develops itself</p>
 
 <p class="hint">→ next topic · ↓ deeper · F full screen · Esc overview</p>
 
@@ -179,201 +179,6 @@ without us writing any of them.
 
 ---
 
-<!-- .slide: data-transition="zoom" -->
-
-<p class="kicker">The API: every record has a web address</p>
-
-## Every route has the same shape
-
-<div class="anatomy">
-<div class="fragment fade-up"><span class="seg" style="color:var(--green)">GET</span><span class="lbl">the verb: what to do</span></div>
-<div><span class="sep">/apis/</span></div>
-<div class="fragment fade-up"><span class="seg" style="color:var(--blue)">{group}</span><span class="lbl">who added it</span></div>
-<div><span class="sep">/</span></div>
-<div class="fragment fade-up"><span class="seg" style="color:var(--muted)">{version}</span><span class="lbl">its version</span></div>
-<div><span class="sep">/namespaces/</span></div>
-<div class="fragment fade-up"><span class="seg" style="color:var(--sand)">{namespace}</span><span class="lbl">whose folder: the tenant</span></div>
-<div><span class="sep">/</span></div>
-<div class="fragment fade-up"><span class="seg" style="color:var(--clay)">{resource}</span><span class="lbl">the kind of record</span></div>
-<div><span class="sep">/</span></div>
-<div class="fragment fade-up"><span class="seg" style="color:var(--green)">{name}</span><span class="lbl">one record</span></div>
-</div>
-
-<div class="routes ">
-<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span>/<span class="name">main-site</span></span><span class="what">TJ's website</span></div>
-<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">bff</span>/<span class="res">clusters</span>/<span class="name">orders-db</span></span><span class="what">bff's database</span></div>
-<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">dev-team</span>/<span class="res">virtualmachines</span>/<span class="name">sql-01</span></span><span class="what">a Windows SQL VM</span></div>
-<div class="route  fragment fade-left"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">matt</span>/<span class="res">workflows</span>/<span class="name">nightly-report</span></span><span class="what">Matt's nightly job</span></div>
-<div class="route  fragment fade-left"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">michael</span>/<span class="res">payloadsites</span></span><span class="what"><em>a new site for Michael</em></span></div>
-</div>
-
-<div class="takeaway fragment fade-up">The list of routes <strong>is</strong> the platform. If there is a route for it, the platform can do it. If not, it can't, <em>yet</em>.</div>
-
-<p class="hint">↓ routes add up · who gets what</p>
-
-Note:
-Every record in the datastore has a web address, and every address has the
-same parts. Then the same template, filled in for five tenants: the sand
-part is the tenant's folder, the orange part is the kind of record. Read
-any route left to right: who added it, whose folder, what kind, which one.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Routes add up over time</p>
-
-## Day 1: every Kubernetes starts with these
-
-<div class="routes tight" data-id="routes">
-<div class="route " data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route " data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route " data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a name other apps can call</span></div>
-<div class="route " data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route " data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-</div>
-
-<p class="muted" data-id="count"><strong>5</strong> routes = <strong>5</strong> things our platform can do</p>
-
-Note:
-The built-in routes. Each step down installs one more project.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Month 2 · install #1</p>
-
-## <img class="icon" src="icons/microsoft-windows.svg" alt=""> + Windows VMs
-
-<div class="routes tight" data-id="routes">
-<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a name other apps can call</span></div>
-<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-<div class="route new" data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs</span></div>
-</div>
-
-<p class="muted" data-id="count"><strong>6</strong> routes = <strong>6</strong> things our platform can do</p>
-
-Note:
-Install KubeVirt. A Windows Server VM is now a POST. Nobody rebuilt or restarted Kubernetes.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Month 4 · install #2</p>
-
-## <img class="icon" src="icons/postgresql.svg" alt=""> + Databases, workflows, front doors
-
-<div class="routes tight" data-id="routes">
-<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a name other apps can call</span></div>
-<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs</span></div>
-<div class="route new" data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases</span></div>
-<div class="route new" data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">workflows</span></div>
-<div class="route new" data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors</span></div>
-</div>
-
-<p class="muted" data-id="count"><strong>9</strong> routes = <strong>9</strong> things our platform can do</p>
-
-Note:
-Install CloudNativePG, Argo and Envoy Gateway. Nobody rebuilt or restarted Kubernetes.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Month 8 · install #3</p>
-
-## <img class="icon" src="icons/cncf-crossplane.svg" alt=""> + The clouds
-
-<div class="routes tight" data-id="routes">
-<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a name other apps can call</span></div>
-<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs</span></div>
-<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases</span></div>
-<div class="route " data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">workflows</span></div>
-<div class="route " data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors</span></div>
-<div class="route new" data-id="bucket"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">storage.gcp.upbound.io</span>/v1beta1/<span class="res">buckets</span></span><span class="what">Google Cloud storage</span></div>
-<div class="route new" data-id="azpg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">dbforpostgresql.azure.upbound.io</span>/v1beta1/<span class="res">flexibleservers</span></span><span class="what">Azure databases</span></div>
-</div>
-
-<p class="muted" data-id="count"><strong>11</strong> routes = <strong>11</strong> things our platform can do</p>
-
-Note:
-Install Crossplane: Azure and Google resources become routes on OUR API. Nobody rebuilt or restarted Kubernetes.
-
---
-
-<!-- .slide: data-auto-animate -->
-
-<p class="kicker" data-id="kick">Year 2 · install #4</p>
-
-## <img class="icon" src="icons/payload-light.svg" alt=""> + Our own product
-
-<div class="routes tight" data-id="routes">
-<div class="route dim" data-id="pods"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
-<div class="route dim" data-id="deploy"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
-<div class="route dim" data-id="svc"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a name other apps can call</span></div>
-<div class="route dim" data-id="secrets"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
-<div class="route dim" data-id="cron"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
-<div class="route " data-id="vm"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs</span></div>
-<div class="route " data-id="pg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases</span></div>
-<div class="route " data-id="wf"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">workflows</span></div>
-<div class="route " data-id="gw"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors</span></div>
-<div class="route " data-id="bucket"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">storage.gcp.upbound.io</span>/v1beta1/<span class="res">buckets</span></span><span class="what">Google Cloud storage</span></div>
-<div class="route " data-id="azpg"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">dbforpostgresql.azure.upbound.io</span>/v1beta1/<span class="res">flexibleservers</span></span><span class="what">Azure databases</span></div>
-<div class="route new" data-id="payload"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">payloadsites</span></span><span class="what">a customer's Payload CMS site</span></div>
-</div>
-
-<p class="muted" data-id="count"><strong>12</strong> routes = <strong>12</strong> things our platform can do</p>
-
-Note:
-With KRO we add our own route, PayloadSite, without writing a program. Nobody rebuilt or restarted Kubernetes.
-
---
-
-<!-- .slide: data-transition="zoom" -->
-
-<p class="big">5 routes became <strong>12</strong>.</p>
-
-# Nobody rebuilt the server.
-
-<p class="fragment fade-up">Same logins · same permissions · same history · same tools, on every new route.</p>
-
-<p class="big fragment fade-up">More routes = <strong>more platform</strong>.</p>
-
---
-
-<!-- .slide: data-transition="convex" -->
-
-## Routes are capabilities, for every tenant
-
-<table style="margin:0.4em auto"><thead><tr><th>Tenant (folder)</th><th><img class="icon" src="icons/lucide-box.svg" alt=""> Apps</th><th><img class="icon" src="icons/postgresql.svg" alt=""> Databases</th><th><img class="icon" src="icons/microsoft-windows.svg" alt=""> Windows VMs</th><th><img class="icon" src="icons/cncf-argo.svg" alt=""> Workflows</th><th class="fragment fade-in" data-fragment-index="1"><img class="icon" src="icons/payload-light.svg" alt=""> Payload sites</th></tr></thead><tbody>
-<tr><td><em>tjs-catfish-and-wings</em></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
-<tr><td><em>bff</em></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
-<tr><td><em>dev-team</em></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
-<tr><td><em>matt</em></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td class="fragment fade-in" data-fragment-index="1"><span class="muted">·</span></td></tr>
-<tr><td><em>michael</em></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
-</tbody></table>
-
-<div class="takeaway fragment fade-up" data-fragment-index="2">Install a route <strong>once</strong> and every tenant can have it. <strong>Permissions and limits</strong> decide who actually gets it.</div>
-
-Note:
-Press next: the Payload sites column appears for everyone the moment KRO
-adds the route.
-
----
-
 <p class="kicker">What the API manages</p>
 
 ## Any resource, not just containers
@@ -422,7 +227,7 @@ adds the route.
 <line x1="524" y1="326" x2="427" y2="404" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
 <image href="icons/payload-light.svg" x="311" y="417" width="58" height="58"/>
 <text x="340" y="505" font-size="26" fill="#faf9f5" text-anchor="middle">Payload CMS sites</text>
-<text x="340" y="531" font-size="19" fill="#b0aea5" text-anchor="middle" class="sans">our own, with KRO</text>
+<text x="340" y="531" font-size="19" fill="#b0aea5" text-anchor="middle" class="sans">NetSam, with KRO</text>
 </g>
 <g class="fragment fade-in">
 <line x1="465" y1="301" x2="258" y2="357" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
@@ -446,14 +251,14 @@ adds the route.
 <line x1="550" y1="199" x2="518" y2="157" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
 <image href="icons/minecraft.svg" x="436" y="30" width="58" height="58"/>
 <text x="465" y="118" font-size="26" fill="#faf9f5" text-anchor="middle">Minecraft servers</text>
-<text x="465" y="144" font-size="19" fill="#b0aea5" text-anchor="middle" class="sans">our own CRD</text>
+<text x="465" y="144" font-size="19" fill="#b0aea5" text-anchor="middle" class="sans">NetSam's own CRD</text>
 </g>
 </svg>
 </div>
 
 <p class="fragment fade-up">Version 1 only ran <em>stateless containers</em>. Now it runs whatever we <strong>teach it</strong>.</p>
 
-<p class="hint">↓ the new kinds · how it manages them</p>
+<p class="hint">↓ history · the new kinds · how it manages them</p>
 
 Note:
 In 2015, Kubernetes did one thing: start containers that keep no data,
@@ -467,19 +272,255 @@ agents, Paperclip instances and Minecraft servers. Same API for all of it.
 
 <!-- .slide: data-transition="fade" -->
 
+## Kubernetes itself keeps improving
+
+<div class="diagram">
+<svg class="sketch" viewBox="0 0 1200 430" style="max-height:470px" xmlns="http://www.w3.org/2000/svg">
+<line x1="40" y1="230" x2="1180" y2="230" stroke="#b0aea5" stroke-width="3" fill="none" data-arrow/>
+<g class="fragment fade-in">
+<line x1="85" y1="230" x2="85" y2="175" stroke="#d97757" stroke-width="2" fill="none"/>
+<circle cx="85" cy="230" r="7" stroke="#d97757" stroke-width="2" fill="#d97757" data-fill="solid"/>
+<image href="icons/kubernetes.svg" x="65" y="50" width="40" height="40"/>
+<text x="85" y="118" font-size="24" fill="#d97757" text-anchor="middle" font-weight="700">2014</text>
+<text x="85" y="142" font-size="16" fill="#faf9f5" text-anchor="middle" class="sans">Google open-sources it</text>
+<text x="85" y="161" font-size="16" fill="#b0aea5" text-anchor="middle" class="sans">after 10 years of Borg</text>
+</g>
+<g class="fragment fade-in">
+<line x1="214" y1="230" x2="214" y2="285" stroke="#d97757" stroke-width="2" fill="none"/>
+<circle cx="214" cy="230" r="7" stroke="#d97757" stroke-width="2" fill="#d97757" data-fill="solid"/>
+<image href="icons/cncf.svg" x="194" y="300" width="40" height="40"/>
+<text x="214" y="370" font-size="24" fill="#d97757" text-anchor="middle" font-weight="700">2015</text>
+<text x="214" y="394" font-size="16" fill="#faf9f5" text-anchor="middle" class="sans">Version 1.0, given</text>
+<text x="214" y="413" font-size="16" fill="#b0aea5" text-anchor="middle" class="sans">to the new CNCF</text>
+</g>
+<g class="fragment fade-in">
+<line x1="343" y1="230" x2="343" y2="175" stroke="#d97757" stroke-width="2" fill="none"/>
+<circle cx="343" cy="230" r="7" stroke="#d97757" stroke-width="2" fill="#d97757" data-fill="solid"/>
+<image href="icons/lucide-file-text.svg" x="323" y="50" width="40" height="40"/>
+<text x="343" y="118" font-size="24" fill="#d97757" text-anchor="middle" font-weight="700">2017</text>
+<text x="343" y="142" font-size="16" fill="#faf9f5" text-anchor="middle" class="sans">Custom kinds (CRDs)</text>
+<text x="343" y="161" font-size="16" fill="#b0aea5" text-anchor="middle" class="sans">+ permissions (RBAC)</text>
+</g>
+<g class="fragment fade-in">
+<line x1="472" y1="230" x2="472" y2="285" stroke="#d97757" stroke-width="2" fill="none"/>
+<circle cx="472" cy="230" r="7" stroke="#d97757" stroke-width="2" fill="#d97757" data-fill="solid"/>
+<image href="icons/coredns.svg" x="452" y="300" width="40" height="40"/>
+<text x="472" y="370" font-size="24" fill="#d97757" text-anchor="middle" font-weight="700">2018</text>
+<text x="472" y="394" font-size="16" fill="#faf9f5" text-anchor="middle" class="sans">CoreDNS becomes its DNS;</text>
+<text x="472" y="413" font-size="16" fill="#b0aea5" text-anchor="middle" class="sans">CSI: the storage plug</text>
+</g>
+<g class="fragment fade-in">
+<line x1="601" y1="230" x2="601" y2="175" stroke="#d97757" stroke-width="2" fill="none"/>
+<circle cx="601" cy="230" r="7" stroke="#d97757" stroke-width="2" fill="#d97757" data-fill="solid"/>
+<image href="icons/microsoft-windows.svg" x="581" y="50" width="40" height="40"/>
+<text x="601" y="118" font-size="24" fill="#d97757" text-anchor="middle" font-weight="700">2019</text>
+<text x="601" y="142" font-size="16" fill="#faf9f5" text-anchor="middle" class="sans">Windows Server</text>
+<text x="601" y="161" font-size="16" fill="#b0aea5" text-anchor="middle" class="sans">containers</text>
+</g>
+<g class="fragment fade-in">
+<line x1="730" y1="230" x2="730" y2="285" stroke="#d97757" stroke-width="2" fill="none"/>
+<circle cx="730" cy="230" r="7" stroke="#d97757" stroke-width="2" fill="#d97757" data-fill="solid"/>
+<image href="icons/lucide-route.svg" x="710" y="300" width="40" height="40"/>
+<text x="730" y="370" font-size="24" fill="#d97757" text-anchor="middle" font-weight="700">2020</text>
+<text x="730" y="394" font-size="16" fill="#faf9f5" text-anchor="middle" class="sans">Ingress: the first</text>
+<text x="730" y="413" font-size="16" fill="#b0aea5" text-anchor="middle" class="sans">front door</text>
+</g>
+<g class="fragment fade-in">
+<line x1="859" y1="230" x2="859" y2="175" stroke="#d97757" stroke-width="2" fill="none"/>
+<circle cx="859" cy="230" r="7" stroke="#d97757" stroke-width="2" fill="#d97757" data-fill="solid"/>
+<image href="icons/envoy-gateway.svg" x="839" y="50" width="40" height="40"/>
+<text x="859" y="118" font-size="24" fill="#d97757" text-anchor="middle" font-weight="700">2023</text>
+<text x="859" y="142" font-size="16" fill="#faf9f5" text-anchor="middle" class="sans">Gateway API 1.0:</text>
+<text x="859" y="161" font-size="16" fill="#b0aea5" text-anchor="middle" class="sans">the modern front door</text>
+</g>
+<g class="fragment fade-in">
+<line x1="988" y1="230" x2="988" y2="285" stroke="#d97757" stroke-width="2" fill="none"/>
+<circle cx="988" cy="230" r="7" stroke="#d97757" stroke-width="2" fill="#d97757" data-fill="solid"/>
+<image href="icons/nvidia.svg" x="968" y="300" width="40" height="40"/>
+<text x="988" y="370" font-size="24" fill="#d97757" text-anchor="middle" font-weight="700">2025</text>
+<text x="988" y="394" font-size="16" fill="#faf9f5" text-anchor="middle" class="sans">GPUs as a resource;</text>
+<text x="988" y="413" font-size="16" fill="#b0aea5" text-anchor="middle" class="sans">resize apps live</text>
+</g>
+<g class="fragment fade-in">
+<line x1="1117" y1="230" x2="1117" y2="175" stroke="#d97757" stroke-width="2" fill="none"/>
+<circle cx="1117" cy="230" r="7" stroke="#d97757" stroke-width="2" fill="#d97757" data-fill="solid"/>
+<image href="icons/lucide-refresh-cw.svg" x="1097" y="50" width="40" height="40"/>
+<text x="1117" y="118" font-size="24" fill="#d97757" text-anchor="middle" font-weight="700">today</text>
+<text x="1117" y="142" font-size="16" fill="#faf9f5" text-anchor="middle" class="sans">a new release</text>
+<text x="1117" y="161" font-size="16" fill="#b0aea5" text-anchor="middle" class="sans">every 4 months</text>
+</g>
+</svg>
+</div>
+
+Note:
+Each of these was added to Kubernetes itself, and every cluster got it by
+upgrading. 2017: custom kinds of record (CRDs), the thing this whole talk
+is about. 2018: CoreDNS became the built-in phone book, and CSI made
+storage a plug-in, so any disk vendor can plug in. 2019: Windows Server
+containers. 2023: Gateway API, the modern front door Envoy Gateway uses.
+2025: GPUs became a first-class resource, and apps can be resized without
+restarting.
+
+--
+
+<!-- .slide: data-transition="fade" -->
+
+## When the projects started, and joined the CNCF
+
+<div class="diagram">
+<svg class="sketch" viewBox="0 0 1200 449" style="max-height:500px" xmlns="http://www.w3.org/2000/svg">
+<line x1="260" y1="30" x2="260" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="293" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'13</text>
+<line x1="324" y1="30" x2="324" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="357" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'14</text>
+<line x1="388" y1="30" x2="388" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="421" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'15</text>
+<line x1="452" y1="30" x2="452" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="485" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'16</text>
+<line x1="516" y1="30" x2="516" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="549" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'17</text>
+<line x1="580" y1="30" x2="580" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="613" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'18</text>
+<line x1="644" y1="30" x2="644" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="677" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'19</text>
+<line x1="708" y1="30" x2="708" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="741" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'20</text>
+<line x1="772" y1="30" x2="772" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="805" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'21</text>
+<line x1="836" y1="30" x2="836" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="869" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'22</text>
+<line x1="900" y1="30" x2="900" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="933" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'23</text>
+<line x1="964" y1="30" x2="964" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="997" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'24</text>
+<line x1="1028" y1="30" x2="1028" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<text x="1061" y="22" font-size="15" fill="#b0aea5" text-anchor="middle" class="sans">'25</text>
+<line x1="1092" y1="30" x2="1092" y2="399" stroke="#363430" stroke-width="1" fill="none"/>
+<g class="fragment fade-in">
+<image href="icons/kubernetes.svg" x="18" y="43" width="24" height="24"/>
+<text x="52" y="62" font-size="19" fill="#faf9f5" text-anchor="start" class="sans">Kubernetes</text>
+<circle cx="356.0" cy="55" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<line x1="362" y1="55" x2="465" y2="55" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<line x1="465" y1="55" x2="593" y2="55" stroke="#e3c08d" stroke-width="4" fill="none"/>
+<line x1="593" y1="55" x2="1143" y2="55" stroke="#8fa876" stroke-width="5" fill="none"/>
+<circle cx="592.8000000000029" cy="55" r="8" stroke="#8fa876" stroke-width="2" fill="#8fa876" data-fill="solid"/>
+</g>
+<g class="fragment fade-in">
+<image href="icons/etcd.svg" x="18" y="76" width="24" height="24"/>
+<text x="52" y="95" font-size="19" fill="#faf9f5" text-anchor="start" class="sans">etcd</text>
+<circle cx="292.0" cy="88" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<line x1="298" y1="88" x2="641" y2="88" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<line x1="641" y1="88" x2="766" y2="88" stroke="#e3c08d" stroke-width="4" fill="none"/>
+<line x1="766" y1="88" x2="1143" y2="88" stroke="#8fa876" stroke-width="5" fill="none"/>
+<circle cx="765.6000000000058" cy="88" r="8" stroke="#8fa876" stroke-width="2" fill="#8fa876" data-fill="solid"/>
+</g>
+<g class="fragment fade-in">
+<image href="icons/coredns.svg" x="18" y="109" width="24" height="24"/>
+<text x="52" y="128" font-size="19" fill="#faf9f5" text-anchor="start" class="sans">CoreDNS</text>
+<circle cx="464.8000000000029" cy="121" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<line x1="471" y1="121" x2="522" y2="121" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<line x1="522" y1="121" x2="647" y2="121" stroke="#e3c08d" stroke-width="4" fill="none"/>
+<line x1="647" y1="121" x2="1143" y2="121" stroke="#8fa876" stroke-width="5" fill="none"/>
+<circle cx="647.1999999999971" cy="121" r="8" stroke="#8fa876" stroke-width="2" fill="#8fa876" data-fill="solid"/>
+</g>
+<g class="fragment fade-in">
+<image href="icons/envoy-gateway.svg" x="18" y="142" width="24" height="24"/>
+<text x="52" y="161" font-size="19" fill="#faf9f5" text-anchor="start" class="sans">Envoy</text>
+<circle cx="452.0" cy="154" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<line x1="458" y1="154" x2="561" y2="154" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<line x1="561" y1="154" x2="638" y2="154" stroke="#e3c08d" stroke-width="4" fill="none"/>
+<line x1="638" y1="154" x2="1143" y2="154" stroke="#8fa876" stroke-width="5" fill="none"/>
+<circle cx="637.6000000000058" cy="154" r="8" stroke="#8fa876" stroke-width="2" fill="#8fa876" data-fill="solid"/>
+</g>
+<g class="fragment fade-in">
+<image href="icons/flux-cd.svg" x="18" y="175" width="24" height="24"/>
+<text x="52" y="194" font-size="19" fill="#faf9f5" text-anchor="start" class="sans">Flux</text>
+<circle cx="484.0" cy="187" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<line x1="490" y1="187" x2="679" y2="187" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<line x1="679" y1="187" x2="894" y2="187" stroke="#e3c08d" stroke-width="4" fill="none"/>
+<line x1="894" y1="187" x2="1143" y2="187" stroke="#8fa876" stroke-width="5" fill="none"/>
+<circle cx="893.6000000000058" cy="187" r="8" stroke="#8fa876" stroke-width="2" fill="#8fa876" data-fill="solid"/>
+</g>
+<g class="fragment fade-in">
+<image href="icons/cncf-kubevirt.svg" x="18" y="208" width="24" height="24"/>
+<text x="52" y="227" font-size="19" fill="#faf9f5" text-anchor="start" class="sans">KubeVirt</text>
+<circle cx="516.0" cy="220" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<line x1="522" y1="220" x2="689" y2="220" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<line x1="689" y1="220" x2="1143" y2="220" stroke="#e3c08d" stroke-width="4" fill="none"/>
+</g>
+<g class="fragment fade-in">
+<image href="icons/cncf-argo.svg" x="18" y="241" width="24" height="24"/>
+<text x="52" y="260" font-size="19" fill="#faf9f5" text-anchor="start" class="sans">Argo</text>
+<circle cx="548.0" cy="253" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<line x1="554" y1="253" x2="727" y2="253" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<line x1="727" y1="253" x2="897" y2="253" stroke="#e3c08d" stroke-width="4" fill="none"/>
+<line x1="897" y1="253" x2="1143" y2="253" stroke="#8fa876" stroke-width="5" fill="none"/>
+<circle cx="896.8000000000029" cy="253" r="8" stroke="#8fa876" stroke-width="2" fill="#8fa876" data-fill="solid"/>
+</g>
+<g class="fragment fade-in">
+<image href="icons/cncf-crossplane.svg" x="18" y="274" width="24" height="24"/>
+<text x="52" y="293" font-size="19" fill="#faf9f5" text-anchor="start" class="sans">Crossplane</text>
+<circle cx="637.6000000000058" cy="286" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<line x1="644" y1="286" x2="740" y2="286" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<line x1="740" y1="286" x2="1079" y2="286" stroke="#e3c08d" stroke-width="4" fill="none"/>
+<line x1="1079" y1="286" x2="1143" y2="286" stroke="#8fa876" stroke-width="5" fill="none"/>
+<circle cx="1079.199999999997" cy="286" r="8" stroke="#8fa876" stroke-width="2" fill="#8fa876" data-fill="solid"/>
+</g>
+<g class="fragment fade-in">
+<image href="icons/cilium.svg" x="18" y="307" width="24" height="24"/>
+<text x="52" y="326" font-size="19" fill="#faf9f5" text-anchor="start" class="sans">Cilium</text>
+<circle cx="452.0" cy="319" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<line x1="458" y1="319" x2="823" y2="319" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<line x1="823" y1="319" x2="951" y2="319" stroke="#e3c08d" stroke-width="4" fill="none"/>
+<line x1="951" y1="319" x2="1143" y2="319" stroke="#8fa876" stroke-width="5" fill="none"/>
+<circle cx="951.1999999999971" cy="319" r="8" stroke="#8fa876" stroke-width="2" fill="#8fa876" data-fill="solid"/>
+</g>
+<g class="fragment fade-in">
+<image href="icons/postgresql.svg" x="18" y="340" width="24" height="24"/>
+<text x="52" y="359" font-size="19" fill="#faf9f5" text-anchor="start" class="sans">CloudNativePG</text>
+<circle cx="855.1999999999971" cy="352" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<line x1="861" y1="352" x2="1031" y2="352" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<line x1="1031" y1="352" x2="1143" y2="352" stroke="#e3c08d" stroke-width="4" fill="none"/>
+</g>
+<g class="fragment fade-in">
+<image href="icons/opentofu.svg" x="18" y="373" width="24" height="24"/>
+<text x="52" y="392" font-size="19" fill="#faf9f5" text-anchor="start" class="sans">OpenTofu</text>
+<circle cx="944.8000000000029" cy="385" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<line x1="951" y1="385" x2="1047" y2="385" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<line x1="1047" y1="385" x2="1143" y2="385" stroke="#e3c08d" stroke-width="4" fill="none"/>
+</g>
+<circle cx="330" cy="429" r="6" stroke="#b0aea5" stroke-width="2" fill="none"/>
+<text x="345" y="435" font-size="17" fill="#b0aea5" text-anchor="start" class="sans">started</text>
+<line x1="440" y1="429" x2="490" y2="429" stroke="#e3c08d" stroke-width="4" fill="none"/>
+<text x="500" y="435" font-size="17" fill="#e3c08d" text-anchor="start" class="sans">in the CNCF</text>
+<circle cx="640" cy="429" r="8" stroke="#8fa876" stroke-width="2" fill="#8fa876" data-fill="solid"/>
+<text x="655" y="435" font-size="17" fill="#8fa876" text-anchor="start" class="sans">graduated</text>
+</svg>
+</div>
+
+Note:
+Each row: when the project started (often inside one company), when it
+was given to the CNCF (the solid line), and when it graduated (green).
+Most of what we use was given away years ago and has had years to mature
+under neutral ownership.
+
+--
+
+<!-- .slide: data-transition="fade" -->
+
 ## Each one is a new kind of record
 
 <div class="kinds" style="font-size:0.56em">
-<div class="kind fragment fade-up"><img class="" src="icons/microsoft-windows.svg" alt=""><code>VirtualMachine</code><span>a Windows Server VM, like Hyper-V</span><span class="who">KubeVirt</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/microsoft-azure.svg" alt=""><code>FlexibleServer</code><span>a database server in Azure</span><span class="who">Crossplane</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/envoy-gateway.svg" alt=""><code>HTTPRoute</code><span>"send tjscatfishandwings.com to TJ's site"</span><span class="who">Envoy Gateway</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/postgresql.svg" alt=""><code>Cluster</code><span>a Postgres database with backups</span><span class="who">CloudNativePG</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/cncf-argo.svg" alt=""><code>Workflow</code><span>"every night: export, report, email"</span><span class="who">Argo Workflows</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/payload-light.svg" alt=""><code>PayloadSite</code><span>one customer's Payload CMS website</span><span class="who">ours, with KRO</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/dotnet.svg" alt=""><code>Deployment</code><span>a .NET app, 3 copies, always on</span><span class="who">built in</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/nvidia.svg" alt=""><code>AI agent</code><span>an AI agent in a locked-down sandbox</span><span class="who">NVIDIA OpenShell</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/lucide-paperclip.svg" alt=""><code>Paperclip</code><span>one Paperclip instance, ready to use</span><span class="who">Paperclip operator</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/minecraft.svg" alt=""><code>MinecraftServer</code><span>"a world for the grandkids, 10 players"</span><span class="who">ours</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/microsoft-windows.svg" alt="microsoft-windows"><code>VirtualMachine</code><span>a Windows Server VM, like Hyper-V</span><span class="who">KubeVirt</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/microsoft-azure.svg" alt="microsoft-azure"><code>FlexibleServer</code><span>a database server in Azure</span><span class="who">Crossplane</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/envoy-gateway.svg" alt="envoy-gateway"><code>HTTPRoute</code><span>"send tjscatfishandwings.com to TJ's site"</span><span class="who">Envoy Gateway</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/postgresql.svg" alt="postgresql"><code>Cluster</code><span>a Postgres database with backups</span><span class="who">CloudNativePG</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/cncf-argo.svg" alt="cncf-argo"><code>Workflow</code><span>"every night: export, report, email"</span><span class="who">Argo Workflows</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/payload-light.svg" alt="payload-light"><code>PayloadSite</code><span>one customer's Payload CMS website</span><span class="who"><img class="icon" src="https://www.netsam.com/assets/img/logo-light.243554167e.png" alt="netsam"> with KRO</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/dotnet.svg" alt="dotnet"><code>Deployment</code><span>a .NET app, 3 copies, always on</span><span class="who">built in</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/nvidia.svg" alt="nvidia"><code>AI agent</code><span>an AI agent in a locked-down sandbox</span><span class="who">NVIDIA OpenShell</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/lucide-paperclip.svg" alt="lucide-paperclip"><code>Paperclip</code><span>one Paperclip instance, ready to use</span><span class="who">Paperclip operator</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/minecraft.svg" alt="minecraft"><code>MinecraftServer</code><span>"a world for the grandkids, 10 players"</span><span class="who"><img class="icon" src="https://www.netsam.com/assets/img/logo-light.243554167e.png" alt="netsam"></span></div>
 </div>
 
 <p class="fragment fade-up">Like adding a <strong>collection</strong> in Payload CMS: a new kind of record, with its own form.</p>
@@ -535,7 +576,7 @@ record has a controller like this: a VM, a database, a customer's website.
 ## Docker Swarm vs. Kubernetes
 
 <table>
-<thead><tr><th></th><th><img class="icon" src="icons/docker.svg" alt=""> Docker Swarm</th><th><img class="icon" src="icons/kubernetes.svg" alt=""> Kubernetes</th></tr></thead>
+<thead><tr><th></th><th><img class="icon" src="icons/docker.svg" alt="docker"> Docker Swarm</th><th><img class="icon" src="icons/kubernetes.svg" alt="kubernetes"> Kubernetes</th></tr></thead>
 <tbody>
 <tr class="fragment fade-up"><td><strong>Manages</strong></td><td>containers</td><td>containers, VMs, databases, clouds, <em>anything we add</em></td></tr>
 <tr class="fragment fade-up"><td><strong>Automation</strong></td><td>restart and scale containers</td><td>a controller for <em>every</em> kind: heal, scale, update, back up</td></tr>
@@ -551,6 +592,201 @@ Note:
 Swarm is simpler and fine for a few containers on a few servers. But it
 stops there: no new kinds of records, no shared database for our own
 programs, no operators. Everything in this talk needs those.
+
+---
+
+<!-- .slide: data-transition="zoom" -->
+
+<p class="kicker">The API: every record has a web address</p>
+
+## Every route has the same shape
+
+<div class="anatomy">
+<div class="fragment fade-up"><span class="seg" style="color:var(--green)">GET</span><span class="lbl">the verb: what to do</span></div>
+<div><span class="sep">/apis/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--blue)">{group}</span><span class="lbl">who added it</span></div>
+<div><span class="sep">/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--muted)">{version}</span><span class="lbl">its version</span></div>
+<div><span class="sep">/namespaces/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--sand)">{namespace}</span><span class="lbl">whose folder: the tenant</span></div>
+<div><span class="sep">/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--clay)">{resource}</span><span class="lbl">the kind of record</span></div>
+<div><span class="sep">/</span></div>
+<div class="fragment fade-up"><span class="seg" style="color:var(--green)">{name}</span><span class="lbl">one record</span></div>
+</div>
+
+<div class="routes ">
+<div class="route  fragment fade-left"><img class="ricon" src="icons/postgresql.svg" alt="postgresql"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">bff</span>/<span class="res">clusters</span>/<span class="name">orders-db</span></span><span class="what">bff's database</span></div>
+<div class="route  fragment fade-left"><img class="ricon" src="icons/cncf-kubevirt.svg" alt="cncf-kubevirt"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">dev-team</span>/<span class="res">virtualmachines</span>/<span class="name">sql-01</span></span><span class="what">a Windows SQL VM</span></div>
+<div class="route  fragment fade-left"><img class="ricon" src="icons/cncf-argo.svg" alt="cncf-argo"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">matt</span>/<span class="res">workflows</span>/<span class="name">nightly-report</span></span><span class="what">Matt's nightly job</span></div>
+<div class="route  fragment fade-left"><img class="ricon" src="https://www.netsam.com/assets/img/logo-light.243554167e.png" alt="netsam"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">netsam.com</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span>/<span class="name">main-site</span></span><span class="what">TJ's website</span></div>
+<div class="route  fragment fade-left"><img class="ricon" src="https://www.netsam.com/assets/img/logo-light.243554167e.png" alt="netsam"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">netsam.com</span>/v1alpha1/namespaces/<span class="ns">michael</span>/<span class="res">payloadsites</span></span><span class="what"><em>a new site for Michael</em></span></div>
+</div>
+
+<div class="takeaway fragment fade-up">The list of routes <strong>is</strong> the platform. If there is a route for it, the platform can do it. If not, it can't, <em>yet</em>.</div>
+
+<p class="hint">↓ routes add up · who gets what</p>
+
+Note:
+Every record in the datastore has a web address, and every address has the
+same parts. Then the same template, filled in for five tenants: the sand
+part is the tenant's folder, the orange part is the kind of record. Read
+any route left to right: who added it, whose folder, what kind, which one.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Routes add up over time</p>
+
+## Day 1: every Kubernetes starts with these
+
+<div class="routes tight" data-id="routes">
+<div class="route " data-id="pods"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route " data-id="deploy"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route " data-id="svc"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a name other apps can call</span></div>
+<div class="route " data-id="secrets"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route " data-id="cron"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>5</strong> routes = <strong>5</strong> things our platform can do</p>
+
+Note:
+The built-in routes. Each step down installs one more project.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Month 2 · install #1</p>
+
+## <img class="icon" src="icons/microsoft-windows.svg" alt="microsoft-windows"> + Windows VMs
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route dim" data-id="svc"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a name other apps can call</span></div>
+<div class="route dim" data-id="secrets"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route new" data-id="vm"><img class="ricon" src="icons/cncf-kubevirt.svg" alt="cncf-kubevirt"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs</span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>6</strong> routes = <strong>6</strong> things our platform can do</p>
+
+Note:
+Install KubeVirt. A Windows Server VM is now a POST. Nobody rebuilt or restarted Kubernetes.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Month 4 · install #2</p>
+
+## <img class="icon" src="icons/postgresql.svg" alt="postgresql"> + Databases, workflows, front doors
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route dim" data-id="svc"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a name other apps can call</span></div>
+<div class="route dim" data-id="secrets"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="vm"><img class="ricon" src="icons/cncf-kubevirt.svg" alt="cncf-kubevirt"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs</span></div>
+<div class="route new" data-id="pg"><img class="ricon" src="icons/postgresql.svg" alt="postgresql"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases</span></div>
+<div class="route new" data-id="wf"><img class="ricon" src="icons/cncf-argo.svg" alt="cncf-argo"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">workflows</span></div>
+<div class="route new" data-id="gw"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors</span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>9</strong> routes = <strong>9</strong> things our platform can do</p>
+
+Note:
+Install CloudNativePG, Argo and Envoy Gateway. Nobody rebuilt or restarted Kubernetes.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Month 8 · install #3</p>
+
+## <img class="icon" src="icons/cncf-crossplane.svg" alt="cncf-crossplane"> + The clouds
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route dim" data-id="svc"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a name other apps can call</span></div>
+<div class="route dim" data-id="secrets"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="vm"><img class="ricon" src="icons/cncf-kubevirt.svg" alt="cncf-kubevirt"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs</span></div>
+<div class="route " data-id="pg"><img class="ricon" src="icons/postgresql.svg" alt="postgresql"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases</span></div>
+<div class="route " data-id="wf"><img class="ricon" src="icons/cncf-argo.svg" alt="cncf-argo"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">workflows</span></div>
+<div class="route " data-id="gw"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors</span></div>
+<div class="route new" data-id="bucket"><img class="ricon" src="icons/google-cloud-platform.svg" alt="google-cloud-platform"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">storage.gcp.upbound.io</span>/v1beta1/<span class="res">buckets</span></span><span class="what">Google Cloud storage</span></div>
+<div class="route new" data-id="azpg"><img class="ricon" src="icons/microsoft-azure.svg" alt="microsoft-azure"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">dbforpostgresql.azure.upbound.io</span>/v1beta1/<span class="res">flexibleservers</span></span><span class="what">Azure databases</span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>11</strong> routes = <strong>11</strong> things our platform can do</p>
+
+Note:
+Install Crossplane: Azure and Google resources become routes on OUR API. Nobody rebuilt or restarted Kubernetes.
+
+--
+
+<!-- .slide: data-auto-animate -->
+
+<p class="kicker" data-id="kick">Year 2 · install #4</p>
+
+## <img class="icon" src="icons/payload-light.svg" alt="payload-light"> + Our own product
+
+<div class="routes tight" data-id="routes">
+<div class="route dim" data-id="pods"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">pods</span></span><span class="what">running copies of an app</span></div>
+<div class="route dim" data-id="deploy"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">apps</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">deployments</span></span><span class="what">.NET, Go, Python apps</span></div>
+<div class="route dim" data-id="svc"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">services</span></span><span class="what">a name other apps can call</span></div>
+<div class="route dim" data-id="secrets"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/api/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">secrets</span></span><span class="what">passwords, certificates</span></div>
+<div class="route dim" data-id="cron"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">batch</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">cronjobs</span></span><span class="what">scheduled jobs</span></div>
+<div class="route " data-id="vm"><img class="ricon" src="icons/cncf-kubevirt.svg" alt="cncf-kubevirt"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">kubevirt.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">virtualmachines</span></span><span class="what">Windows Server VMs</span></div>
+<div class="route " data-id="pg"><img class="ricon" src="icons/postgresql.svg" alt="postgresql"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">postgresql.cnpg.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">clusters</span></span><span class="what">Postgres databases</span></div>
+<div class="route " data-id="wf"><img class="ricon" src="icons/cncf-argo.svg" alt="cncf-argo"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">argoproj.io</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">workflows</span></span><span class="what">workflows</span></div>
+<div class="route " data-id="gw"><img class="ricon" src="icons/kubernetes.svg" alt="kubernetes"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">gateway.networking.k8s.io</span>/v1/namespaces/<span class="ns">{namespace}</span>/<span class="res">httproutes</span></span><span class="what">website front doors</span></div>
+<div class="route " data-id="bucket"><img class="ricon" src="icons/google-cloud-platform.svg" alt="google-cloud-platform"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">storage.gcp.upbound.io</span>/v1beta1/<span class="res">buckets</span></span><span class="what">Google Cloud storage</span></div>
+<div class="route " data-id="azpg"><img class="ricon" src="icons/microsoft-azure.svg" alt="microsoft-azure"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">dbforpostgresql.azure.upbound.io</span>/v1beta1/<span class="res">flexibleservers</span></span><span class="what">Azure databases</span></div>
+<div class="route new" data-id="payload"><img class="ricon" src="https://www.netsam.com/assets/img/logo-light.243554167e.png" alt="netsam"><span class="verb ">GET</span><span class="path">/apis/<span class="grp">netsam.com</span>/v1alpha1/namespaces/<span class="ns">{namespace}</span>/<span class="res">payloadsites</span></span><span class="what">a customer's Payload CMS site</span></div>
+</div>
+
+<p class="muted" data-id="count"><strong>12</strong> routes = <strong>12</strong> things our platform can do</p>
+
+Note:
+With KRO we add our own route, PayloadSite, without writing a program. Nobody rebuilt or restarted Kubernetes.
+
+--
+
+<!-- .slide: data-transition="zoom" -->
+
+<p class="big">5 routes became <strong>12</strong>.</p>
+
+# Nobody rebuilt the server.
+
+<p class="fragment fade-up">Same logins · same permissions · same history · same tools, on every new route.</p>
+
+<p class="big fragment fade-up">More routes = <strong>more platform</strong>.</p>
+
+--
+
+<!-- .slide: data-transition="convex" -->
+
+## Routes are capabilities, for every tenant
+
+<table style="margin:0.4em auto"><thead><tr><th>Tenant (folder)</th><th><img class="icon" src="icons/lucide-box.svg" alt="lucide-box"> Apps</th><th><img class="icon" src="icons/postgresql.svg" alt="postgresql"> Databases</th><th><img class="icon" src="icons/microsoft-windows.svg" alt="microsoft-windows"> Windows VMs</th><th><img class="icon" src="icons/cncf-argo.svg" alt="cncf-argo"> Workflows</th><th class="fragment fade-in" data-fragment-index="1"><img class="icon" src="icons/payload-light.svg" alt="payload-light"> Payload sites</th></tr></thead><tbody>
+<tr><td><em>tjs-catfish-and-wings</em></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
+<tr><td><em>bff</em></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
+<tr><td><em>dev-team</em></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
+<tr><td><em>matt</em></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span style="color:var(--green)">✓</span></td><td><span style="color:var(--green)">✓</span></td><td class="fragment fade-in" data-fragment-index="1"><span class="muted">·</span></td></tr>
+<tr><td><em>michael</em></td><td><span style="color:var(--green)">✓</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td><span class="muted">·</span></td><td class="fragment fade-in" data-fragment-index="1"><span style="color:var(--green)">✓</span></td></tr>
+</tbody></table>
+
+<div class="takeaway fragment fade-up" data-fragment-index="2">Install a route <strong>once</strong> and every tenant can have it. <strong>Permissions and limits</strong> decide who actually gets it.</div>
+
+Note:
+Press next: the Payload sites column appears for everyone the moment KRO
+adds the route.
 
 ---
 
@@ -607,7 +843,7 @@ programs, no operators. Everything in this talk needs those.
 
 <p class="fragment fade-up">Nobody typed an IP address. <strong>Ever.</strong></p>
 
-<p class="hint">↓ reading a name · things move · GoDaddy · the front door · auth</p>
+<p class="hint">↓ reading a name · things move · GoDaddy · the front door + logins</p>
 
 Note:
 Every cluster has its own DNS server, CoreDNS: a phone book that updates
@@ -809,10 +1045,11 @@ API. Change or delete the route and the GoDaddy record follows.
 
 <!-- .slide: data-transition="fade" -->
 
-## The front door: north-south traffic
+## The front door: traffic in, logins handled
 
 <div class="diagram">
-<svg class="sketch" viewBox="0 0 1200 430" xmlns="http://www.w3.org/2000/svg">
+<svg class="sketch" viewBox="0 0 1200 470" style="max-height:450px" xmlns="http://www.w3.org/2000/svg">
+<g class="fragment fade-out" data-fragment-index="4">
 <rect x="330" y="110" width="840" height="300" rx="14" stroke="#6a9bcc" stroke-width="2" fill="none" data-dash/>
 <text x="350" y="140" font-size="22" fill="#6a9bcc" text-anchor="start" class="sans">our cluster</text>
 <image href="icons/lucide-globe.svg" x="71" y="31" width="58" height="58"/>
@@ -837,77 +1074,74 @@ API. Change or delete the route and the GoDaddy record follows.
 <text x="905" y="370" font-size="22" fill="#8fa876" text-anchor="middle">east-west: app to app, inside</text>
 <text x="905" y="398" font-size="18" fill="#b0aea5" text-anchor="middle" class="sans">CoreDNS names + Cilium rules</text>
 </g>
-</svg>
-</div>
-
-<p class="fragment fade-up">Envoy Gateway <strong>only</strong> guards the front door. A developer adds a site with <strong>one record</strong>: "this address goes to my app".</p>
-
-Note:
-North-south is traffic coming in from the internet and going out.
-East-west is apps talking to each other inside. Envoy Gateway only does
-north-south. For a developer, publishing an app is one HTTPRoute record:
-no firewall ticket, no IIS bindings, no certificate juggling.
-
---
-
-<!-- .slide: data-transition="fade" -->
-
-## Security and logins, before the app
-
-<div class="diagram">
-<svg class="sketch" viewBox="0 0 1200 430" xmlns="http://www.w3.org/2000/svg">
+<g class="fragment fade-in" data-fragment-index="3">
+<text x="600" y="455" font-size="22" fill="#e3c08d" text-anchor="middle">Envoy Gateway only guards the front door. A developer adds a site with one record.</text>
+</g>
+</g>
+<g class="fragment fade-in" data-fragment-index="4">
 <image href="icons/lucide-user.svg" x="52" y="92" width="56" height="56"/>
 <text x="80" y="178" font-size="26" fill="#faf9f5" text-anchor="middle">Visitor</text>
 <rect x="190" y="40" width="700" height="200" rx="14" stroke="#c9789a" stroke-width="2" fill="#c9789a"/>
 <image href="icons/envoy-gateway.svg" x="216" y="51" width="48" height="48"/>
 <text x="280" y="84" font-size="24" fill="#faf9f5" text-anchor="start">Envoy Gateway: checks on the way in</text>
 <line x1="120" y1="120" x2="220" y2="140" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
-<g class="fragment fade-in" data-fragment-index="1">
+<g class="fragment fade-in" data-fragment-index="5">
 <rect x="220" y="115" width="150" height="90" rx="14" stroke="#faf9f5" stroke-width="2" fill="#2b2a27" data-fill="solid"/>
 <image href="icons/lucide-lock-keyhole.svg" x="278" y="128" width="34" height="34"/>
-<text x="295" y="192" font-size="20" fill="#faf9f5" text-anchor="middle" class="sans">HTTPS</text>
+<text x="295" y="192" font-size="20" fill="#faf9f5" text-anchor="middle">HTTPS</text>
 </g>
-<g class="fragment fade-in" data-fragment-index="2">
+<g class="fragment fade-in" data-fragment-index="6">
 <line x1="370" y1="160" x2="390" y2="160" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
 <rect x="390" y="115" width="150" height="90" rx="14" stroke="#faf9f5" stroke-width="2" fill="#2b2a27" data-fill="solid"/>
 <image href="icons/lucide-user-check.svg" x="448" y="128" width="34" height="34"/>
-<text x="465" y="192" font-size="20" fill="#faf9f5" text-anchor="middle" class="sans">who are you?</text>
-<line x1="465" y1="205" x2="465" y2="300" stroke="#e3c08d" stroke-width="2" fill="none" data-dash/>
-<image href="icons/lucide-shield-check.svg" x="441" y="306" width="48" height="48"/>
-<text x="465" y="385" font-size="20" fill="#e3c08d" text-anchor="middle" class="sans">our login service</text>
-<text x="465" y="410" font-size="18" fill="#b0aea5" text-anchor="middle" class="sans">(external auth)</text>
+<text x="465" y="192" font-size="20" fill="#faf9f5" text-anchor="middle">who are you?</text>
 </g>
-<g class="fragment fade-in" data-fragment-index="3">
+<g class="fragment fade-in" data-fragment-index="7">
+<line x1="465" y1="205" x2="465" y2="262" stroke="#e3c08d" stroke-width="2" fill="none" data-dash data-arrow/>
+<rect x="150" y="262" width="630" height="150" rx="14" stroke="#e3c08d" stroke-width="2" fill="none" data-dash/>
+<text x="465" y="292" font-size="20" fill="#e3c08d" text-anchor="middle">sign in with OIDC, at a provider we choose</text>
+<image href="icons/keycloak.svg" x="217" y="317" width="46" height="46"/>
+<text x="240" y="392" font-size="18" fill="#faf9f5" text-anchor="middle">Keycloak (ours)</text>
+<image href="icons/google.svg" x="444" y="319" width="42" height="42"/>
+<text x="465" y="392" font-size="18" fill="#faf9f5" text-anchor="middle">Google</text>
+<image href="icons/aws-light.svg" x="655" y="315" width="50" height="50"/>
+<text x="680" y="392" font-size="18" fill="#faf9f5" text-anchor="middle">AWS Cognito</text>
+</g>
+<g class="fragment fade-in" data-fragment-index="8">
 <line x1="540" y1="160" x2="560" y2="160" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
 <rect x="560" y="115" width="150" height="90" rx="14" stroke="#faf9f5" stroke-width="2" fill="#2b2a27" data-fill="solid"/>
 <image href="icons/lucide-gauge.svg" x="618" y="128" width="34" height="34"/>
-<text x="635" y="192" font-size="20" fill="#faf9f5" text-anchor="middle" class="sans">not too fast</text>
+<text x="635" y="192" font-size="20" fill="#faf9f5" text-anchor="middle">not too fast</text>
 </g>
-<g class="fragment fade-in" data-fragment-index="4">
+<g class="fragment fade-in" data-fragment-index="8">
 <line x1="710" y1="160" x2="730" y2="160" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
 <rect x="730" y="115" width="150" height="90" rx="14" stroke="#faf9f5" stroke-width="2" fill="#2b2a27" data-fill="solid"/>
 <image href="icons/lucide-route.svg" x="788" y="128" width="34" height="34"/>
-<text x="805" y="192" font-size="20" fill="#faf9f5" text-anchor="middle" class="sans">which app?</text>
+<text x="805" y="192" font-size="20" fill="#faf9f5" text-anchor="middle">which app?</text>
 </g>
-<g class="fragment fade-in" data-fragment-index="5">
+<g class="fragment fade-in" data-fragment-index="9">
 <line x1="890" y1="140" x2="990" y2="140" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
 <image href="icons/payload-light.svg" x="1040" y="110" width="60" height="60"/>
 <text x="1070" y="200" font-size="26" fill="#faf9f5" text-anchor="middle">TJ's site</text>
 <text x="1070" y="240" font-size="22" fill="#8fa876" text-anchor="middle">just gets a request</text>
 <text x="1070" y="268" font-size="22" fill="#8fa876" text-anchor="middle">from a signed-in user</text>
+<text x="1070" y="300" font-size="18" fill="#b0aea5" text-anchor="middle">(no login code at all)</text>
+</g>
 </g>
 </svg>
 </div>
 
-<div class="takeaway fragment fade-up">The app has <strong>no login code</strong> and no HTTPS setup. Envoy's filters and plugins do it, the same way for every app.</div>
+<div class="takeaway fragment fade-up" data-fragment-index="10">Sites <strong>never</strong> implement login in code. The proxy offloads auth entirely, the same way for every app.</div>
 
 Note:
-Envoy Gateway runs a chain of filters on every request: HTTPS, then
-"external auth", which asks our login service whether this visitor is
-allowed in, then rate limits, then routing. Only a request that passed
-all of them reaches the app, already labelled with who the user is. Like
-IIS authentication modules, but in front of every app at once, set up
-with records instead of server settings.
+North-south is traffic coming in from the internet and going out;
+east-west is apps talking to each other inside. Envoy Gateway only does
+north-south. For a developer, publishing an app is one HTTPRoute record.
+Then, on the same front door, every request passes Envoy's filters:
+HTTPS, then "who are you?": Envoy sends the visitor to sign in with OIDC
+at a provider we choose (our own Keycloak, Google, or AWS Cognito), or
+asks our own auth service (external auth). Then rate limits and routing.
+The app only ever sees a signed-in user, so no site writes login code.
 
 ---
 
@@ -917,18 +1151,18 @@ with records instead of server settings.
 
 ## A "PayloadSite" route for our customers
 
-<pre class="spec fragment fade-up"><span class="k">apiVersion</span>: kro.run/v1alpha1
+<pre class="spec fragment fade-up"><span class="k">apiVersion</span>: netsam.com/v1alpha1
 <span class="k">kind</span>: PayloadSite
 <span class="k">metadata</span>:
   <span class="k">name</span>: main-site
   <span class="k">namespace</span>: tjs-catfish-and-wings   <span class="c"># the tenant&#x27;s folder</span>
 <span class="k">spec</span>:
   <span class="k">domain</span>: tjscatfishandwings.com
-  <span class="k">target</span>: cloudflare-workers         <span class="c"># where it runs (7 choices)</span>
+  <span class="k">target</span>: cloud-run                  <span class="c"># where it runs (7 choices)</span>
   <span class="k">size</span>: small                        <span class="c"># small | medium | large</span></pre>
 
 <div class="routes ">
-<div class="route new fragment fade-up"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span></span><span class="what"><em>= one new Payload CMS site</em></span></div>
+<div class="route new fragment fade-up"><img class="ricon" src="https://www.netsam.com/assets/img/logo-light.243554167e.png" alt="netsam"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">netsam.com</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span></span><span class="what"><em>= one new Payload CMS site</em></span></div>
 </div>
 
 <p class="hint">↓ where it can run · what KRO hides · the portal on top</p>
@@ -945,13 +1179,13 @@ decided for the customer.
 ## Seven places a PayloadSite can run
 
 <div class="tiles" style="gap:0.6em 0.4em">
-<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/cloudflare-workers.svg" alt=""><b>Cloudflare Workers</b><span>D1 + R2</span></div>
-<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/google-cloud-platform.svg" alt=""><b>Google Cloud Run</b><span>Cloud SQL + Cloud Storage</span></div>
-<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/azure-container-instances.svg" alt=""><b>Azure Container Apps</b><span>Azure Postgres + Blob</span></div>
-<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/azure-container-service.svg" alt=""><b>AKS</b><span>Azure Postgres + Blob</span></div>
-<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/google-cloud-platform.svg" alt=""><b>GKE</b><span>Cloud SQL + Cloud Storage</span></div>
-<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/kubernetes.svg" alt=""><b>Our clusters</b><span>CloudNativePG + OpenEBS</span></div>
-<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/lucide-server.svg" alt=""><b>Other on-prem Kubernetes</b><span>CloudNativePG + their disks</span></div>
+<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/cloudflare-workers.svg" alt="cloudflare-workers"><b>Cloudflare Workers</b><span>D1 + R2</span></div>
+<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/google-cloud-platform.svg" alt="google-cloud-platform"><b>Google Cloud Run</b><span>Cloud SQL + Cloud Storage</span></div>
+<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/azure-container-instances.svg" alt="azure-container-instances"><b>Azure Container Apps</b><span>Azure Postgres + Blob</span></div>
+<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/azure-container-service.svg" alt="azure-container-service"><b>AKS</b><span>MongoDB in the cluster + Blob</span></div>
+<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/google-cloud-platform.svg" alt="google-cloud-platform"><b>GKE</b><span>MongoDB in the cluster + Cloud Storage</span></div>
+<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/kubernetes.svg" alt="kubernetes"><b>Our clusters</b><span>MongoDB + OpenEBS</span></div>
+<div class="tile fragment fade-up" style="width:7em"><img class="" src="icons/lucide-server.svg" alt="lucide-server"><b>Other on-prem Kubernetes</b><span>MongoDB + their disks</span></div>
 </div>
 
 <p class="fragment fade-up">Same three fields every time. Only <em>target</em> changes.</p>
@@ -959,8 +1193,8 @@ decided for the customer.
 Note:
 Payload CMS needs somewhere to run, a database, and a place for uploaded
 media. Each target gets the right pieces for that place: D1 and R2 on
-Cloudflare, Cloud SQL on Google, Azure Postgres on Azure, and
-CloudNativePG on our own or a customer's Kubernetes.
+Cloudflare, Cloud SQL on Cloud Run, Azure Postgres on Container Apps, and
+a MongoDB inside the cluster wherever Payload runs on Kubernetes.
 
 --
 
@@ -1037,6 +1271,95 @@ our clusters, and keeps it that way.
 
 <!-- .slide: data-transition="fade" -->
 
+## The recipe: one PayloadSite becomes a graph
+
+<div class="diagram">
+<svg class="sketch" viewBox="0 0 1200 545" style="max-height:480px" xmlns="http://www.w3.org/2000/svg">
+<rect x="20" y="175" width="220" height="170" rx="14" stroke="#d97757" stroke-width="3" fill="#2b2a27" data-fill="solid"/>
+<image href="icons/payload-light.svg" x="35" y="190" width="34" height="34"/>
+<text x="78" y="214" font-size="22" fill="#d97757" text-anchor="start" font-weight="700">PayloadSite</text>
+<text x="45" y="255" font-size="18" fill="#e3c08d" text-anchor="start" class="mono">domain</text>
+<text x="45" y="285" font-size="18" fill="#e3c08d" text-anchor="start" class="mono">target</text>
+<text x="45" y="315" font-size="18" fill="#e3c08d" text-anchor="start" class="mono">size</text>
+<rect x="270" y="20" width="910" height="445" rx="18" stroke="#b0aea5" stroke-width="2" fill="none" data-dash/>
+<image href="icons/kubernetes.svg" x="287" y="31" width="26" height="26"/>
+<text x="322" y="51" font-size="18" fill="#b0aea5" text-anchor="start">ResourceGraphDefinition "payloadsite" (KRO)</text>
+<line x1="240" y1="260" x2="282" y2="260" stroke="#d97757" stroke-width="2" fill="none" data-arrow/>
+<g class="fragment fade-in" data-fragment-index="1">
+<rect x="290" y="270" width="205" height="74" rx="10" stroke="#faf9f5" stroke-width="2" fill="#2b2a27" data-fill="solid"/>
+<image href="icons/cncf-crossplane.svg" x="303" y="290" width="34" height="34"/>
+<text x="346" y="301" font-size="19" fill="#faf9f5" text-anchor="start" font-weight="700">Media storage</text>
+<text x="346" y="324" font-size="14" fill="#b0aea5" text-anchor="start">R2 · GCS · Blob · a disk</text>
+<rect x="510" y="170" width="205" height="74" rx="10" stroke="#faf9f5" stroke-width="2" fill="#2b2a27" data-fill="solid"/>
+<image href="icons/lucide-key-round.svg" x="523" y="190" width="34" height="34"/>
+<text x="566" y="201" font-size="19" fill="#faf9f5" text-anchor="start" font-weight="700">Secret</text>
+<text x="566" y="224" font-size="14" fill="#b0aea5" text-anchor="start">connection details</text>
+<line x1="490" y1="290" x2="510" y2="235" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
+<rect x="950" y="270" width="205" height="74" rx="10" stroke="#faf9f5" stroke-width="2" fill="#2b2a27" data-fill="solid"/>
+<image href="icons/godaddy.svg" x="963" y="290" width="34" height="34"/>
+<text x="1006" y="301" font-size="19" fill="#faf9f5" text-anchor="start" font-weight="700">DNS record</text>
+<text x="1006" y="324" font-size="14" fill="#b0aea5" text-anchor="start">ExternalDNS, GoDaddy</text>
+</g>
+<g class="fragment fade-in" data-fragment-index="2">
+<rect x="290" y="70" width="205" height="74" rx="10" stroke="#6a9bcc" stroke-width="2" fill="#2b2a27" data-fill="solid" data-dash/>
+<image href="icons/mongodb.svg" x="303" y="90" width="34" height="34"/>
+<text x="346" y="101" font-size="19" fill="#faf9f5" text-anchor="start" font-weight="700">MongoDB</text>
+<text x="346" y="124" font-size="14" fill="#b0aea5" text-anchor="start">inside the cluster</text>
+<line x1="490" y1="110" x2="510" y2="185" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
+<rect x="730" y="70" width="205" height="74" rx="10" stroke="#6a9bcc" stroke-width="2" fill="#2b2a27" data-fill="solid" data-dash/>
+<image href="icons/payload-light.svg" x="743" y="90" width="34" height="34"/>
+<text x="786" y="101" font-size="19" fill="#faf9f5" text-anchor="start" font-weight="700">Payload container</text>
+<text x="786" y="124" font-size="14" fill="#b0aea5" text-anchor="start">Deployment + Service</text>
+<line x1="710" y1="195" x2="730" y2="130" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
+<rect x="950" y="70" width="205" height="74" rx="10" stroke="#6a9bcc" stroke-width="2" fill="#2b2a27" data-fill="solid" data-dash/>
+<image href="icons/envoy-gateway.svg" x="963" y="90" width="34" height="34"/>
+<text x="1006" y="101" font-size="19" fill="#faf9f5" text-anchor="start" font-weight="700">HTTPRoute</text>
+<text x="1006" y="124" font-size="14" fill="#b0aea5" text-anchor="start">Envoy Gateway</text>
+<line x1="930" y1="107" x2="950" y2="107" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
+<line x1="1050" y1="144" x2="1050" y2="270" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
+</g>
+<g class="fragment fade-in" data-fragment-index="3">
+<rect x="290" y="170" width="205" height="74" rx="10" stroke="#e3c08d" stroke-width="2" fill="#2b2a27" data-fill="solid" data-dash/>
+<image href="icons/cncf-crossplane.svg" x="303" y="190" width="34" height="34"/>
+<text x="346" y="201" font-size="19" fill="#faf9f5" text-anchor="start" font-weight="700">Cloud database</text>
+<text x="346" y="224" font-size="14" fill="#b0aea5" text-anchor="start">D1 · Cloud SQL · Azure</text>
+<line x1="490" y1="207" x2="510" y2="207" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
+<rect x="730" y="170" width="205" height="74" rx="10" stroke="#e3c08d" stroke-width="2" fill="#2b2a27" data-fill="solid" data-dash/>
+<image href="icons/cncf-crossplane.svg" x="743" y="190" width="34" height="34"/>
+<text x="786" y="201" font-size="19" fill="#faf9f5" text-anchor="start" font-weight="700">Cloud app</text>
+<text x="786" y="224" font-size="14" fill="#b0aea5" text-anchor="start">Workers · Run · ACA</text>
+<line x1="710" y1="207" x2="730" y2="207" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
+<polyline points="930,207 990,207 990,270" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
+</g>
+<g class="fragment fade-in" data-fragment-index="4">
+<rect x="890" y="375" width="260" height="60" rx="30" stroke="#8fa876" stroke-width="2" fill="none"/>
+<text x="1020" y="412" font-size="20" fill="#8fa876" text-anchor="middle" font-weight="700">status: url + ready</text>
+<line x1="1050" y1="344" x2="1050" y2="375" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
+<polyline points="890,405 130,405 130,345" stroke="#8fa876" stroke-width="2" fill="none" data-arrow/>
+</g>
+<rect x="290" y="485" width="26" height="18" rx="4" stroke="#faf9f5" stroke-width="2" fill="none"/>
+<text x="326" y="500" font-size="17" fill="#faf9f5" text-anchor="start">always</text>
+<rect x="420" y="485" width="26" height="18" rx="4" stroke="#6a9bcc" stroke-width="2" fill="none" data-dash/>
+<text x="456" y="500" font-size="17" fill="#6a9bcc" text-anchor="start">Payload runs in a Kubernetes cluster (AKS, GKE, ours, on-prem)</text>
+<rect x="290" y="515" width="26" height="18" rx="4" stroke="#e3c08d" stroke-width="2" fill="none" data-dash/>
+<text x="326" y="530" font-size="17" fill="#e3c08d" text-anchor="start">Payload runs serverless (Cloudflare Workers, Cloud Run, Container Apps)</text>
+</svg>
+</div>
+
+Note:
+This is the ResourceGraphDefinition KRO uses for every PayloadSite. Three
+pieces are always made: media storage, a secret with the connection
+details, and a GoDaddy DNS record through ExternalDNS. If Payload runs in a
+Kubernetes cluster (AKS, GKE, ours or on-prem), KRO adds a MongoDB inside
+that cluster, the Payload container, and an HTTPRoute on Envoy Gateway. If
+it runs serverless, Crossplane creates the cloud database and the cloud app
+instead. When everything is ready, the status (the address, ready: true)
+flows back to the PayloadSite.
+
+--
+
+<!-- .slide: data-transition="fade" -->
+
 ## Our cluster is the brain, the sites run anywhere
 
 <div class="diagram">
@@ -1047,27 +1370,27 @@ our clusters, and keeps it that way.
 <text x="640" y="102" font-size="20" fill="#faf9f5" text-anchor="middle" class="sans">the API + KRO + Crossplane</text>
 <g class="fragment fade-in">
 <line x1="480" y1="130" x2="150" y2="230" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
-<image href="icons/cloudflare-workers.svg" x="118" y="238" width="64" height="64"/>
+<image href="icons/google-cloud-platform.svg" x="118" y="238" width="64" height="64"/>
 <text x="150" y="340" font-size="24" fill="#e3c08d" text-anchor="middle">tjs-catfish-and-wings</text>
-<text x="150" y="368" font-size="20" fill="#b0aea5" text-anchor="middle" class="sans">Cloudflare Workers</text>
+<text x="150" y="368" font-size="20" fill="#b0aea5" text-anchor="middle" class="sans">always Google</text>
 </g>
 <g class="fragment fade-in">
 <line x1="560" y1="130" x2="450" y2="230" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
-<image href="icons/azure-container-instances.svg" x="418" y="238" width="64" height="64"/>
-<text x="450" y="340" font-size="24" fill="#e3c08d" text-anchor="middle">bff</text>
-<text x="450" y="368" font-size="20" fill="#b0aea5" text-anchor="middle" class="sans">Azure Container Apps</text>
+<image href="icons/microsoft-azure.svg" x="418" y="238" width="64" height="64"/>
+<text x="450" y="340" font-size="24" fill="#e3c08d" text-anchor="middle">michael</text>
+<text x="450" y="368" font-size="20" fill="#b0aea5" text-anchor="middle" class="sans">always Azure</text>
 </g>
 <g class="fragment fade-in">
 <line x1="640" y1="130" x2="750" y2="230" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
-<image href="icons/google-cloud-platform.svg" x="718" y="238" width="64" height="64"/>
-<text x="750" y="340" font-size="24" fill="#e3c08d" text-anchor="middle">michael</text>
-<text x="750" y="368" font-size="20" fill="#b0aea5" text-anchor="middle" class="sans">Google Cloud Run</text>
+<image href="icons/lucide-server.svg" x="718" y="238" width="64" height="64"/>
+<text x="750" y="340" font-size="24" fill="#e3c08d" text-anchor="middle">bff</text>
+<text x="750" y="368" font-size="20" fill="#b0aea5" text-anchor="middle" class="sans">on-prem, Google, ours</text>
 </g>
 <g class="fragment fade-in">
 <line x1="720" y1="130" x2="1050" y2="230" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
 <image href="icons/kubernetes.svg" x="1018" y="238" width="64" height="64"/>
 <text x="1050" y="340" font-size="24" fill="#e3c08d" text-anchor="middle">dev-team</text>
-<text x="1050" y="368" font-size="20" fill="#b0aea5" text-anchor="middle" class="sans">one of our clusters</text>
+<text x="1050" y="368" font-size="20" fill="#b0aea5" text-anchor="middle" class="sans">our clusters + Cloudflare</text>
 </g>
 </svg>
 </div>
@@ -1148,10 +1471,10 @@ shows the address and starts the bill.
 ## What the portal is made of: four records
 
 <div class="kinds">
-<div class="kind fragment fade-up"><img class="" src="icons/dotnet.svg" alt=""><code>Deployment</code><span>the portal program itself (.NET, or anything), 3 copies</span><span class="who">built in</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/envoy-gateway.svg" alt=""><code>HTTPRoute</code><span>its public address: portal.our-company.com</span><span class="who">Envoy Gateway</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/lucide-key-round.svg" alt=""><code>ServiceAccount</code><span>its own login: may create PayloadSites, nothing else</span><span class="who">RBAC, built in</span></div>
-<div class="kind fragment fade-up"><img class="" src="icons/lucide-eye.svg" alt=""><code>watch</code><span>told about every PayloadSite change, the moment it happens</span><span class="who">built in</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/dotnet.svg" alt="dotnet"><code>Deployment</code><span>the portal program itself (.NET, or anything), 3 copies</span><span class="who">built in</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/envoy-gateway.svg" alt="envoy-gateway"><code>HTTPRoute</code><span>its public address: portal.our-company.com</span><span class="who">Envoy Gateway</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/lucide-key-round.svg" alt="lucide-key-round"><code>ServiceAccount</code><span>its own login: may create PayloadSites, nothing else</span><span class="who">RBAC, built in</span></div>
+<div class="kind fragment fade-up"><img class="" src="icons/lucide-eye.svg" alt="lucide-eye"><code>watch</code><span>told about every PayloadSite change, the moment it happens</span><span class="who">built in</span></div>
 </div>
 
 <div class="takeaway fragment fade-up">No server to build, no database to set up, no login system to write. The platform supplies the rest.</div>
@@ -1212,17 +1535,17 @@ the portal restarts, it simply looks again and catches up.
 <table>
 <thead><tr><th>Tenant</th><th>Can use</th><th>Payload sites (max)</th></tr></thead>
 <tbody>
-<tr><td><em>tjs-catfish-and-wings</em></td><td><img class="icon" src="icons/payload-light.svg" alt=""> sites, <img class="icon" src="icons/postgresql.svg" alt=""> databases</td><td>2</td></tr>
-<tr><td><em>bff</em></td><td><img class="icon" src="icons/payload-light.svg" alt=""> sites, <img class="icon" src="icons/postgresql.svg" alt=""> databases</td><td>2</td></tr>
-<tr><td><em>matt</em></td><td><img class="icon" src="icons/microsoft-windows.svg" alt=""> VMs, <img class="icon" src="icons/cncf-argo.svg" alt=""> workflows</td><td>0</td></tr>
-<tr><td><em>michael</em></td><td><img class="icon" src="icons/payload-light.svg" alt=""> sites</td><td>1</td></tr>
+<tr><td><em>tjs-catfish-and-wings</em></td><td><img class="icon" src="icons/payload-light.svg" alt="payload-light"> sites, <img class="icon" src="icons/postgresql.svg" alt="postgresql"> databases</td><td>2</td></tr>
+<tr><td><em>bff</em></td><td><img class="icon" src="icons/payload-light.svg" alt="payload-light"> sites, <img class="icon" src="icons/postgresql.svg" alt="postgresql"> databases</td><td>2</td></tr>
+<tr><td><em>matt</em></td><td><img class="icon" src="icons/microsoft-windows.svg" alt="microsoft-windows"> VMs, <img class="icon" src="icons/cncf-argo.svg" alt="cncf-argo"> workflows</td><td>0</td></tr>
+<tr><td><em>michael</em></td><td><img class="icon" src="icons/payload-light.svg" alt="payload-light"> sites</td><td>1</td></tr>
 <tr><td><em>dev-team</em></td><td>everything, everywhere</td><td>no limit</td></tr>
 </tbody>
 </table>
 <!-- .element: class="fragment fade-up" -->
 
 <div class="routes fragment fade-up">
-<div class="route "><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span></span><span class="what"><span style="color:var(--rose)">TJ&#39;s 3rd site: 403 Forbidden, limit reached</span></span></div>
+<div class="route "><img class="ricon" src="https://www.netsam.com/assets/img/logo-light.243554167e.png" alt="netsam"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">netsam.com</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span></span><span class="what"><span style="color:var(--rose)">TJ&#39;s 3rd site: 403, limit reached</span></span></div>
 </div>
 
 Note:
@@ -1233,18 +1556,18 @@ Limits (ResourceQuota) say how many. Both are just more records.
 
 <!-- .slide: data-background-gradient="radial-gradient(circle at 30% 20%, #2a3340, #1f1e1d 70%)" -->
 
-<p class="kicker">Reassurance <img class="icon" src="icons/cncf.svg" alt=""></p>
+<p class="kicker">Reassurance <img class="icon" src="icons/cncf.svg" alt="cncf"></p>
 
 ## How the CNCF grades its projects
 
 <div class="levels">
-<div class="level  fragment fade-up"><img class="" src="icons/lucide-sprout.svg" alt=""><b>Sandbox</b><em>Early, experimental</em><ul class="ticks" style="font-size:0.95em; margin:0.3em 0 0.3em 0.2em"><li>accepted by the CNCF</li><li>neutral home, open rules</li><li>may still change a lot</li></ul><p style="margin:0"><strong>For us:</strong> Try it at the edges</p></div>
-<div class="level sand fragment fade-up"><img class="" src="icons/lucide-leaf.svg" alt=""><b>Incubating</b><em>Proven in production</em><ul class="ticks" style="font-size:0.95em; margin:0.3em 0 0.3em 0.2em"><li>used in production by 3+ companies</li><li>a healthy, growing team</li><li>steady releases</li></ul><p style="margin:0"><strong>For us:</strong> Use it, keep an eye on it</p></div>
-<div class="level green fragment fade-up"><img class="" src="icons/lucide-tree-deciduous.svg" alt=""><b>Graduated</b><em>Boring, in the best way</em><ul class="ticks" style="font-size:0.95em; margin:0.3em 0 0.3em 0.2em"><li>independent security audit</li><li>maintainers from several companies</li><li>public list of users</li></ul><p style="margin:0"><strong>For us:</strong> Build the business on it</p></div>
+<div class="level  fragment fade-up"><img class="" src="icons/lucide-sprout.svg" alt="lucide-sprout"><b>Sandbox</b><em>Early, experimental</em><ul class="ticks" style="font-size:0.95em; margin:0.3em 0 0.3em 0.2em"><li>accepted by the CNCF</li><li>neutral home, open rules</li><li>may still change a lot</li></ul><p style="margin:0"><strong>For us:</strong> Try it at the edges</p></div>
+<div class="level sand fragment fade-up"><img class="" src="icons/lucide-leaf.svg" alt="lucide-leaf"><b>Incubating</b><em>Proven in production</em><ul class="ticks" style="font-size:0.95em; margin:0.3em 0 0.3em 0.2em"><li>used in production by 3+ companies</li><li>a healthy, growing team</li><li>steady releases</li></ul><p style="margin:0"><strong>For us:</strong> Use it, keep an eye on it</p></div>
+<div class="level green fragment fade-up"><img class="" src="icons/lucide-tree-deciduous.svg" alt="lucide-tree-deciduous"><b>Graduated</b><em>Boring, in the best way</em><ul class="ticks" style="font-size:0.95em; margin:0.3em 0 0.3em 0.2em"><li>independent security audit</li><li>maintainers from several companies</li><li>public list of users</li></ul><p style="margin:0"><strong>For us:</strong> Build the business on it</p></div>
 </div>
 
 <div class="tiles fragment fade-up" style="gap:0.4em 0.3em">
-<div class="tile" style="width:5.2em"><img class="" src="icons/kubernetes.svg" alt=""><b>Kubernetes</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/etcd.svg" alt=""><b>etcd</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/coredns.svg" alt=""><b>CoreDNS</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/cilium.svg" alt=""><b>Cilium</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/envoy-gateway.svg" alt=""><b>Envoy</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/cncf-crossplane.svg" alt=""><b>Crossplane</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/cncf-argo.svg" alt=""><b>Argo</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/flux-cd.svg" alt=""><b>Flux</b></div>
+<div class="tile" style="width:5.2em"><img class="" src="icons/kubernetes.svg" alt="kubernetes"><b>Kubernetes</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/etcd.svg" alt="etcd"><b>etcd</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/coredns.svg" alt="coredns"><b>CoreDNS</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/cilium.svg" alt="cilium"><b>Cilium</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/envoy-gateway.svg" alt="envoy-gateway"><b>Envoy</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/cncf-crossplane.svg" alt="cncf-crossplane"><b>Crossplane</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/cncf-argo.svg" alt="cncf-argo"><b>Argo</b></div><div class="tile" style="width:5.2em"><img class="" src="icons/flux-cd.svg" alt="flux-cd"><b>Flux</b></div>
 </div>
 
 <p class="hint">↓ "never heard of it" ≠ small · our rule · where we stand · who owns it</p>
@@ -1261,7 +1584,7 @@ the bottom are Graduated projects we use.
 ## "Never heard of it" ≠ small
 
 <div class="tiles" style="gap:0.6em 0.3em">
-<div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/kubernetes.svg" alt=""><b>Kubernetes</b><span>started at Google</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/cncf-argo.svg" alt=""><b>Argo</b><span>grown up at Intuit</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/flux-cd.svg" alt=""><b>Flux</b><span>used by Microsoft in Azure</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/cilium.svg" alt=""><b>Cilium</b><span>Cisco; inside Google & Azure</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/envoy-gateway.svg" alt=""><b>Envoy</b><span>born at Lyft; runs Google & AWS proxies</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/cncf-kubevirt.svg" alt=""><b>KubeVirt</b><span>started by Red Hat</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/kubernetes.svg" alt=""><b>KRO</b><span>AWS + Google + Microsoft</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/cncf-crossplane.svg" alt=""><b>Crossplane</b><span>runs clouds at big enterprises</span></div>
+<div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/kubernetes.svg" alt="kubernetes"><b>Kubernetes</b><span>started at Google</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/cncf-argo.svg" alt="cncf-argo"><b>Argo</b><span>grown up at Intuit</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/flux-cd.svg" alt="flux-cd"><b>Flux</b><span>used by Microsoft in Azure</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/cilium.svg" alt="cilium"><b>Cilium</b><span>Cisco; inside Google & Azure</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/envoy-gateway.svg" alt="envoy-gateway"><b>Envoy</b><span>born at Lyft; runs Google & AWS proxies</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/cncf-kubevirt.svg" alt="cncf-kubevirt"><b>KubeVirt</b><span>started by Red Hat</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/kubernetes.svg" alt="kubernetes"><b>KRO</b><span>AWS + Google + Microsoft</span></div><div class="tile fragment fade-up" style="width:5.6em"><img class="" src="icons/cncf-crossplane.svg" alt="cncf-crossplane"><b>Crossplane</b><span>runs clouds at big enterprises</span></div>
 </div>
 
 <p class="big fragment fade-up">The most valuable software on earth runs on these.</p>
@@ -1277,9 +1600,9 @@ the bottom are Graduated projects we use.
 <div class="diagram">
 <svg class="sketch" viewBox="0 0 1200 190" xmlns="http://www.w3.org/2000/svg">
 <g class="fragment fade-right">
-<image href="icons/lucide-layout-dashboard.svg" x="53" y="53" width="54" height="54"/>
+<image href="https://www.netsam.com/assets/img/logo-light.243554167e.png" x="53" y="53" width="54" height="54"/>
 <text x="80" y="137" font-size="22" fill="#faf9f5" text-anchor="middle">Portal</text>
-<text x="80" y="163" font-size="19" fill="#b0aea5" text-anchor="middle" class="sans">ours</text>
+<text x="80" y="163" font-size="19" fill="#b0aea5" text-anchor="middle" class="sans">NetSam</text>
 </g>
 <g class="fragment fade-right">
 <line x1="133" y1="80" x2="208" y2="80" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
@@ -1315,7 +1638,7 @@ the bottom are Graduated projects we use.
 <line x1="998" y1="80" x2="1073" y2="80" stroke="#faf9f5" stroke-width="2" fill="none" data-arrow/>
 <image href="icons/payload-light.svg" x="1091" y="53" width="54" height="54"/>
 <text x="1118" y="137" font-size="22" fill="#faf9f5" text-anchor="middle">Payload site</text>
-<text x="1118" y="163" font-size="19" fill="#b0aea5" text-anchor="middle" class="sans">ours</text>
+<text x="1118" y="163" font-size="19" fill="#b0aea5" text-anchor="middle" class="sans">NetSam</text>
 </g>
 </svg>
 </div>
@@ -1339,11 +1662,11 @@ Gateway as the front door, the whole pathway is now CNCF.
 
 | Level | Projects |
 | --- | --- |
-| <img class="icon" src="icons/lucide-tree-deciduous.svg" alt=""> **Graduated** | <img class="icon" src="icons/kubernetes.svg" alt=""> Kubernetes · <img class="icon" src="icons/etcd.svg" alt=""> etcd · <img class="icon" src="icons/coredns.svg" alt=""> CoreDNS · <img class="icon" src="icons/cilium.svg" alt=""> Cilium · <img class="icon" src="icons/envoy-gateway.svg" alt=""> Envoy (Gateway) · <img class="icon" src="icons/cncf-crossplane.svg" alt=""> Crossplane · <img class="icon" src="icons/cncf-argo.svg" alt=""> Argo · <img class="icon" src="icons/flux-cd.svg" alt=""> Flux |
-| <img class="icon" src="icons/kubernetes.svg" alt=""> **Part of Kubernetes** | KRO · Gateway API |
-| <img class="icon" src="icons/lucide-leaf.svg" alt=""> **Incubating** | <img class="icon" src="icons/cncf-kubevirt.svg" alt=""> KubeVirt |
-| <img class="icon" src="icons/lucide-sprout.svg" alt=""> **Sandbox** | <img class="icon" src="icons/postgresql.svg" alt=""> CloudNativePG · <img class="icon" src="icons/opentofu.svg" alt=""> OpenTofu · <img class="icon" src="icons/cncf-k3s.svg" alt=""> k3s · <img class="icon" src="icons/cncf-openebs.svg" alt=""> OpenEBS |
-| **Not CNCF** (open source) | <img class="icon" src="icons/rancher.svg" alt=""> RKE2 |
+| <img class="icon" src="icons/lucide-tree-deciduous.svg" alt="lucide-tree-deciduous"> **Graduated** | <img class="icon" src="icons/kubernetes.svg" alt="kubernetes"> Kubernetes · <img class="icon" src="icons/etcd.svg" alt="etcd"> etcd · <img class="icon" src="icons/coredns.svg" alt="coredns"> CoreDNS · <img class="icon" src="icons/cilium.svg" alt="cilium"> Cilium · <img class="icon" src="icons/envoy-gateway.svg" alt="envoy-gateway"> Envoy (Gateway) · <img class="icon" src="icons/cncf-crossplane.svg" alt="cncf-crossplane"> Crossplane · <img class="icon" src="icons/cncf-argo.svg" alt="cncf-argo"> Argo · <img class="icon" src="icons/flux-cd.svg" alt="flux-cd"> Flux |
+| <img class="icon" src="icons/kubernetes.svg" alt="kubernetes"> **Part of Kubernetes** | KRO · Gateway API |
+| <img class="icon" src="icons/lucide-leaf.svg" alt="lucide-leaf"> **Incubating** | <img class="icon" src="icons/cncf-kubevirt.svg" alt="cncf-kubevirt"> KubeVirt |
+| <img class="icon" src="icons/lucide-sprout.svg" alt="lucide-sprout"> **Sandbox** | <img class="icon" src="icons/postgresql.svg" alt="postgresql"> CloudNativePG · <img class="icon" src="icons/opentofu.svg" alt="opentofu"> OpenTofu · <img class="icon" src="icons/cncf-k3s.svg" alt="cncf-k3s"> k3s · <img class="icon" src="icons/cncf-openebs.svg" alt="cncf-openebs"> OpenEBS |
+| **Not CNCF** (open source) | <img class="icon" src="icons/rancher.svg" alt="rancher"> RKE2 |
 <!-- .element: class="fragment fade-up" -->
 
 <p class="fragment fade-up">The whole pathway is <strong>Graduated</strong> or part of Kubernetes.</p>
@@ -1374,9 +1697,9 @@ Gateway as the front door, the whole pathway is now CNCF.
 </svg>
 </div>
 
-<div class="takeaway fragment fade-up"><img class="icon" src="icons/opentofu.svg" alt=""> <strong>2023:</strong> Terraform's company changed its license. The community moved the open code to <strong>OpenTofu</strong> under a foundation. A foundation-owned project <strong>can't be taken away</strong>.</div>
+<div class="takeaway fragment fade-up"><img class="icon" src="icons/opentofu.svg" alt="opentofu"> <strong>2023:</strong> Terraform's company changed its license. The community moved the open code to <strong>OpenTofu</strong> under a foundation. A foundation-owned project <strong>can't be taken away</strong>.</div>
 
-<p class="fragment fade-up">You already depend on open source: <img class="icon" src="icons/payload-light.svg" alt=""> Payload CMS · DotNetNuke · <img class="icon" src="icons/dotnet.svg" alt=""> .NET · <img class="icon" src="icons/github-light.svg" alt=""> GitHub. A new Kubernetes release every <strong>4 months</strong>, free.</p>
+<p class="fragment fade-up">You already depend on open source: <img class="icon" src="icons/payload-light.svg" alt="payload-light"> Payload CMS · DotNetNuke · <img class="icon" src="icons/dotnet.svg" alt="dotnet"> .NET · <img class="icon" src="icons/github-light.svg" alt="github-light"> GitHub. A new Kubernetes release every <strong>4 months</strong>, free.</p>
 
 ---
 
@@ -1384,12 +1707,12 @@ Gateway as the front door, the whole pathway is now CNCF.
 
 ## Our platform, floor by floor
 
-<div class="layer fragment fade-down" data-fragment-index="6" style="border-left-color:var(--clay); width:96%"><span>Our routes: sites, tenants, databases, VMs</span><span><img class="icon" src="icons/kubernetes.svg" alt=""> KRO <img class="icon" src="icons/cncf-crossplane.svg" alt=""> Crossplane <img class="icon" src="icons/cncf-kubevirt.svg" alt=""> KubeVirt <img class="icon" src="icons/postgresql.svg" alt=""> CloudNativePG</span></div>
-<div class="layer fragment fade-down" data-fragment-index="5" style="border-left-color:var(--rose); width:91%"><span>Front door</span><span><img class="icon" src="icons/godaddy.svg" alt=""> GoDaddy + ExternalDNS <img class="icon" src="icons/cloudflare.svg" alt=""> Cloudflare <img class="icon" src="icons/envoy-gateway.svg" alt=""> Envoy Gateway</span></div>
-<div class="layer fragment fade-down" data-fragment-index="4" style="border-left-color:var(--sand); width:86%"><span>Networking: Cluster Mesh, BGP</span><span><img class="icon" src="icons/cilium.svg" alt=""> Cilium</span></div>
-<div class="layer fragment fade-down" data-fragment-index="3" style="border-left-color:var(--blue); width:81%"><span>Kubernetes, disks, sandboxes</span><span><img class="icon" src="icons/rancher.svg" alt=""> RKE2 <img class="icon" src="icons/cncf-k3s.svg" alt=""> k3s <img class="icon" src="icons/cncf-openebs.svg" alt=""> OpenEBS <img class="icon" src="icons/lucide-shield.svg" alt=""> Kata</span></div>
-<div class="layer fragment fade-down" data-fragment-index="2" style="border-left-color:var(--green); width:76%"><span>Encrypted network between every server</span><span><img class="icon" src="icons/wireguard.svg" alt=""> WireGuard</span></div>
-<div class="layer fragment fade-down" data-fragment-index="1" style="border-left-color:var(--muted); width:71%"><span>Servers: any cloud + our racks</span><span><img class="icon" src="icons/nixos.svg" alt=""> NixOS</span></div>
+<div class="layer fragment fade-down" data-fragment-index="6" style="border-left-color:var(--clay); width:96%"><span>Our routes: sites, tenants, databases, VMs</span><span><img class="icon" src="icons/kubernetes.svg" alt="kubernetes"> KRO <img class="icon" src="icons/cncf-crossplane.svg" alt="cncf-crossplane"> Crossplane <img class="icon" src="icons/cncf-kubevirt.svg" alt="cncf-kubevirt"> KubeVirt <img class="icon" src="icons/postgresql.svg" alt="postgresql"> CloudNativePG</span></div>
+<div class="layer fragment fade-down" data-fragment-index="5" style="border-left-color:var(--rose); width:91%"><span>Front door</span><span><img class="icon" src="icons/godaddy.svg" alt="godaddy"> GoDaddy + ExternalDNS <img class="icon" src="icons/cloudflare.svg" alt="cloudflare"> Cloudflare <img class="icon" src="icons/envoy-gateway.svg" alt="envoy-gateway"> Envoy Gateway</span></div>
+<div class="layer fragment fade-down" data-fragment-index="4" style="border-left-color:var(--sand); width:86%"><span>Networking: Cluster Mesh, BGP</span><span><img class="icon" src="icons/cilium.svg" alt="cilium"> Cilium</span></div>
+<div class="layer fragment fade-down" data-fragment-index="3" style="border-left-color:var(--blue); width:81%"><span>Kubernetes, disks, sandboxes</span><span><img class="icon" src="icons/rancher.svg" alt="rancher"> RKE2 <img class="icon" src="icons/cncf-k3s.svg" alt="cncf-k3s"> k3s <img class="icon" src="icons/cncf-openebs.svg" alt="cncf-openebs"> OpenEBS <img class="icon" src="icons/lucide-shield.svg" alt="lucide-shield"> Kata</span></div>
+<div class="layer fragment fade-down" data-fragment-index="2" style="border-left-color:var(--green); width:76%"><span>Encrypted network between every server</span><span><img class="icon" src="icons/wireguard.svg" alt="wireguard"> WireGuard</span></div>
+<div class="layer fragment fade-down" data-fragment-index="1" style="border-left-color:var(--muted); width:71%"><span>Servers: any cloud + our racks</span><span><img class="icon" src="icons/nixos.svg" alt="nixos"> NixOS</span></div>
 
 <p class="hint">↓ extra walls · the end</p>
 
@@ -1448,12 +1771,12 @@ records; only the risky workloads pay the small extra cost.
 ## One POST = one customer's website, on any cloud
 
 <div class="routes ">
-<div class="route new"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">kro.run</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span></span><span class="what"><em>"tjscatfishandwings.com, Workers, small"</em></span></div>
+<div class="route new"><img class="ricon" src="https://www.netsam.com/assets/img/logo-light.243554167e.png" alt="netsam"><span class="verb post">POST</span><span class="path">/apis/<span class="grp">netsam.com</span>/v1alpha1/namespaces/<span class="ns">tjs-catfish-and-wings</span>/<span class="res">payloadsites</span></span><span class="what"><em>"TJ&#39;s site, Google, small"</em></span></div>
 </div>
 
 <p class="big fragment fade-up">Kubernetes, the extensible API: <strong>a platform that develops itself.</strong></p>
 
-<h1 class="fragment fade-up hand" style="margin-top:0.5em">Questions?</h1>
+<h1 class="fragment fade-up" style="margin-top:0.5em">Questions?</h1>
 
 <small class="fragment fade-in">Everything from tonight, slower, is on the website.</small>
 

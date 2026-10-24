@@ -12,20 +12,39 @@ With KRO ([chapter 4](extending.md)) we add our own route to the API,
 like a short form:
 
 ```yaml
-apiVersion: kro.run/v1alpha1
+apiVersion: netsam.com/v1alpha1
 kind: PayloadSite
 metadata:
   name: main-site
   namespace: tjs-catfish-and-wings   # the tenant's folder
 spec:
   domain: tjscatfishandwings.com
-  target: cloudflare-workers         # where it runs (7 choices, below)
+  target: cloud-run                  # where it runs (7 choices, below)
   size: small                        # small | medium | large
 ```
 
 Creating it is one request:
-`POST /apis/kro.run/v1alpha1/namespaces/tjs-catfish-and-wings/payloadsites`.
-(`kro.run` is KRO's default group; it can carry our company's name instead.)
+`POST /apis/netsam.com/v1alpha1/namespaces/tjs-catfish-and-wings/payloadsites`.
+(`netsam.com` is the API group: it says NetSam added this route.)
+
+## The recipe behind a PayloadSite
+
+KRO turns the PayloadSite route into a **ResourceGraphDefinition**: a
+recipe that says which records to create for each new site. Some pieces
+are always made; the rest depend on where the site runs.
+
+```mermaid
+flowchart TB
+    P["PayloadSite<br/>domain · target · size"] --> A["Always: media storage,<br/>a Secret, a GoDaddy DNS record"]
+    P -->|"runs in a cluster"| K["MongoDB in the cluster,<br/>the Payload container,<br/>an HTTPRoute for Envoy Gateway"]
+    P -->|"runs serverless"| C["Crossplane builds a cloud database<br/>and the cloud app"]
+    A --> S["status: url + ready"]
+    K --> S
+    C --> S
+```
+
+Only `domain`, `target` and `size` are exposed. Everything else is
+decided by the recipe, the same way for every customer.
 
 ## Seven places a PayloadSite can run
 
@@ -37,10 +56,10 @@ media. The same three fields build all of it, wherever the customer picked:
 | `cloudflare-workers` | Cloudflare Workers | D1 + R2 |
 | `cloud-run` | Google Cloud Run | Cloud SQL + Cloud Storage |
 | `azure-container-apps` | Azure Container Apps | Azure Database for PostgreSQL + Blob Storage |
-| `aks` | Azure Kubernetes Service | Azure Database for PostgreSQL + Blob Storage |
-| `gke` | Google Kubernetes Engine | Cloud SQL + Cloud Storage |
-| `ours` | one of our Kubernetes clusters | CloudNativePG + OpenEBS |
-| `on-prem` | another on-premises Kubernetes | CloudNativePG + that site's disks |
+| `aks` | Azure Kubernetes Service | MongoDB in the cluster + Blob Storage |
+| `gke` | Google Kubernetes Engine | MongoDB in the cluster + Cloud Storage |
+| `ours` | one of our Kubernetes clusters | MongoDB + OpenEBS |
+| `on-prem` | another on-premises Kubernetes | MongoDB + that site's disks |
 
 Every site also gets an HTTPS certificate and a DNS record in **GoDaddy**,
 where Dad's domains live, written by **ExternalDNS**. When everything is
@@ -49,14 +68,16 @@ ready, the record fills in its status:
 
 ```mermaid
 flowchart TB
-    B["🧠 Our Kubernetes cluster<br/>API + KRO + Crossplane"] --> T1["tjs-catfish-and-wings<br/>Cloudflare Workers"]
-    B --> T2["bff<br/>Azure Container Apps"]
-    B --> T3["michael<br/>Google Cloud Run"]
-    B --> T4["dev-team<br/>one of our clusters"]
+    B["🧠 Our Kubernetes cluster<br/>API + KRO + Crossplane"] --> T1["tjs-catfish-and-wings<br/>always Google"]
+    B --> T2["michael<br/>always Azure"]
+    B --> T3["bff<br/>on-prem, Google and ours"]
+    B --> T4["dev-team<br/>our clusters + Cloudflare"]
 ```
 
-Our cluster is the brain; each customer's site runs wherever makes sense
-for them. Mixed, multi-tenant, multi-cloud, all through one API.
+Our cluster is the brain; each customer's site runs wherever they prefer:
+TJ's always picks Google, Michael always picks Azure, bff mixes on-prem,
+Google and our own clusters, and our own sites run in our clusters or on
+Cloudflare. Mixed, multi-tenant, multi-cloud, all through one API.
 
 ## KRO shows the basics, Crossplane builds the rest
 
@@ -121,7 +142,7 @@ flowchart LR
 
 Behind the "Create my site" button the portal does exactly one thing: POST
 a PayloadSite. For billing it **watches** the route
-(`GET /apis/kro.run/v1alpha1/payloadsites?watch=true`): a site created
+(`GET /apis/netsam.com/v1alpha1/payloadsites?watch=true`): a site created
 starts billing, a size change changes the price, a site deleted stops
 billing. That makes the portal an operator too.
 

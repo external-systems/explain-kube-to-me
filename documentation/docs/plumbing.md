@@ -96,13 +96,17 @@ Every request then passes a chain of Envoy **filters** before it reaches
 the app:
 
 1. **HTTPS**: certificates handled at the door.
-2. **External auth**: Envoy asks our login service whether this visitor is
-   allowed in.
+2. **Sign-in (OIDC)**: a visitor who is not signed in is sent to a login
+   provider we choose: **Keycloak** (our own), **Google**, or **AWS Cognito**.
+   The provider vouches for who they are, and Envoy checks that on every
+   request after that. Envoy can also ask an **external auth** service
+   whether this person may use this app.
 3. **Rate limits**: nobody can flood the app.
 4. **Routing**: on to the right app, in the right folder.
 
-The app only ever sees a request from a signed-in user. It has **no login
-code and no HTTPS setup**, and every app gets the same protection, like IIS
+The app only ever sees a request from a signed-in user. Sites **never
+implement login in code**: the proxy offloads auth entirely, with no
+HTTPS setup either. Every app gets the same protection, like IIS
 authentication modules in front of every site at once, set up with records
 instead of server settings.
 
