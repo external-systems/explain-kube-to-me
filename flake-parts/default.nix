@@ -1,24 +1,20 @@
 {
-  perSystem = {
-    pkgs,
-    config,
-    ...
-  }: {
+  perSystem = {pkgs, ...}: {
     # Formatter: `nix fmt .`
     formatter = pkgs.alejandra;
 
-    # Mkdocs (mkdocs-flake module, imported in flake.nix):
+    # The slide deck. The presenting module (imported in flake.nix) turns
+    # this one line into `packages.slides`, `apps.serve-slides` and the
+    # /slides/ embed in the docs site below.
+    presenting.slides.dir = ../slides;
+
+    # Mkdocs (mkdocs-flake, pulled in by the presenting module):
     #   nix build .#documentation      → ./result is the static website
     #   nix run .#watch-documentation  → live preview on http://127.0.0.1:8000
     documentation = {
       mkdocs-root = ../documentation;
       # Broken links / missing nav pages fail the build instead of warning.
       strict = true;
-      # Ship the built slide deck inside the website at /slides/
-      # (embedded by docs/presentation.md). Runs in the build directory,
-      # where docs/ is a symlink copy of documentation/docs (read-only
-      # directories, hence the chmod).
-      mkdocs-preBuildHook = "chmod u+w docs && cp -r ${config.packages.slides} docs/slides";
     };
   };
 }
