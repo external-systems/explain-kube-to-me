@@ -1,53 +1,50 @@
 {
   description = "Kubernetes, The Extensible API: docs site (MkDocs) + slide deck (reveal.js)";
 
-  # Every outside dependency is an input below. `flake.lock` records the
-  # exact commit + content hash of each one, so every machine builds the
-  # same site. Update them with `nix flake update` (all) or
-  # `nix flake update <name>` (one).
   inputs = {
-    # Nixpkgs — the package set (python, mkdocs' runtime, alejandra, ...).
-    # Pinned to a stable release branch; flake.lock holds the exact commit.
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    # Shared-input authority for the org: nixpkgs, flake-parts and
+    # import-tree come from the artifact flake. Named org-pkgs, never
+    # pkgs: `pkgs` is the nixpkgs package set everywhere else. After
+    # `nix flake update org-pkgs`, run `sync-locks` in the same commit.
+    org-pkgs.url = "github:external-systems/pkgs";
+    nixpkgs.follows = "org-pkgs/nixpkgs";
+    flake-parts.follows = "org-pkgs/flake-parts";
+    import-tree.follows = "org-pkgs/import-tree";
 
-    # Utility Flakes
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs";
-    };
-    import-tree.url = "github:denful/import-tree";
-
-    # Presenting — docs site (MkDocs) + slide deck (reveal.js) as one
-    # flake-parts module (github:external-systems/presenting). It carries
-    # mkdocs-flake, the reveal.js pin and the deck build, so this repo only
-    # sets `presenting.slides.dir` + `documentation.*` (flake-parts/default.nix).
-    # Upgrade docs tooling or reveal.js with `nix flake update presenting`.
-    presenting = {
-      url = "github:external-systems/presenting";
-      # Nested `inputs = {...}`: flat `inputs.<x>.follows` lines trip
-      # statix's repeated-keys lint (W20).
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "flake-parts";
-        import-tree.follows = "import-tree";
-      };
-    };
+    # No consumer-facing inputs: the site and deck are dev-partition
+    # outputs. presenting, treefmt-nix and dev-nixpkgs are in dev/flake.nix.
   };
 
   outputs = inputs:
     inputs.flake-parts.lib.mkFlake {inherit inputs;} {
-      # Add "aarch64-linux" / "aarch64-darwin" here to build on those too.
+      # Exposes debug.options / currentSystem.options, which nixd
+      # (.vscode/settings.json) reads for flake-parts option hints.
+      debug = true;
+
       systems = [
         "x86_64-linux"
+        "aarch64-linux"
       ];
 
       imports = [
-        # Every .nix file under ./flake-parts is a flake-parts module,
-        # loaded automatically — no import list to keep in sync.
+        inputs.flake-parts.flakeModules.partitions
         (inputs.import-tree ./flake-parts)
-        # packages.{documentation,slides}, apps.{watch-documentation,serve-slides},
-        # and the deck embedded in the site at /slides/.
-        inputs.presenting.flakeModules.default
       ];
+
+      # Apps, checks and the formatter are evaluated only on demand; the
+      # dev shell is devenv (devenv.yaml), not a flake output.
+      partitionedAttrs = {
+        apps = "dev";
+        checks = "dev";
+        formatter = "dev";
+        # Docs/slides: `nix build .#documentation` / `.#slides`
+        # (org-pkgs flakeModules.dev, documentation/flake-module.nix).
+        legacyPackages = "dev";
+      };
+
+      partitions.dev = {
+        module = ./dev/flake-module.nix;
+        extraInputsFlake = ./dev;
+      };
     };
 }
