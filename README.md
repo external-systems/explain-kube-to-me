@@ -15,19 +15,17 @@ comparisons; the only code is one short PayloadSite order form.
 - `documentation/slides/icons/`: product logos and line icons, with their sources and
   licenses in `documentation/slides/CREDITS.txt`.
 
-The repo follows the external-systems org flake standard: inputs follow
-external-systems/pkgs, and the docs, deck, formatter and checks live in a
-`dev` flake-parts partition (`dev/flake.nix`, own `dev/flake.lock`).
-`documentation/flake-module.nix` imports the
-[presenting](https://github.com/external-systems/presenting) flake-parts
-module and sets `presenting.slides.dir`; mkdocs-flake, the reveal.js pin and
-the deck build all come from that one input
-(`nix flake update --flake ./dev presenting`). Zero npm. The dev shell is
+The repo follows the external-systems org flake standard: one input,
+external-systems/pkgs, whose `flakeModules.dev` brings the formatter, the
+checks and the docs and deck build (MkDocs from nixpkgs, the reveal.js
+pin). `documentation/mkdocs.yml` and `documentation/slides/index.html` are
+this repo's own and are used as-is. Update the tooling with
+`nix flake update org-pkgs`, then `sync-locks`. Zero npm. The dev shell is
 devenv (`devenv shell`, or `devenv up` for docs on :8981 and slides on :8982).
 
 ```bash
-nix run .#serve-slides          # rehearse the deck → http://127.0.0.1:8000 (S = speaker notes)
-nix run .#watch-documentation   # live docs preview → http://127.0.0.1:8000
+nix run .#serve-slides          # rehearse the deck → http://127.0.0.1:8982 (S = speaker notes)
+nix run .#watch-documentation   # live docs preview → http://127.0.0.1:8981
 
 nix build .#slides              # ./result = the deck on its own (opens from disk)
 nix build .#documentation       # ./result = the website, deck included at /slides/

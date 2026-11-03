@@ -11,8 +11,8 @@
     flake-parts.follows = "org-pkgs/flake-parts";
     import-tree.follows = "org-pkgs/import-tree";
 
-    # No consumer-facing inputs: the site and deck are dev-partition
-    # outputs. presenting, treefmt-nix and dev-nixpkgs are in dev/flake.nix.
+    # No other inputs: formatting, the site and the deck all come from
+    # org-pkgs (flakeModules.dev).
   };
 
   outputs = inputs:
@@ -27,24 +27,10 @@
       ];
 
       imports = [
-        inputs.flake-parts.flakeModules.partitions
+        # treefmt, docs + slides (documentation/: its own mkdocs.yml and
+        # slides/index.html are used as-is), lock-sync.
+        inputs.org-pkgs.flakeModules.dev
         (inputs.import-tree ./flake-parts)
       ];
-
-      # Apps, checks and the formatter are evaluated only on demand; the
-      # dev shell is devenv (devenv.yaml), not a flake output.
-      partitionedAttrs = {
-        apps = "dev";
-        checks = "dev";
-        formatter = "dev";
-        # Docs/slides: `nix build .#documentation` / `.#slides`
-        # (org-pkgs flakeModules.dev, documentation/flake-module.nix).
-        legacyPackages = "dev";
-      };
-
-      partitions.dev = {
-        module = ./dev/flake-module.nix;
-        extraInputsFlake = ./dev;
-      };
     };
 }
