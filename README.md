@@ -30,7 +30,7 @@ nix flake check                 # build both + lint the Nix code
 ```
 
 Pushes to `main` publish the website, deck included, to GitHub Pages
-(`.github/workflows/pages.yml`). One-time setup: Settings → Pages → Source:
+(`.github/workflows/ci.yml`, the external-systems/pkgs org CI). One-time setup: Settings → Pages → Source:
 "GitHub Actions". Build output is never committed: CI builds and deploys
 it, and `result`, `_site/` and `site/` are gitignored.
 

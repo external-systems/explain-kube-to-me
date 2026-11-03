@@ -16,9 +16,10 @@ only. Never commit what a build produces:
   `slides.md`);
 - no `gh-pages` branch pushes and no "publish" commits.
 
-`.github/workflows/pages.yml` runs `nix flake check`, builds
-`.#documentation` (deck embedded at `/slides/`) and deploys it to Pages
-on pushes to `main`. To publish, merge to `main`. If something needs to
+`.github/workflows/ci.yml` calls the org CI (external-systems/pkgs
+`org-ci.yml`): `nix flake check` on PRs (`ci / flake-check`), and on
+pushes to `main` it builds `.#documentation` (deck embedded at
+`/slides/`) and deploys it to Pages. Change CI only in pkgs, never here. To publish, merge to `main`. If something needs to
 be in the built site, change the sources or the flake, not the output.
 
 Vendored *sources* the deck loads at runtime (`slides/vendor/rough.js`,
