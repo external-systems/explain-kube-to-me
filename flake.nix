@@ -27,8 +27,8 @@
       ];
 
       imports = [
-        # treefmt, docs + slides (documentation/: its own mkdocs.yml and
-        # slides/index.html are used as-is), lock-sync.
+        # treefmt, docs + slides (settings in flake-parts/docs.nix),
+        # lock-sync.
         inputs.org-pkgs.flakeModules.dev
         (inputs.import-tree ./flake-parts)
       ];

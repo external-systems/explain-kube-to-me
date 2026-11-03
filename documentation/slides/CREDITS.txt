@@ -11,6 +11,3 @@ icons/ (product logos)
 
 icons/lucide-*.svg (line icons, recoloured)
   Lucide (ISC), https://lucide.dev
-
-vendor/rough.js
-  Rough.js 4.6.6 by Preet Shihn (MIT), https://roughjs.com

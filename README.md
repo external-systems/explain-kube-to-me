@@ -10,16 +10,17 @@ comparisons; the only code is one short PayloadSite order form.
 - `documentation/docs/`: the website, eight short chapters + a dictionary.
 - `documentation/slides/slides.md`: the deck, 8 topics (↓ for more on each). Every slide
   has speaker notes (press `S`).
-- `documentation/slides/sketch.js` + `documentation/slides/vendor/rough.js`: turn the `<svg class="sketch">`
-  diagrams in the deck into hand-drawn, Excalidraw-style drawings.
+- `documentation/slides/custom.css`: this deck's own blocks (route pills, kinds,
+  levels). The look, speaker sync and the hand-drawn `<svg class="sketch">`
+  diagrams come from the org style in external-systems/pkgs.
 - `documentation/slides/icons/`: product logos and line icons, with their sources and
   licenses in `documentation/slides/CREDITS.txt`.
 
 The repo follows the external-systems org flake standard: one input,
 external-systems/pkgs, whose `flakeModules.dev` brings the formatter, the
 checks and the docs and deck build (MkDocs from nixpkgs, the reveal.js
-pin). `documentation/mkdocs.yml` and `documentation/slides/index.html` are
-this repo's own and are used as-is. Update the tooling with
+pin, the org style). The settings that differ from the org defaults are
+in `flake-parts/docs.nix`. Update the tooling with
 `nix flake update org-pkgs`, then `sync-locks`. Zero npm. The dev shell is
 devenv (`devenv shell`, or `devenv up` for docs on :8981 and slides on :8982).
 
