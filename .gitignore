@@ -1,13 +1,11 @@
-# Build artifacts are NEVER committed. CI builds the site and deploys it
-# to GitHub Pages (.github/workflows/pages.yml); see CLAUDE.md.
-
-# nix build output links
+# Build artifacts are NEVER committed: CI builds the site and deploys it
+# to GitHub Pages (.github/workflows/ci.yml); see AGENTS.md.
 result
 result-*
-
-# `mkdocs build` output, if you ever run mkdocs outside Nix
+.devenv*
+.direnv
+devenv.local.nix
+# Pages builds happen in CI only; never commit them.
 documentation/site/
-site/
-
-# CI's copy of the built site for the Pages upload
 _site/
+site/
