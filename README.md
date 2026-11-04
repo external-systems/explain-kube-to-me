@@ -23,7 +23,7 @@ comparisons; the only code is one short PayloadSite order form.
   licenses in `documentation/slides/CREDITS.txt`.
 
 The repo follows the external-systems org flake standard: one input,
-external-systems/pkgs, whose `flakeModules.dev` brings the formatter, the
+external-systems/pkgs, whose `flakeModules.default` brings the formatter, the
 checks and the docs and deck build (MkDocs from nixpkgs, the reveal.js
 pin, the org style). The settings that differ from the org defaults are
 in `flake-parts/docs.nix`. Update the tooling with
