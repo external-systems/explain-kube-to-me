@@ -12,7 +12,7 @@
     import-tree.follows = "org-pkgs/import-tree";
 
     # No other inputs: formatting, the site and the deck all come from
-    # org-pkgs (flakeModules.dev).
+    # org-pkgs (flakeModules.default).
   };
 
   outputs = inputs:
@@ -29,7 +29,7 @@
       imports = [
         # treefmt, docs + slides (settings in flake-parts/docs.nix),
         # lock-sync.
-        inputs.org-pkgs.flakeModules.dev
+        inputs.org-pkgs.flakeModules.default
         (inputs.import-tree ./flake-parts)
       ];
     };
