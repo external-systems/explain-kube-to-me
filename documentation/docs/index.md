@@ -1,5 +1,11 @@
 # Kubernetes, The Extensible API
 
+[![ci](https://img.shields.io/github/actions/workflow/status/external-systems/explain-kube-to-me/ci.yml?branch=main&label=ci&logo=github)](https://github.com/external-systems/explain-kube-to-me/actions/workflows/ci.yml)
+[![release](https://img.shields.io/github/v/release/external-systems/explain-kube-to-me?label=release&color=d97757)](https://github.com/external-systems/explain-kube-to-me/releases/latest)
+[![docs](https://img.shields.io/website?url=https%3A%2F%2Fexplain-kube-to-me.external.systems%2F&label=docs&up_message=online&down_message=offline)](https://explain-kube-to-me.external.systems/)
+[![license](https://img.shields.io/github/license/external-systems/explain-kube-to-me)](https://github.com/external-systems/explain-kube-to-me/blob/main/LICENSE)
+[![built with Nix](https://img.shields.io/badge/built_with-Nix-5277C3?logo=nixos&logoColor=white)](https://nixos.org)
+
 ## A Platform that Develops itself
 
 !!! quote ""
